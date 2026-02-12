@@ -5,69 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuantumAI v6 - Sulung Workflow</title>
     <style>
-        body { background-color: #020617; color: #00f2ff; font-family: 'Courier New', monospace; margin: 0; padding: 10px; font-size: 0.85em; overflow-x: hidden; }
-        .header { border: 1px solid #00f2ff; padding: 10px; text-align: center; box-shadow: 0 0 15px #00f2ff; margin-bottom: 10px; border-radius: 5px; background: rgba(0, 242, 255, 0.1); }
-        .creator-name { font-size: 0.6em; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .card { border: 1px solid #1e293b; background: #0f172a; padding: 8px; border-radius: 4px; border-top: 2px solid #00f2ff; position: relative; }
-        .full { grid-column: span 2; }
-        .label { color: #94a3b8; font-size: 0.65em; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #1e293b; }
-        .status { color: #4ade80; font-weight: bold; animation: blink 1.5s infinite; }
-        .radar-box { height: 60px; display: flex; justify-content: center; align-items: center; }
-        .radar { width: 50px; height: 50px; border: 1px solid #00f2ff; border-radius: 50%; position: relative; }
-        .radar:after { content: ""; width: 50%; height: 2px; background: #00f2ff; position: absolute; top: 50%; left: 50%; transform-origin: left; animation: rotate 2s linear infinite; }
-        .chat-box { background: #000; border: 1px solid #334155; padding: 10px; height: 100px; overflow-y: auto; font-size: 0.7em; margin-top: 5px; color: #4ade80; text-align: left; line-height: 1.4; }
-        .chat-input { width: 100%; background: #1e293b; border: 1px solid #00f2ff; color: #fff; padding: 8px; margin-top: 5px; box-sizing: border-box; font-size: 0.8em; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-group { display: flex; gap: 5px; margin-top: 8px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 3px; font-weight: bold; font-size: 0.75em; color: white; text-transform: uppercase; }
-        .buy { background: #16a34a; box-shadow: 0 0 5px #16a34a; } .sell { background: #dc2626; box-shadow: 0 0 5px #dc2626; }
+        body { background: #000; color: #00f2ff; font-family: 'Courier New', monospace; margin: 0; padding: 10px; overflow-x: hidden; }
+        .main-container { border: 2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff inset; padding: 15px; border-radius: 10px; background: radial-gradient(circle, #001a1a 0%, #000 100%); }
+        .header { text-align: center; border-bottom: 2px double #00f2ff; padding-bottom: 10px; margin-bottom: 15px; }
+        .name-tag { font-size: 0.6em; color: #4ade80; letter-spacing: 3px; }
+        
+        /* RADAR BESAR DI TENGAH */
+        .radar-v6 { width: 150px; height: 150px; border: 2px solid #00f2ff; border-radius: 50%; margin: 20px auto; position: relative; box-shadow: 0 0 15px #00f2ff; background: repeating-radial-gradient(circle, transparent 0, transparent 20px, rgba(0,242,255,0.1) 21px); }
+        .radar-v6:after { content: ""; width: 50%; height: 2px; background: linear-gradient(to right, transparent, #00f2ff); position: absolute; top: 50%; left: 50%; transform-origin: left; animation: sweep 2s linear infinite; }
+        
+        .grid-v6 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .panel { border: 1px solid #334155; background: rgba(15, 23, 42, 0.8); padding: 8px; font-size: 0.7em; position: relative; }
+        .panel:before { content: "▲"; position: absolute; top: -5px; left: 5px; font-size: 8px; color: #00f2ff; }
+        
+        .chart-mock { height: 40px; background: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,242,255,0.1) 6px); display: flex; align-items: flex-end; gap: 2px; }
+        .bar { width: 4px; background: #4ade80; border-radius: 2px; }
+        
+        .btn-v6 { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #00f2ff; background: rgba(0, 242, 255, 0.1); color: #fff; font-weight: bold; cursor: pointer; text-shadow: 0 0 5px #00f2ff; }
+        .chat-v6 { background: #000; border: 1px solid #00f2ff; height: 80px; margin-top: 15px; padding: 5px; font-size: 0.6em; color: #4ade80; overflow-y: auto; }
+        
+        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2 style="margin:0; font-size: 1em; letter-spacing: 1px;">« QuantumAI v6 Sulung Workflow »</h2>
-        <div class="creator-name">Developed by dadanrukanda89</div>
-    </div>
-
-    <div class="grid">
-        <div class="card full">
-            <div class="label">SYSTEM ENGINE STATUS</div>
-            <div style="font-size: 0.8em;">V6 Core Link: <span class="status">LIVE CONNECTED</span></div>
+    <div class="main-container">
+        <div class="header">
+            <h2 style="margin:0; font-size: 1.1em; text-shadow: 0 0 10px #00f2ff;">QUANTUM AI V6</h2>
+            <div class="name-tag">SULUNG WORKFLOW - DADAN RUKANDA</div>
         </div>
 
-        <div class="card">
-            <div class="label">AI SIGNAL</div>
-            <div style="color:#4ade80; font-size: 1.3em; font-weight: bold; text-align:center; padding: 10px 0;">BUY</div>
+        <div class="radar-v6">
+            <div style="position:absolute; top:45%; left:40%; font-size:0.6em; font-weight:bold; color:#f87171;">SCANNING...</div>
         </div>
 
-        <div class="card">
-            <div class="label">RADAR PULSE</div>
-            <div class="radar-box"><div class="radar"></div></div>
-        </div>
-
-        <div class="card full">
-            <div class="label">EXECUTION CONTROL</div>
-            <div class="btn-group">
-                <button class="btn buy">BUY</button>
-                <button class="btn sell">SELL</button>
-                <button class="btn" style="background:#475569;">HOLD</button>
+        <div class="grid-v6">
+            <div class="panel">
+                <div style="color:#94a3b8; margin-bottom:5px;">AI CORE SIGNAL</div>
+                <b style="color:#4ade80;">STRONG BUY</b>
+            </div>
+            <div class="panel">
+                <div style="color:#94a3b8; margin-bottom:5px;">REAL-TIME CHART</div>
+                <div class="chart-mock">
+                    <div class="bar" style="height:60%"></div><div class="bar" style="height:80%"></div><div class="bar" style="height:40%"></div><div class="bar" style="height:90%"></div>
+                </div>
+            </div>
+            <div class="panel" style="grid-column: span 2;">
+                <div style="color:#94a3b8; margin-bottom:5px;">SATELLITE MOMENTUM</div>
+                <marquee scrollamount="3">Connecting to Binance... Connected. Scanning MSI Indicators... 100% Optimized.</marquee>
             </div>
         </div>
 
-        <div class="card full">
-            <div class="label">QuantumAI Chat Interface</div>
-            <div class="chat-box">
-                [SYSTEM] >> Synchronizing with Broker...<br>
-                [USER] >> Protocol v6 Activated.<br>
-                [AI] >> Scanning Satellite Momentum...<br>
-                [STATUS] >> READY FOR TRADING.
-            </div>
-            <input type="text" class="chat-input" placeholder="Ketik perintah ke AI...">
+        <button class="btn-v6">EXECUTE PROTOCOL V6</button>
+
+        <div class="chat-v6">
+            [SYSTEM] >> Synchronized with dadanrukanda89-lab<br>
+            [AI] >> Radar Pulse Analysis: ACTIVE<br>
+            [CMD] >> Ready for Trade execution.
         </div>
     </div>
 </body>
 </html>
+
 
 
