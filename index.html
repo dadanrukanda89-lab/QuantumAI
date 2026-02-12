@@ -3,82 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>QuantumAI v6 - DRUKANDA</title>
+    <title>QuantumAI - DRUKANDA</title>
     <style>
-        body { background: #000814; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
-        .admin-top { text-align: center; padding: 8px; color: #fbbf24; font-size: 11px; border-bottom: 1px solid #1e293b; letter-spacing: 3px; }
+        body { background: #010409; color: #fff; font-family: monospace; margin: 0; padding: 0; }
+        .adm { text-align: center; padding: 10px; color: #fbbf24; font-size: 10px; border-bottom: 1px solid #1e293b; letter-spacing: 3px; }
+        
+        /* RADAR CSS (Pengganti Gambar Pecah) */
+        .rdr { width: 100%; height: 110px; background: #000; position: relative; border-bottom: 2px solid #00f2ff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .rdr-sc { width: 100%; height: 2px; background: #00f2ff; position: absolute; box-shadow: 0 0 15px #00f2ff; animation: s 2s infinite linear; }
+        @keyframes s { from { top: 0; } to { top: 110px; } }
 
-        /* RADAR BUATAN SENDIRI (ANTI PECAH) */
-        .radar-box { 
-            width: 100%; height: 130px; background: #000; position: relative;
-            border-bottom: 2px solid #00f2ff; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .radar-circle { width: 100px; height: 100px; border: 1px solid #00f2ff; border-radius: 50%; opacity: 0.3; animation: pulse 2s infinite; }
-        .radar-sweep { width: 100%; height: 2px; background: #00f2ff; position: absolute; box-shadow: 0 0 15px #00f2ff; animation: scan 3s infinite linear; }
-        @keyframes scan { from { top: 0; } to { top: 130px; } }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
-
-        .container { padding: 12px; width: 100%; max-width: 450px; margin: auto; }
-
-        /* PANEL SINYAL PADAT */
-        .grid-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .card-mini { background: #0b1220; border: 1px solid #1e293b; padding: 10px; border-radius: 5px; border-left: 3px solid #00f2ff; }
-        .label { font-size: 9px; color: #00f2ff; display: block; margin-bottom: 3px; }
-        .val { font-size: 12px; font-weight: bold; }
-
-        /* AREA CHART/SATELIT (DIBUAT GELAP GAHAR) */
-        .chart-area { 
-            border: 1px solid #1e293b; height: 160px; border-radius: 10px; 
-            background: radial-gradient(circle, #001a33 0%, #000 70%);
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
-        .chart-label { position: absolute; top: 10px; left: 12px; font-size: 9px; color: #00f2ff; }
-
-        /* CHAT PANJANG MANIS (Glow Hijau) */
-        .chat-final { 
-            border: 2px solid #a3e635; border-radius: 10px; background: #000; 
-            margin-top: 15px; box-shadow: 0 0 20px rgba(163, 230, 53, 0.3); overflow: hidden;
-        }
-        .chat-head { background: #a3e635; color: #000; padding: 6px; font-weight: bold; font-size: 12px; text-align: center; }
-        .chat-body { padding: 12px; font-size: 11px; color: #4ade80; height: 100px; line-height: 1.5; }
-
-        .footer { text-align: center; font-size: 10px; color: #475569; padding: 20px; }
+        .cont { padding: 10px; max-width: 400px; margin: auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .card { background: #0d1117; border: 1px solid #30363d; padding: 10px; border-radius: 5px; border-left: 3px solid #00f2ff; font-size: 10px; }
+        
+        .chrt { border: 1px solid #1e293b; height: 160px; border-radius: 10px; background: radial-gradient(circle, #001a33 0%, #000 80%); display: flex; align-items: center; justify-content: center; position: relative; }
+        
+        /* CHAT PANJANG MANIS (HIJAU NEON) */
+        .cht { border: 2px solid #a3e635; border-radius: 12px; background: #000; margin-top: 15px; box-shadow: 0 0 20px rgba(163, 230, 53, 0.3); overflow: hidden; }
+        .cht-h { background: #a3e635; color: #000; padding: 6px; font-weight: bold; font-size: 12px; text-align: center; }
+        .cht-b { padding: 12px; font-size: 11px; color: #4ade80; height: 100px; line-height: 1.5; }
     </style>
 </head>
 <body>
-    <div class="admin-top">ADMIN: DRUKANDA</div>
-    
-    <div class="radar-box">
-        <div class="radar-sweep"></div>
-        <div class="radar-circle"></div>
-        <span style="color:#00f2ff; font-size:14px; letter-spacing:5px; z-index:2;">QUANTUM V6</span>
-    </div>
-
-    <div class="container">
-        <div class="grid-panel">
-            <div class="card-mini"><span class="label">AI SIGNAL</span><span class="val">BUY / ACTIVE</span></div>
-            <div class="card-mini"><span class="label">RISK MGMT</span><span class="val">SECURE</span></div>
+    <div class="adm">ADMIN: DRUKANDA</div>
+    <div class="rdr"><div class="rdr-sc"></div><span style="color:#00f2ff; letter-spacing:5px;">QUANTUM V6</span></div>
+    <div class="cont">
+        <div class="grid">
+            <div class="card"><span style="color:#8b949e">SIGNAL</span><br><b>BUY</b></div>
+            <div class="card"><span style="color:#8b949e">RISK</span><br><b>SECURE</b></div>
         </div>
-
-        <div class="chart-area">
-            <span class="chart-label">MOMENTUM RADAR SYNC</span>
-            <div style="width:70%; height:1px; background:#00f2ff; opacity:0.2;"></div>
-            <div style="width:1px; height:70%; background:#00f2ff; opacity:0.2; position:absolute;"></div>
-            <p style="font-size:10px; color:#1e293b;">[ NO IMAGE ERROR ]</p>
+        <div class="chrt"><span style="color:#00f2ff; font-size:8px; position:absolute; top:10px; left:10px;">RADAR SYNCED</span></div>
+        <div class="cht">
+            <div class="cht-h">⚔ QUANTUMAI CHAT INTERFACE ⚔</div>
+            <div class="cht-b">[SYSTEM] >> Welcome, Drukanda.<br>[WSTEM] >> Sat-Sync: 100%<br><span style="color:#fbbf24;">[STATUS] >> Momentum Active.</span></div>
         </div>
-
-        <div class="chat-final">
-            <div class="chat-head">⚔ QUANTUMAI CHAT INTERFACE ⚔</div>
-            <div class="chat-body">
-                [SYSTEM] >> Welcome back, Drukanda.<br>
-                [WSTEM]  >> Satellite Sync: 100%<br>
-                [CORE]   >> All modules functional.<br>
-                <span style="color:#fbbf24;">[STATUS] >> Momentum Pulse Active.</span>
-            </div>
-        </div>
-
-        <div class="footer">Developed by dadanrukanda89-lab | 2026</div>
     </div>
 </body>
 </html>
