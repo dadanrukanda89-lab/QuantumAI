@@ -3,46 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI Sulung Workflow</title>
+    <title>QuantumAI v6 Sulung Workflow</title>
     <style>
-        body { background: #000; color: #fff; font-family: monospace; margin: 0; padding: 0; overflow-x: hidden; }
-        .v6-radar { width: 100%; display: block; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff; }
-        .container { padding: 15px; background: linear-gradient(180deg, rgba(0,242,255,0.1), #000); }
-        .v15-card { border: 2px solid #00f2ff; border-radius: 12px; background: rgba(0,0,0,0.9); padding: 15px; box-shadow: inset 0 0 15px rgba(0,242,255,0.2); }
-        .neon-gold { color: #fbbf24; text-align: center; font-weight: bold; text-shadow: 0 0 10px #fbbf24; margin-bottom: 15px; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; overflow-x: hidden; }
+        .v6-radar { width: 100%; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff; display: block; }
+        .dashboard-container { padding: 10px; background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, #000 90%); }
         
-        /* CHAT INTERFACE TIMBUL */
-        .chat-box { border: 2px solid #a3e635; border-radius: 10px; background: #000; box-shadow: 0 0 25px rgba(163,230,53,0.4); margin-top: 15px; }
-        .chat-head { background: #a3e635; color: #000; padding: 5px 10px; font-weight: bold; font-size: 0.8em; display: flex; justify-content: space-between; border-radius: 7px 7px 0 0; }
-        .chat-content { padding: 10px; font-size: 0.75em; color: #4ade80; height: 100px; overflow-y: auto; line-height: 1.4; }
-        .chat-bar { border-top: 1px solid #1e293b; padding: 8px; background: rgba(255,255,255,0.05); }
-        .input-text { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 0.8em; }
+        /* PANEL GRID SEPERTI DI GAMBAR SULUNG */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .info-box { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.8); padding: 8px; border-radius: 4px; font-size: 0.65em; border-left: 3px solid #00f2ff; }
+        .neon-blue { color: #00f2ff; font-weight: bold; text-transform: uppercase; }
+
+        /* CHAT INTERFACE EXACT COPY */
+        .chat-wrap { 
+            border: 2px solid #a3e635; border-radius: 10px; background: #000; 
+            box-shadow: 0 0 25px rgba(163, 230, 53, 0.3); margin-top: 10px;
+        }
+        .chat-header { 
+            background: #a3e635; color: #000; padding: 6px 12px; font-weight: bold; 
+            font-size: 0.75em; display: flex; justify-content: space-between;
+        }
+        .chat-log { padding: 12px; height: 110px; overflow-y: auto; font-size: 0.7em; color: #4ade80; line-height: 1.4; border-bottom: 1px solid #1e293b; }
+        .chat-field { padding: 8px 12px; font-size: 0.7em; color: #94a3b8; display: flex; align-items: center; }
         
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } }
-        .scan { animation: blink 1.2s infinite; color: #a3e635; }
+        .footer-text { text-align: center; font-size: 0.55em; color: #475569; margin-top: 25px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
     <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-radar">
 
-    <div class="container">
-        <div class="v15-card">
-            <div class="neon-gold">⚡ QUANTUM CORE V15 - HYPER ACTIVE ⚡</div>
-            
-            <div class="chat-box">
-                <div class="chat-head"><span>⚔ QuantumAI Chat Interface ⚔</span><span>[X]</span></div>
-                <div class="chat-content">
-                    [SYSTEN] >> Syncing all ONLINE. Market scan...<br>
-                    [CORE]   >> Backend system: market scan.<br>
-                    [USER]   >> Initiate full-spectrum market scan.<br>
-                    <span class="scan">[STATUS] >> Ready for command.</span>
-                </div>
-                <div class="chat-bar">
-                    <input type="text" class="input-text" placeholder="Chat DadanAI:....">
-                </div>
+    <div class="dashboard-container">
+        <div class="info-grid">
+            <div class="info-box"><span class="neon-blue">AI CORE SIGNAL</span><br>BUY / SELL / HOLD</div>
+            <div class="info-box"><span class="neon-blue">RISK ENGINE</span><br>SL / TP / BE ACTIVE</div>
+            <div class="info-box"><span class="neon-blue">SATELLITE</span><br>MOMENTUM SYNCED</div>
+            <div class="info-box"><span class="neon-blue">BACKEND</span><br>CORE SYSTEM ON</div>
+        </div>
+
+        <div class="chat-wrap">
+            <div class="chat-header">
+                <span>⚔ QuantumAI Chat Interface ⚔</span>
+                <span>[X]</span>
+            </div>
+            <div class="chat-log">
+                [SYSTEM] >> Syncing all ONLINE. Market scan...<br>
+                [WSTEM] >> Synncmnnrriximsg all ONLINE. Market scan...<br>
+                [CORE]   >> Backend system: market scan.<br>
+                [USER]   >> Initiate full-spectrum market scan.<br>
+                <span style="color:#fbbf24;">[STATUS] >> Ready for command.</span>
+            </div>
+            <div class="chat-field">
+                <span style="color:#a3e635; margin-right:5px;">></span>
+                <span>Chat Input | ChatDadanAI:....</span>
             </div>
         </div>
-        <p style="text-align:center; font-size:0.6em; color:#475569; margin-top:15px;">Developed by dadanrukanda89-lab | 2026</p>
+
+        <div class="footer-text">
+            Developed by dadanrukanda89-lab | QuantumAI Protocol 2026
+        </div>
     </div>
 </body>
 </html>
