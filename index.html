@@ -1,568 +1,61 @@
-// main.dart
-import 'dart:async';
-import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:web_socket_channel/io.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QuantumAI v6</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css" />
+</head>
 
-// ---- CONFIG: set your backend URL here ----
-const String WS_URL = 'ws://127.0.0.1:8000/ws/ui';
-const String HTTP_SIGNALS = 'http://127.0.0.1:8000/signals';
-// --------------------------------------------
+<body class="bg-black text-cyan-400">
 
-void main() {
-  runApp(QuantumAIDemoApp());
-}
+<div class="p-4">
 
-class QuantumAIDemoApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'QuantumAI v11.1 Pro - Demo',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        colorScheme: ColorScheme.dark(primary: Colors.cyanAccent),
-      ),
-      home: DashboardPage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+    <!-- HEADER -->
+    <h1 class="text-3xl font-bold text-center neon">
+        QuantumAI v6 Control Panel
+    </h1>
 
-class DashboardPage extends StatefulWidget {
-  @override
-  _DashboardPageState createState() => _DashboardPageState();
-}
+    <!-- SIGNAL + RISK -->
+    <div class="grid grid-cols-4 gap-4 mt-6">
 
-class _DashboardPageState extends State<DashboardPage>
-    with SingleTickerProviderStateMixin {
-  IOWebSocketChannel? channel;
-  Timer? pollTimer;
-  Map latestSignal = {};
-  String wsStatus = 'disconnected';
-  double _scale = 1.0;
-  double _baseScale = 1.0;
-  final ValueNotifier<bool> _isConnected = ValueNotifier<bool>(false);
+        <div class="card">
+            <h2>AI Core Signal</h2>
+            <p id="signal" class="text-2xl font-bold">WAITING...</p>
+        </div>
 
-  // animation (radar pulse)
-  late AnimationController _pulseController;
+        <div class="card">
+            <h2>Momentum Pulse</h2>
+            <p id="momentum">Scanning...</p>
+        </div>
 
-  @override
-  void initState() {
-    super.initState();
-    _pulseController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2))
-          ..repeat();
-    connectWs();
-    pollTimer = Timer.periodic(Duration(seconds: 2), (_) => fetchSignal());
-  }
+        <div class="card">
+            <h2>Risk Engine</h2>
+            <p>SL / TP / BE</p>
+        </div>
 
-  void connectWs() {
-    try {
-      channel = IOWebSocketChannel.connect(WS_URL);
-      channel!.stream.listen((message) {
-        setState(() {
-          wsStatus = 'connected';
-        });
-      }, onDone: () {
-        setState(() {
-          wsStatus = 'disconnected';
-        });
-        Future.delayed(Duration(seconds: 2), () => connectWs());
-      }, onError: (e) {
-        setState(() {
-          wsStatus = 'error';
-        });
-        Future.delayed(Duration(seconds: 2), () => connectWs());
-      });
-      _isConnected.value = true;
-    } catch (e) {
-      _isConnected.value = false;
-      Future.delayed(Duration(seconds: 2), () => connectWs());
-    }
-  }
+        <div class="card">
+            <h2>News Intelligence</h2>
+            <p>Live Feed</p>
+        </div>
 
-  Future<void> fetchSignal() async {
-    try {
-      var resp = await http.get(Uri.parse(HTTP_SIGNALS));
-      if (resp.statusCode == 200) {
-        var j = json.decode(resp.body);
-        setState(() {
-          latestSignal = (j['signals'] != null && j['signals'].length > 0)
-              ? j['signals'][0]
-              : {};
-        });
-      }
-    } catch (e) {
-      // ignore network errors in demo
-    }
-  }
+    </div>
 
-  @override
-  void dispose() {
-    pollTimer?.cancel();
-    channel?.sink.close();
-    _pulseController.dispose();
-    super.dispose();
-  }
+    <!-- CHART -->
+    <div class="card mt-6">
+        <h2>Real Time Chart</h2>
+        <canvas id="chart"></canvas>
+    </div>
 
-  // Quick helper ui pieces
-  Widget _headerBar() {
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
-          children: [
-            Text('QuantumAI v11.1 Pro',
-                style: TextStyle(fontSize: 18, color: Colors.cyanAccent)),
-            Spacer(),
-            ValueListenableBuilder<bool>(
-              valueListenable: _isConnected,
-              builder: (_, connected, __) {
-                return Row(children: [
-                  Icon(
-                    connected ? Icons.cloud_done : Icons.cloud_off,
-                    color: connected ? Colors.greenAccent : Colors.redAccent,
-                    size: 18,
-                  ),
-                  SizedBox(width: 8),
-                  Text(wsStatus,
-                      style: TextStyle(fontSize: 12, color: Colors.white70)),
-                ]);
-              },
-            )
-          ],
-        ),
-      ),
-    );
-  }
+</div>
 
-  Widget _leftCandlesPanel(double w, double h) {
-    return Container(
-      width: w,
-      height: h,
-      padding: EdgeInsets.all(8),
-      decoration: neonCardDecoration(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Real-Time Chart', style: neonTitleStyle()),
-          SizedBox(height: 8),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.black.withOpacity(0.2),
-              ),
-              child: Center(child: SimpleMiniCandleChart()),
-            ),
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              chipText('M30'),
-              SizedBox(width: 6),
-              chipText('H1'),
-              SizedBox(width: 6),
-              chipText('H4'),
-              SizedBox(width: 6),
-              chipText('D1'),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+<!-- 🔥 CHAT PANEL (2 BARIS FIXED BOTTOM) -->
+<div class="chat-panel">
+    <div id="chat-log" class="chat-log"></div>
+    <input type="text" id="chat-input" placeholder="Type command..." />
+</div>
 
-  Widget _rightPanel(double w, double h) {
-    return Container(
-      width: w,
-      height: h,
-      child: Column(children: [
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(bottom: 8),
-            padding: EdgeInsets.all(8),
-            decoration: neonCardDecoration(),
-            child: Column(
-              children: [
-                Row(children: [
-                  Text('Risk Management', style: neonTitleStyle()),
-                ]),
-                SizedBox(height: 8),
-                Expanded(
-                  child: RiskPanel(),
-                )
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(8),
-          decoration: neonCardDecoration(),
-          child: Column(
-            children: [
-              Row(children: [Text('News Feed', style: neonTitleStyle())]),
-              SizedBox(height: 8),
-              SizedBox(
-                height: 120,
-                child: NewsFeedPlaceholder(),
-              )
-            ],
-          ),
-        )
-      ]),
-    );
-  }
-
-  Widget _centerRadar(double w, double h) {
-    return Container(
-      width: w,
-      height: h,
-      padding: EdgeInsets.all(12),
-      decoration: neonCardDecoration(),
-      child: Stack(children: [
-        Center(
-          child: RadarPulse(
-            controller: _pulseController,
-            size: min(w, h) * 0.9,
-            signal: latestSignal['signal'] ?? 'HOLD',
-            confidence: (latestSignal['confidence'] ?? 0.0).toDouble(),
-          ),
-        ),
-        // overlay small HUD
-        Positioned(
-          bottom: 12,
-          left: 12,
-          right: 12,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Momentum Radar', style: neonSubTitleStyle()),
-              Row(children: [
-                Text('Signal: ', style: TextStyle(color: Colors.white70)),
-                Text('${latestSignal['signal'] ?? '---'}',
-                    style: TextStyle(
-                        color: latestSignal['signal'] == 'BUY'
-                            ? Colors.greenAccent
-                            : (latestSignal['signal'] == 'SELL'
-                                ? Colors.redAccent
-                                : Colors.yellowAccent),
-                        fontWeight: FontWeight.bold)),
-                SizedBox(width: 12),
-                Text('Conf: ${((latestSignal['confidence'] ?? 0.0) * 100).toInt()}%',
-                    style: TextStyle(color: Colors.white70))
-              ])
-            ],
-          ),
-        )
-      ]),
-    );
-  }
-
-  // Bottom control hub
-  Widget _controlHub(double w) {
-    return Container(
-      width: w,
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            colors: [Colors.blueAccent.withOpacity(0.08), Colors.black]),
-      ),
-      child: Column(children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          decoration: neonCardDecoration(inner: true),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green[600], padding: EdgeInsets.symmetric(horizontal:20, vertical:12)),
-                onPressed: () => channel?.sink.add('place buy'),
-                child: Text('BUY', style: TextStyle(fontSize: 18)),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[800], padding: EdgeInsets.symmetric(horizontal:20, vertical:12)),
-                onPressed: () => channel?.sink.add('place hold'),
-                child: Text('HOLD', style: TextStyle(fontSize: 18)),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[700], padding: EdgeInsets.symmetric(horizontal:20, vertical:12)),
-                onPressed: () => channel?.sink.add('place sell'),
-                child: Text('SELL', style: TextStyle(fontSize: 18)),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _scale = 1.0;
-                    _baseScale = 1.0;
-                  });
-                },
-                icon: Icon(Icons.zoom_out_map),
-                label: Text('Reset Zoom')),
-            SizedBox(width: 12),
-            ElevatedButton.icon(
-                onPressed: () {
-                  // quick demo: toggle glow (not heavy)
-                },
-                icon: Icon(Icons.flash_on),
-                label: Text('FX'))
-          ],
-        )
-      ]),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // sizes relative to screen
-    final size = MediaQuery.of(context).size;
-    final contentWidth = max(size.width, 1000.0); // allow horizontal space for zooming
-    final leftW = contentWidth * 0.22;
-    final rightW = contentWidth * 0.22;
-    final centerW = contentWidth * 0.46;
-    final panelHeight = size.height * 0.55;
-
-    return Scaffold(
-      body: Column(children: [
-        _headerBar(),
-        Expanded(
-          child: InteractiveViewer(
-            minScale: 0.6,
-            maxScale: 2.5,
-            scaleEnabled: true,
-            panEnabled: true,
-            child: Center(
-              child: Container(
-                width: contentWidth,
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    // top row: three panels
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // left chart
-                        _leftCandlesPanel(leftW, panelHeight),
-                        SizedBox(width: 12),
-                        // center radar
-                        _centerRadar(centerW, panelHeight),
-                        SizedBox(width: 12),
-                        // right panels
-                        _rightPanel(rightW, panelHeight),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    // bottom control hub
-                    _controlHub(contentWidth),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-// ------------------- Small helper widgets --------------------
-
-BoxDecoration neonCardDecoration({bool inner = false}) {
-  return BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    gradient: inner
-        ? null
-        : LinearGradient(colors: [
-            Colors.blue.withOpacity(0.06),
-            Colors.purple.withOpacity(0.02)
-          ]),
-    border: Border.all(color: Colors.cyan.withOpacity(0.18)),
-    boxShadow: [
-      BoxShadow(
-          color: Colors.cyan.withOpacity(0.04), blurRadius: 8, spreadRadius: 1),
-    ],
-  );
-}
-
-TextStyle neonTitleStyle() =>
-    TextStyle(color: Colors.cyanAccent, fontWeight: FontWeight.w600);
-
-TextStyle neonSubTitleStyle() =>
-    TextStyle(color: Colors.white70, fontWeight: FontWeight.w500);
-
-Widget chipText(String t) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-    decoration: BoxDecoration(
-        color: Colors.white12, borderRadius: BorderRadius.circular(6)),
-    child: Text(t, style: TextStyle(color: Colors.white70, fontSize: 12)),
-  );
-}
-
-// Simple placeholder small candle chart (replace later with proper lib)
-class SimpleMiniCandleChart extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(painter: MiniCandlePainter());
-  }
-}
-
-class MiniCandlePainter extends CustomPainter {
-  final Random rnd = Random();
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white30;
-    final w = size.width;
-    final h = size.height;
-    // background grid
-    final gPaint = Paint()..color = Colors.white10;
-    for (int i = 0; i < 5; i++) {
-      canvas.drawLine(Offset(0, h * i / 5), Offset(w, h * i / 5), gPaint);
-    }
-    // draw random candle-like bars
-    final candlePaint = Paint()..style = PaintingStyle.fill;
-    final barW = max(2.0, w / 40);
-    for (int i = 0; i < 30; i++) {
-      double x = i * (barW + 2);
-      double open = h * (0.3 + rnd.nextDouble() * 0.4);
-      double close = h * (0.3 + rnd.nextDouble() * 0.4);
-      double top = min(open, close) - rnd.nextDouble() * 20;
-      double bottom = max(open, close) + rnd.nextDouble() * 20;
-      bool bullish = close < open;
-      candlePaint.color = bullish ? Colors.greenAccent.withOpacity(0.9) : Colors.redAccent.withOpacity(0.9);
-      // wick
-      canvas.drawRect(Rect.fromLTWH(x + barW/2 - 0.5, top, 1, bottom - top), candlePaint);
-      // body
-      canvas.drawRect(Rect.fromLTWH(x, min(open, close), barW, (open - close).abs().clamp(2.0, 40.0)), candlePaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-// Radar pulse widget
-class RadarPulse extends StatelessWidget {
-  final AnimationController controller;
-  final double size;
-  final String signal;
-  final double confidence;
-  RadarPulse({required this.controller, required this.size, required this.signal, required this.confidence});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: AnimatedBuilder(
-        animation: controller,
-        builder: (_, __) {
-          return CustomPaint(
-            painter: RadarPainter(progress: controller.value, signal: signal, confidence: confidence),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class RadarPainter extends CustomPainter {
-  final double progress;
-  final String signal;
-  final double confidence;
-  RadarPainter({required this.progress, required this.signal, required this.confidence});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width/2, size.height/2);
-    final radius = min(size.width, size.height)/2;
-    final base = Paint()..color = Colors.cyan.withOpacity(0.06);
-    canvas.drawCircle(center, radius, base);
-    final ring = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    // concentric rings
-    for (int i=1; i<=4; i++) {
-      ring.color = Colors.cyan.withOpacity(0.06 * (5-i));
-      canvas.drawCircle(center, radius * i/4, ring);
-    }
-    // rotating sweep
-    final sweep = Paint()
-      ..shader = RadialGradient(colors: [Colors.cyanAccent.withOpacity(0.7), Colors.transparent]).createShader(Rect.fromCircle(center: center, radius: radius))
-      ..blendMode = BlendMode.plus;
-    final sweepAngle = progress * 2 * pi;
-    final path = Path();
-    path.moveTo(center.dx, center.dy);
-    path.arcTo(Rect.fromCircle(center: center, radius: radius), sweepAngle - 0.3, 0.6, false);
-    path.close();
-    canvas.drawPath(path, sweep);
-    // center node
-    final node = Paint()..color = (signal=='BUY' ? Colors.greenAccent : (signal=='SELL' ? Colors.redAccent : Colors.yellowAccent));
-    canvas.drawCircle(center, 8 + confidence*12, node);
-    // crosshair lines
-    final line = Paint()..color = Colors.white12;
-    canvas.drawLine(center.translate(-radius,0), center.translate(radius,0), line);
-    canvas.drawLine(center.translate(0,-radius), center.translate(0,radius), line);
-  }
-
-  @override
-  bool shouldRepaint(covariant RadarPainter oldDelegate) => oldDelegate.progress != progress || oldDelegate.signal != signal;
-}
-
-// Risk panel placeholder
-class RiskPanel extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      riskRow('SL', '1.5%'),
-      riskRow('TP', '3.0%'),
-      riskRow('BE', 'enabled'),
-      riskRow('Trailing', '0.8%'),
-      SizedBox(height:12),
-      LinearProgressIndicator(value: 0.32, color: Colors.orangeAccent, backgroundColor: Colors.white10)
-    ]);
-  }
-  Widget riskRow(String k, String v) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical:4),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(k, style: TextStyle(color: Colors.white70)),
-        Text(v, style: TextStyle(color: Colors.white))
-      ]),
-    );
-  }
-}
-
-// news feed placeholder
-class NewsFeedPlaceholder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        newsTile('Breaking: Market sees slight uptick', '2m ago'),
-        newsTile('Macro data: GDP beats est.', '15m ago'),
-        newsTile('Watch: BTC volatility remains', '30m ago'),
-      ],
-    );
-  }
-  Widget newsTile(String title, String time) {
-    return ListTile(
-      dense: true,
-      contentPadding: EdgeInsets.zero,
-      title: Text(title, style: TextStyle(fontSize: 13)),
-      trailing: Text(time, style: TextStyle(fontSize: 11, color: Colors.white54)),
-    );
-  }
-}
+<script src="app.js"></script>
+</body>
+</html>
