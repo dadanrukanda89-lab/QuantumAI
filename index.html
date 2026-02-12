@@ -2,52 +2,40 @@ from fastapi import FastAPI
 import numpy as np
 import random
 from datetime import datetime
-from typing import List
 
-app = FastAPI(title="Quantum AI v16 - Starter")
+app = FastAPI(title="Quantum AI v16")
 
-# --- BLOK LOGIKA AI (Quantum Engine) ---
 class QuantumEngine:
     def __init__(self):
         self.signal_history = []
-        self.last_price = 100.0
 
     def generate_signal(self):
-        # 1. Ambil data mentah (Simulasi)
+        # Logika Inti v16
         base = random.uniform(-1, 1)
         momentum = np.tanh(base * np.pi)
         
-        # 2. Logika Sederhana (Biar jalan dulu)
-        if momentum > 0.4:
-            trend = "BUY"
-        elif momentum < -0.4:
-            trend = "SELL"
+        # Penentuan Trend Akurat
+        if base > 0.4:
+            trend = "STRONG BUY"
+        elif base < -0.4:
+            trend = "STRONG SELL"
         else:
             trend = "WAIT"
 
-        signal = {
+        return {
             "timestamp": datetime.utcnow().isoformat(),
             "momentum": round(momentum, 4),
             "trend": trend,
             "confidence": f"{round(abs(base) * 100, 2)}%",
-            "status": "ACTIVE"
+            "version": "v16-starter"
         }
-        
-        self.signal_history.append(signal)
-        return signal
 
-# Inisialisasi mesin
 engine = QuantumEngine()
 
-# --- BLOK ENDPOINT API ---
 @app.get("/")
 def home():
-    return {"message": "Quantum AI v16 is Running!", "manual": "Go to /signal to generate"}
+    return {"status": "Quantum AI Online", "instruction": "Go to /signal"}
 
 @app.get("/signal")
 def get_signal():
     return engine.generate_signal()
-
-@app.get("/history")
-def get_history():
-    return engine.get_history(limit=5)
