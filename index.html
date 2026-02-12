@@ -3,77 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI - drukanda</title>
+    <title>QuantumAI - DRUKANDA</title>
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
+        .header-drukanda { background: #000; padding: 10px; text-align: center; color: #fbbf24; font-size: 0.7em; letter-spacing: 3px; border-bottom: 1px solid #1e293b; font-weight: bold; }
         
-        /* Nama Kecil di Atas */
-        .header-top { background: #000; padding: 5px; text-align: center; border-bottom: 1px solid #1e293b; color: #fbbf24; font-size: 0.6em; letter-spacing: 2px; }
+        /* Gambar Utama */
+        .img-container { width: 100%; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 15px #00f2ff; overflow: hidden; }
+        .img-container img { width: 100%; display: block; }
 
-        /* Background Gambar Utama agar tidak pecah */
-        .bg-container { 
-            width: 100%; 
-            background: url('https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png') no-repeat top center;
-            background-size: contain;
-            padding-top: 60%; /* Memberi ruang untuk gambar radar v6 */
-        }
+        .content { padding: 12px; }
 
-        .main-content { padding: 10px; position: relative; }
+        /* Sinyal Mini */
+        .grid-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .box-mini { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 8px; border-radius: 5px; font-size: 0.6em; border-left: 3px solid #00f2ff; }
 
-        /* Box Sinyal Mini */
-        .signal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 15px; }
-        .mini-box { border: 1px solid #00f2ff; background: rgba(0, 0, 0, 0.8); padding: 5px; border-radius: 4px; font-size: 0.55em; text-align: center; }
-        .cyan { color: #00f2ff; font-weight: bold; }
+        /* Chat Kotak Panjang */
+        .chat-box { border: 2px solid #a3e635; border-radius: 10px; background: #000; margin-bottom: 20px; box-shadow: 0 0 20px rgba(163, 230, 53, 0.2); }
+        .chat-head { background: #a3e635; color: #000; padding: 5px; font-weight: bold; font-size: 0.7em; text-align: center; }
+        .chat-body { padding: 10px; font-size: 0.65em; color: #4ade80; height: 80px; }
 
-        /* Panel Chart (Satelit Pindah Sini & Tidak Menghalangi) */
-        .chart-frame { 
-            border: 2px solid #334155; border-radius: 10px; height: 160px; 
-            margin-bottom: 20px; position: relative; 
-            background: rgba(15, 23, 42, 0.9);
-            box-shadow: inset 0 0 15px #00f2ff;
-            overflow: hidden;
-        }
-        .satelit-img { width: 100%; opacity: 0.4; position: absolute; top: -20px; }
-        .chart-label { position: absolute; bottom: 5px; right: 10px; font-size: 0.5em; color: #00f2ff; }
-
-        /* Chat Kotak Panjang Paling Bawah */
-        .chat-long { 
-            border: 2px solid #a3e635; border-radius: 8px; background: #000; 
-            box-shadow: 0 0 15px rgba(163, 230, 53, 0.3); overflow: hidden;
-        }
-        .chat-h { background: #a3e635; color: #000; padding: 4px; font-weight: bold; font-size: 0.65em; text-align: center; }
-        .chat-b { padding: 10px; font-size: 0.6em; color: #4ade80; line-height: 1.4; }
-
-        .footer { text-align: center; font-size: 0.45em; color: #475569; margin-top: 20px; padding-bottom: 10px; }
+        /* Chart di Paling Bawah agar Tidak Menghalangi */
+        .chart-bottom { border: 2px solid #00f2ff; border-radius: 10px; padding: 10px; background: rgba(0, 242, 255, 0.05); position: relative; }
+        .chart-label { color: #00f2ff; font-size: 0.5em; margin-bottom: 5px; display: block; }
     </style>
 </head>
 <body>
-    <div class="header-top">ADMIN: DRUKANDA</div>
+    <div class="header-drukanda">ADMIN: DRUKANDA</div>
     
-    <div class="bg-container">
-        <div class="main-content">
-            
-            <div class="signal-grid">
-                <div class="mini-box"><span class="cyan">CORE:</span> ACTIVE</div>
-                <div class="mini-box"><span class="cyan">RISK:</span> SECURE</div>
-            </div>
+    <div class="img-container">
+        <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" alt="Quantum Radar">
+    </div>
 
-            <div class="chart-frame">
-                <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="satelit-img">
-                <div style="padding: 20px; text-align: center; font-size: 0.7em; color: #fff;">[ REAL-TIME MOMENTUM ]</div>
-                <div class="chart-label">QUANTUM SATELLITE SYNC</div>
-            </div>
+    <div class="content">
+        <div class="grid-mini">
+            <div class="box-mini"><span style="color:#00f2ff">CORE:</span> ACTIVE</div>
+            <div class="box-mini"><span style="color:#00f2ff">RISK:</span> SECURE</div>
+        </div>
 
-            <div class="chat-long">
-                <div class="chat-h">⚔ QuantumAI Chat Interface ⚔</div>
-                <div class="chat-b">
-                    [CORE] >> Market scan complete.<br>
-                    [USER] >> Access granted, Drukanda.<br>
-                    <span style="color:#fbbf24;">[STATUS] >> Momentum Pulse Active.</span>
-                </div>
+        <div class="chat-box">
+            <div class="chat-head">QUANTUMAI CHAT INTERFACE</div>
+            <div class="chat-body">
+                [CORE] >> Market scan complete.<br>
+                [USER] >> Welcome back, drukanda.<br>
+                [SYSTEM] >> Momentum Pulse Active.
             </div>
+        </div>
 
-            <div class="footer">Developed by dadanrukanda89-lab | 2026</div>
+        <div class="chart-bottom">
+            <span class="chart-label">REAL-TIME SATELLITE CHART</span>
+            <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" style="width:100%; opacity:0.3; filter: grayscale(100%) brightness(200%);">
         </div>
     </div>
 </body>
