@@ -3,64 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 Sulung Workflow</title>
+    <title>QuantumAI - drukanda</title>
     <style>
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; overflow-x: hidden; }
-        .v6-radar { width: 100%; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff; display: block; }
-        .dashboard-container { padding: 10px; background: radial-gradient(circle, rgba(0,242,255,0.1) 0%, #000 90%); }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        .header-drukanda { padding: 5px; text-align: center; font-size: 0.6em; color: #fbbf24; letter-spacing: 3px; border-bottom: 1px solid #1e293b; }
         
-        /* PANEL GRID SEPERTI DI GAMBAR SULUNG */
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .info-box { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.8); padding: 8px; border-radius: 4px; font-size: 0.65em; border-left: 3px solid #00f2ff; }
-        .neon-blue { color: #00f2ff; font-weight: bold; text-transform: uppercase; }
+        /* RADAR V6 UTAMA */
+        .v6-radar { width: 100%; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
-        /* CHAT INTERFACE EXACT COPY */
-        .chat-wrap { 
-            border: 2px solid #a3e635; border-radius: 10px; background: #000; 
-            box-shadow: 0 0 25px rgba(163, 230, 53, 0.3); margin-top: 10px;
+        /* PANEL PENGATURAN */
+        .control-panel { padding: 10px; }
+        .btn-setup { 
+            background: rgba(0, 242, 255, 0.1); color: #00f2ff; border: 1px solid #00f2ff; 
+            width: 100%; padding: 6px; font-size: 0.7em; border-radius: 4px; margin-bottom: 10px;
         }
-        .chat-header { 
-            background: #a3e635; color: #000; padding: 6px 12px; font-weight: bold; 
-            font-size: 0.75em; display: flex; justify-content: space-between;
+
+        /* AREA CHART & SATELIT (BISA TIMBUL) */
+        #chartArea { 
+            display: none; border: 1px solid #334155; border-radius: 10px; 
+            height: 150px; background: rgba(15, 23, 42, 0.9); margin-bottom: 15px;
+            position: relative; overflow: hidden;
         }
-        .chat-log { padding: 12px; height: 110px; overflow-y: auto; font-size: 0.7em; color: #4ade80; line-height: 1.4; border-bottom: 1px solid #1e293b; }
-        .chat-field { padding: 8px 12px; font-size: 0.7em; color: #94a3b8; display: flex; align-items: center; }
-        
-        .footer-text { text-align: center; font-size: 0.55em; color: #475569; margin-top: 25px; letter-spacing: 1px; }
+        .satelit-mini { width: 100%; opacity: 0.6; transform: scale(1.2); }
+
+        /* SINYAL KECIL MANIS */
+        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+        .mini-box { border: 1px solid #1e293b; padding: 5px; font-size: 0.55em; border-left: 2px solid #00f2ff; }
+
+        /* CHAT PANJANG MANIS DI BAWAH */
+        .chat-slim { 
+            border: 2px solid #a3e635; border-radius: 8px; background: #000; 
+            box-shadow: 0 0 15px rgba(163, 230, 53, 0.2); 
+        }
+        .chat-h { background: #a3e635; color: #000; padding: 4px; font-weight: bold; font-size: 0.6em; text-align: center; }
+        .chat-b { padding: 8px; font-size: 0.6em; color: #4ade80; height: 60px; }
     </style>
 </head>
 <body>
+    <div class="header-drukanda">ADMIN: DRUKANDA</div>
+    
     <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-radar">
 
-    <div class="dashboard-container">
-        <div class="info-grid">
-            <div class="info-box"><span class="neon-blue">AI CORE SIGNAL</span><br>BUY / SELL / HOLD</div>
-            <div class="info-box"><span class="neon-blue">RISK ENGINE</span><br>SL / TP / BE ACTIVE</div>
-            <div class="info-box"><span class="neon-blue">SATELLITE</span><br>MOMENTUM SYNCED</div>
-            <div class="info-box"><span class="neon-blue">BACKEND</span><br>CORE SYSTEM ON</div>
+    <div class="control-panel">
+        <button class="btn-setup" onclick="toggleView()">⚙ PENGATURAN CHART (TIMBUL/SEMBUNYI)</button>
+
+        <div id="chartArea">
+            <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="satelit-mini">
+            <div style="position:absolute; bottom:5px; left:10px; font-size:0.5em; color:#00f2ff;">MOMENTUM SYNC...</div>
         </div>
 
-        <div class="chat-wrap">
-            <div class="chat-header">
-                <span>⚔ QuantumAI Chat Interface ⚔</span>
-                <span>[X]</span>
-            </div>
-            <div class="chat-log">
-                [SYSTEM] >> Syncing all ONLINE. Market scan...<br>
-                [WSTEM] >> Synncmnnrriximsg all ONLINE. Market scan...<br>
-                [CORE]   >> Backend system: market scan.<br>
-                [USER]   >> Initiate full-spectrum market scan.<br>
-                <span style="color:#fbbf24;">[STATUS] >> Ready for command.</span>
-            </div>
-            <div class="chat-field">
-                <span style="color:#a3e635; margin-right:5px;">></span>
-                <span>Chat Input | ChatDadanAI:....</span>
-            </div>
+        <div class="mini-grid">
+            <div class="mini-box"><span style="color:#00f2ff;">CORE:</span> ACTIVE</div>
+            <div class="mini-box"><span style="color:#00f2ff;">RISK:</span> SECURE</div>
         </div>
 
-        <div class="footer-text">
-            Developed by dadanrukanda89-lab | QuantumAI Protocol 2026
+        <div class="chat-slim">
+            <div class="chat-h">QUANTUMAI CHAT INTERFACE</div>
+            <div class="chat-b">
+                [CORE] >> Market scan complete.<br>
+                [USER] >> Welcome back, drukanda.
+            </div>
         </div>
     </div>
+
+    <script>
+        function toggleView() {
+            var x = document.getElementById("chartArea");
+            x.style.display = (x.style.display === "none") ? "block" : "none";
+        }
+    </script>
 </body>
 </html>
