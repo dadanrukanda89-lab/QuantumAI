@@ -1,38 +1,53 @@
-backend_gateway/
-├── app/
-│   ├── ai_core/
-│   │   ├── __init__.py
-│   │   └── quantum_engine.py
-│   ├── __init__.py
-│   ├── main.py
-│   └── routers/
-│       └── signals.py
-├── requirements.txt
-└── .env.example
-# quantum_engine.py
-# Otak AI Signal – Quantum Processing Engine
-
+from fastapi import FastAPI
 import numpy as np
 import random
 from datetime import datetime
+from typing import List
 
+app = FastAPI(title="Quantum AI v16 - Starter")
+
+# --- BLOK LOGIKA AI (Quantum Engine) ---
 class QuantumEngine:
     def __init__(self):
         self.signal_history = []
+        self.last_price = 100.0
 
     def generate_signal(self):
-        """Menghasilkan sinyal trading dengan pendekatan pseudo-quantum"""
+        # 1. Ambil data mentah (Simulasi)
         base = random.uniform(-1, 1)
-        timestamp = datetime.utcnow().isoformat()
+        momentum = np.tanh(base * np.pi)
+        
+        # 2. Logika Sederhana (Biar jalan dulu)
+        if momentum > 0.4:
+            trend = "BUY"
+        elif momentum < -0.4:
+            trend = "SELL"
+        else:
+            trend = "WAIT"
+
         signal = {
-            "timestamp": timestamp,
-            "momentum": np.tanh(base * np.pi),
-            "trend": "BUY" if base > 0 else "SELL",
-            "confidence": abs(base)
+            "timestamp": datetime.utcnow().isoformat(),
+            "momentum": round(momentum, 4),
+            "trend": trend,
+            "confidence": f"{round(abs(base) * 100, 2)}%",
+            "status": "ACTIVE"
         }
+        
         self.signal_history.append(signal)
         return signal
 
-    def get_history(self, limit=10):
-        """Ambil riwayat sinyal terakhir"""
-        return self.signal_history[-limit:]
+# Inisialisasi mesin
+engine = QuantumEngine()
+
+# --- BLOK ENDPOINT API ---
+@app.get("/")
+def home():
+    return {"message": "Quantum AI v16 is Running!", "manual": "Go to /signal to generate"}
+
+@app.get("/signal")
+def get_signal():
+    return engine.generate_signal()
+
+@app.get("/history")
+def get_history():
+    return engine.get_history(limit=5)
