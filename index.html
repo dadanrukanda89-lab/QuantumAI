@@ -7,63 +7,58 @@
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
         
-        /* 1. Nama DRUKANDA Paling Atas */
-        .admin-header { text-align: center; padding: 8px; color: #fbbf24; font-size: 0.65em; border-bottom: 1px solid #1e293b; letter-spacing: 2px; }
+        /* Nama ADMIN: DRUKANDA Kecil di Atas */
+        .admin-tag { text-align: center; padding: 5px; color: #fbbf24; font-size: 0.6em; border-bottom: 1px solid #1e293b; letter-spacing: 2px; }
 
-        /* 2. Gambar Radar Utama (V6) */
-        .v6-radar { width: 100%; border-bottom: 2px solid #00f2ff; display: block; }
+        /* Gambar Radar Utama (Link Langsung) */
+        .radar-top { width: 100%; border-bottom: 2px solid #00f2ff; display: block; box-shadow: 0 0 10px #00f2ff; }
 
-        .container { padding: 12px; }
+        .content { padding: 10px; }
 
-        /* 3. Sinyal Mini (Kecil Biar Gak Menuhi Layar) */
-        .signal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .mini-card { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 6px; border-radius: 4px; font-size: 0.55em; border-left: 2px solid #00f2ff; }
+        /* Sinyal Mini - Gak Makan Tempat */
+        .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .mini-card { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 5px; border-radius: 4px; font-size: 0.55em; border-left: 2px solid #00f2ff; }
 
-        /* 4. Chart Panel (Bekas Chart yang Kamu Mau) */
-        .chart-panel { 
-            border: 1px solid #334155; border-radius: 8px; height: 140px; 
-            margin-bottom: 15px; background: rgba(0, 242, 255, 0.05);
-            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+        /* Kotak Chart/Satelit (Pindah Sini & Tidak Nutup) */
+        .chart-box { 
+            border: 1px solid #334155; border-radius: 8px; height: 130px; 
+            margin-bottom: 15px; background: #000; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
-        .satelit-bg { width: 80%; opacity: 0.4; filter: hue-rotate(180deg); }
-        .label-chart { position: absolute; top: 5px; left: 8px; font-size: 0.5em; color: #00f2ff; }
+        .satelit-img { width: 90%; opacity: 0.5; filter: hue-rotate(180deg); }
 
-        /* 5. Chat Kotak Panjang Paling Bawah (Manis & Gak Nutup) */
-        .chat-final { 
+        /* Chat Kotak Panjang Manis - Paling Bawah */
+        .chat-bottom { 
             border: 2px solid #a3e635; border-radius: 8px; background: #000; 
             box-shadow: 0 0 15px rgba(163, 230, 53, 0.2); 
         }
-        .chat-head { background: #a3e635; color: #000; padding: 4px; font-weight: bold; font-size: 0.65em; text-align: center; }
-        .chat-body { padding: 8px; font-size: 0.6em; color: #4ade80; line-height: 1.4; height: 60px; }
-
-        .footer { text-align: center; font-size: 0.45em; color: #475569; margin-top: 15px; }
+        .chat-h { background: #a3e635; color: #000; padding: 3px; font-weight: bold; font-size: 0.6em; text-align: center; }
+        .chat-b { padding: 8px; font-size: 0.6em; color: #4ade80; height: 50px; overflow-y: auto; }
     </style>
 </head>
 <body>
-    <div class="admin-header">ADMIN: DRUKANDA</div>
+    <div class="admin-tag">ADMIN: DRUKANDA</div>
     
-    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-radar">
+    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="radar-top">
 
-    <div class="container">
-        <div class="signal-row">
-            <div class="mini-card"><span style="color:#00f2ff">SIGNAL:</span> BUY</div>
+    <div class="content">
+        <div class="signal-grid">
+            <div class="mini-card"><span style="color:#00f2ff">STATUS:</span> ACTIVE</div>
             <div class="mini-card"><span style="color:#00f2ff">RISK:</span> SECURE</div>
         </div>
 
-        <div class="chart-panel">
-            <span class="label-chart">MOMENTUM RADAR</span>
-            <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="satelit-bg">
+        <div class="chart-box">
+            <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="satelit-img">
+            <div style="position:absolute; top:5px; left:8px; font-size:0.5em; color:#00f2ff;">RADAR SYNCED</div>
         </div>
 
-        <div class="chat-final">
-            <div class="chat-head">⚔ QuantumAI Chat Interface ⚔</div>
-            <div class="chat-body">
-                [SYSTEM] >> Admin drukanda Logged In.<br>
-                [STATUS] >> All Systems Functional.
+        <div class="chat-bottom">
+            <div class="chat-h">QUANTUMAI CHAT INTERFACE</div>
+            <div class="chat-b">
+                [SYSTEM] >> Drukanda Logged In.<br>
+                [CORE]   >> All systems online.
             </div>
         </div>
-
-        <div class="footer">Developed by dadanrukanda89-lab | 2026</div>
     </div>
 </body>
 </html>
