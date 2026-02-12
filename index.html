@@ -3,94 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6-v15 Hybrid Terminal</title>
+    <title>QuantumAI v6-v15 Hybrid</title>
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
-        .main-visual { width: 100%; height: auto; display: block; border-bottom: 2px solid #00f2ff; }
-        
-        .engine-panel { background: rgba(2, 6, 23, 0.98); border: 2px solid #00f2ff; margin: 10px; padding: 12px; border-radius: 8px; box-shadow: 0 0 25px rgba(0, 242, 255, 0.5); }
-        .v15-header { color: #fbbf24; font-size: 0.9em; font-weight: bold; border-bottom: 1px solid #1e293b; padding-bottom: 5px; margin-bottom: 10px; text-transform: uppercase; text-align: center; }
-        
-        .running-trade { background: #0f172a; padding: 10px; border-radius: 4px; margin-bottom: 15px; border-left: 4px solid #fbbf24; }
-        .trade-grid { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 10px; font-size: 0.75em; }
-        
-        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.7em; margin-bottom: 15px; }
-        .data-row { display: flex; justify-content: space-between; border-bottom: 1px solid #0f172a; padding: 4px 0; }
-        .val { color: #00f2ff; font-weight: bold; }
-        .up { color: #4ade80; } .down { color: #f87171; }
-
-        .chat-log { background: #000; height: 180px; overflow-y: auto; padding: 10px; font-size: 0.7em; color: #4ade80; text-align: left; border: 1px solid #1e293b; border-radius: 4px; line-height: 1.4; }
-        .footer { font-size: 0.6em; color: #475569; padding: 15px; text-align: center; letter-spacing: 2px; }
+        .v6-header-img { 
+            width: 100%; 
+            display: block; 
+            border-bottom: 2px solid #00f2ff; 
+            box-shadow: 0 0 20px #00f2ff; 
+        }
+        .engine-panel { 
+            border: 2px solid #00f2ff; 
+            margin: 10px; 
+            padding: 15px; 
+            border-radius: 8px; 
+            background: rgba(0, 242, 255, 0.05);
+        }
+        .v15-header { color: #fbbf24; text-align: center; font-weight: bold; margin-bottom: 10px; }
+        .log-box { 
+            background: #000; 
+            height: 180px; 
+            overflow-y: auto; 
+            padding: 10px; 
+            font-size: 0.75em; 
+            color: #4ade80; 
+            border: 1px solid #1e293b; 
+        }
+        .trade-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1e293b; }
+        .price { color: #00f2ff; }
     </style>
 </head>
- <body>
+<body>
+    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-header-img">
 
-​<img src="1000061290.png" style="width:100%; display:block; border-bottom:2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff;">
     <div class="engine-panel">
-        <div class="v15-header">⚡ QUANTUM CORE v15 - HYPER ACTIVE ⚡</div>
+        <div class="v15-header">⚡ QUANTUM CORE V15 - HYPER ACTIVE ⚡</div>
+        <div class="trade-row"><span>XAUUSD</span><span class="price">2024.86</span><span style="color:#4ade80">+0.22%</span></div>
+        <div class="trade-row"><span>BTCUSD</span><span class="price">52152.00</span><span style="color:#f87171">-0.08%</span></div>
         
-        <div class="running-trade">
-            <div class="trade-grid">
-                <span>XAUUSD</span>
-                <span id="goldPrice" class="val">2024.45</span>
-                <span id="goldChange" class="up">+0.22%</span>
-            </div>
-            <div class="trade-grid" style="margin-top:5px;">
-                <span>BTCUSD</span>
-                <span id="btcPrice" class="val">52140.80</span>
-                <span id="btcChange" class="down">-0.08%</span>
-            </div>
-        </div>
-
-        <div class="market-grid">
-            <div class="data-row"><span>ENGINE:</span><span class="val" style="color:#fbbf24">v15 HYBRID</span></div>
-            <div class="data-row"><span>TIME FRAME:</span><span class="val">M15 / H4 / D1</span></div>
-            <div class="data-row"><span>RSI (14):</span><span class="val" id="rsiVal">62.1</span></div>
-            <div class="data-row"><span>SECURITY:</span><span class="val">MIRROR SHIELD</span></div>
-        </div>
-
-        <div class="chat-log" id="logBox">
+        <div class="log-box">
             [SYS] >> Loading Quantum v15 Algorithms...<br>
             [SEC] >> Mirror Protocol (Bola Memantul) Active.<br>
             [AI] >> V6 Interface Merged with V15 Core.<br>
             [USER] >> Dadan Rukanda: Admin Access Granted.<br>
+            [REPAIR] >> Self-Healing: Integrity Check 100%.<br>
+            [OK] >> Mesin Cuan 14h: Running Smoothly...
         </div>
     </div>
-
-    <div class="footer">POWERED BY DADANRUKANDA89-LAB | V15 ENGINE | 2026</div>
-
-    <script>
-        function updatePrices() {
-            const gold = 2024 + Math.random();
-            const btc = 52140 + (Math.random() * 15);
-            const rsi = 55 + (Math.random() * 15);
-            
-            document.getElementById('goldPrice').innerText = gold.toFixed(2);
-            document.getElementById('btcPrice').innerText = btc.toFixed(2);
-            document.getElementById('rsiVal').innerText = rsi.toFixed(1);
-        }
-
-        const updates = [
-            "[v15] >> Analyzing Satellite Momentum...",
-            "[REPAIR] >> Self-Healing: Integrity Check 100%.",
-            "[SEC] >> Reflected Attack (Mirror-Shield-Active).",
-            "[v15] >> Signal Generated: STRONG BUY.",
-            "[INFO] >> Server Jakarta-London-NY: SYNCED.",
-            "[OK] >> Mesin Cuan 14h: Running Smoothly."
-        ];
-
-        let i = 0;
-        setInterval(() => {
-            updatePrices();
-            const entry = document.createElement('div');
-            entry.innerHTML = updates[i % updates.length];
-            document.getElementById('logBox').appendChild(entry);
-            document.getElementById('logBox').scrollTop = logBox.scrollHeight;
-            i++;
-        }, 3000);
-    </script>
 </body>
 </html>
+
 
 
 
