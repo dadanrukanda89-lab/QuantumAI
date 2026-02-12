@@ -3,42 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6-v15 Hybrid</title>
+    <title>QuantumAI v6 Sulung Workflow</title>
     <style>
         body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; overflow-x: hidden; }
-        .v6-radar { width: 100%; display: block; border-bottom: 2px solid #00f2ff; box-shadow: 0 0 20px #00f2ff; }
-        .engine-panel { border: 2px solid #00f2ff; margin: 15px; padding: 15px; border-radius: 12px; background: rgba(0, 242, 255, 0.05); box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.2); }
-        .v15-header { color: #fbbf24; text-align: center; font-weight: bold; text-shadow: 0 0 8px #fbbf24; margin-bottom: 15px; }
-        .trade-data { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1e293b; font-size: 0.9em; }
-        .price { color: #00f2ff; font-weight: bold; }
-        .log-screen { background: #000; height: 180px; overflow-y: auto; padding: 10px; font-size: 0.75em; color: #4ade80; border: 1px solid #00f2ff; margin-top: 15px; border-radius: 5px; }
+        
+        /* HEADER RADAR FUTURISTIK */
+        .v6-radar-img { 
+            width: 100%; 
+            display: block; 
+            border-bottom: 2px solid #00f2ff; 
+            box-shadow: 0 0 20px #00f2ff; 
+            filter: hue-rotate(10deg) brightness(1.2);
+        }
+
+        /* CONTAINER UTAMA */
+        .dashboard { padding: 15px; background: linear-gradient(180deg, rgba(0,242,255,0.1) 0%, #000 100%); }
+
+        /* PANEL V15 HYPER ACTIVE */
+        .v15-panel { 
+            border: 2px solid #00f2ff; 
+            border-radius: 15px; 
+            background: rgba(0, 0, 0, 0.85); 
+            padding: 20px; 
+            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.3), 0 0 15px rgba(0, 242, 255, 0.2);
+            position: relative;
+        }
+
+        .status-header { 
+            color: #fbbf24; 
+            text-align: center; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            text-shadow: 0 0 10px #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        /* DATA MARKET KEDAP-KEDIP */
+        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .data-card { background: rgba(30, 41, 59, 0.5); padding: 10px; border-radius: 8px; border-left: 4px solid #00f2ff; }
+        .label { font-size: 0.7em; color: #94a3b8; }
+        .value { color: #00f2ff; font-weight: bold; font-size: 1.1em; }
+
+        /* MONITORING LOG */
+        .quantum-log { 
+            background: #050505; 
+            height: 200px; 
+            overflow-y: auto; 
+            padding: 12px; 
+            font-size: 0.75em; 
+            color: #4ade80; 
+            border: 1px solid #1e293b;
+            border-radius: 5px;
+            line-height: 1.5;
+        }
+
         .footer { text-align: center; font-size: 0.6em; color: #475569; margin-top: 20px; text-transform: uppercase; }
+        
+        /* ANIMASI SCANNING */
+        @keyframes scan { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .scanning { animation: scan 2s infinite; color: #00f2ff; }
     </style>
 </head>
 <body>
-    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-radar">
 
-    <div class="engine-panel">
-        <div class="v15-header">⚡ QUANTUM CORE V15 - HYPER ACTIVE ⚡</div>
-        <div class="trade-data"><span>XAUUSD</span><span class="price">2024.86</span><span style="color:#4ade80">+0.22%</span></div>
-        <div class="trade-data"><span>BTCUSD</span><span class="price">52152.00</span><span style="color:#f87171">-0.08%</span></div>
-        <div class="log-screen">
-            [SYS] >> DEPLOYING V6 RADAR INTERFACE...<br>
-            [AI]  >> CONNECTING TO V15 HYBRID ENGINE...<br>
-            [SEC] >> MIRROR PROTOCOL ACTIVE (BOLA MEMANTUL).<br>
-            [USER]>> ADMIN: DADAN RUKANDA ACCESS GRANTED.<br>
-            [INFO]>> SIGNAL: STRONG BUY CONFIRMED.<br>
-            [OK]  >> SELF-HEALING SYSTEM: ONLINE 100%.<br>
-            [LOG] >> MONITORING QUANTUM TRADES...
+    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="v6-radar-img">
+
+    <div class="dashboard">
+        <div class="v15-panel">
+            <div class="status-header">⚡ QUANTUM CORE V15 - HYPER ACTIVE ⚡</div>
+            
+            <div class="market-grid">
+                <div class="data-card"><div class="label">XAUUSD</div><div class="value">2024.86</div></div>
+                <div class="data-card"><div class="label">BTCUSD</div><div class="value">52152.00</div></div>
+            </div>
+
+            <div class="quantum-log">
+                <span class="scanning">[AI] >> INITIALIZING SULUNG WORKFLOW...</span><br>
+                [SYS] >> SATELLITE SIGNAL SYNCED...<br>
+                [SEC] >> MIRROR PROTOCOL (BOLA MEMANTUL) ACTIVE.<br>
+                [AI]  >> ANALYZING MOMENTUM PULSE...<br>
+                [USER]>> ADMIN: DADAN RUKANDA ACCESS GRANTED.<br>
+                [OK]  >> NEON FUTURISTIC UI LOADED.<br>
+                [LOG] >> MONITORING MARKET 24/7...
+            </div>
         </div>
+        <div class="footer">POWERED BY DADANRUKANDA89-LAB | V15 ENGINE | 2026</div>
     </div>
-    <div class="footer">POWERED BY DADANRUKANDA89-LAB | 2026</div>
+
 </body>
 </html>
-
-
-
-
-
-
-
