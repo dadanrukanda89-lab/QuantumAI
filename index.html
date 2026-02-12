@@ -1,61 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantumAI v6</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="style.css" />
+
+<style>
+body{
+margin:0;
+font-family:monospace;
+background:radial-gradient(circle at top,#0a0f1f,#000);
+color:cyan;
+overflow-x:hidden;
+}
+
+/* STAR EFFECT */
+body:before{
+content:"";
+position:fixed;
+width:100%;
+height:100%;
+background:url('https://www.transparenttextures.com/patterns/stardust.png');
+opacity:0.3;
+z-index:-1;
+}
+
+.title{
+text-align:center;
+font-size:28px;
+margin-top:20px;
+text-shadow:0 0 20px cyan;
+}
+
+.container{
+padding:20px;
+padding-bottom:80px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-top:30px;
+}
+
+.box{
+padding:15px;
+border-radius:12px;
+background:rgba(0,255,255,0.05);
+border:1px solid cyan;
+}
+
+.glow{box-shadow:0 0 20px cyan;}
+.blue{box-shadow:0 0 20px blue;}
+.purple{box-shadow:0 0 20px purple;}
+.pink{box-shadow:0 0 20px deeppink;}
+
+.big{
+font-size:22px;
+font-weight:bold;
+}
+
+.chart-box{
+margin-top:30px;
+padding:20px;
+border:1px solid cyan;
+border-radius:12px;
+box-shadow:0 0 20px cyan;
+text-align:center;
+}
+
+canvas{
+background:#111;
+border-radius:50%;
+}
+
+/* CHAT MINI 2 BARIS */
+.chat-mini{
+position:fixed;
+bottom:0;
+width:100%;
+background:black;
+border-top:1px solid cyan;
+}
+
+#chat-log{
+height:25px;
+font-size:12px;
+padding:5px;
+overflow:hidden;
+}
+
+#chat-input{
+width:100%;
+border:none;
+padding:6px;
+background:black;
+color:cyan;
+font-size:14px;
+outline:none;
+}
+</style>
 </head>
 
-<body class="bg-black text-cyan-400">
+<body>
 
-<div class="p-4">
+<h1 class="title">QuantumAI v6 Control Panel</h1>
 
-    <!-- HEADER -->
-    <h1 class="text-3xl font-bold text-center neon">
-        QuantumAI v6 Control Panel
-    </h1>
+<div class="container">
 
-    <!-- SIGNAL + RISK -->
-    <div class="grid grid-cols-4 gap-4 mt-6">
+<div class="grid">
 
-        <div class="card">
-            <h2>AI Core Signal</h2>
-            <p id="signal" class="text-2xl font-bold">WAITING...</p>
-        </div>
+<div class="box glow">
+<h3>AI Core Signal</h3>
+<p id="signal" class="big">WAITING...</p>
+</div>
 
-        <div class="card">
-            <h2>Momentum Pulse</h2>
-            <p id="momentum">Scanning...</p>
-        </div>
+<div class="box blue">
+<h3>Satellite Momentum</h3>
+<p id="momentum">Scanning...</p>
+</div>
 
-        <div class="card">
-            <h2>Risk Engine</h2>
-            <p>SL / TP / BE</p>
-        </div>
+<div class="box purple">
+<h3>Risk Engine</h3>
+<p>SL / TP / BE</p>
+</div>
 
-        <div class="card">
-            <h2>News Intelligence</h2>
-            <p>Live Feed</p>
-        </div>
-
-    </div>
-
-    <!-- CHART -->
-    <div class="card mt-6">
-        <h2>Real Time Chart</h2>
-        <canvas id="chart"></canvas>
-    </div>
+<div class="box pink">
+<h3>News Intelligence</h3>
+<p>Breaking Alerts</p>
+</div>
 
 </div>
 
-<!-- 🔥 CHAT PANEL (2 BARIS FIXED BOTTOM) -->
-<div class="chat-panel">
-    <div id="chat-log" class="chat-log"></div>
-    <input type="text" id="chat-input" placeholder="Type command..." />
+<div class="chart-box">
+<h3>Radar Pulse</h3>
+<canvas id="radar" width="200" height="200"></canvas>
 </div>
 
-<script src="app.js"></script>
+</div>
+
+<!-- CHAT -->
+<div class="chat-mini">
+<div id="chat-log"></div>
+<input type="text" id="chat-input" placeholder="Ready for command...">
+</div>
+
+<script>
+const signal=document.getElementById("signal");
+const momentum=document.getElementById("momentum");
+const chatLog=document.getElementById("chat-log");
+const chatInput=document.getElementById("chat-input");
+const canvas=document.getElementById("radar");
+const ctx=canvas.getContext("2d");
+
+/* SIGNAL UPDATE */
+function updateSignal(){
+const arr=["BUY","SELL","HOLD"];
+const pick=arr[Math.floor(Math.random()*3)];
+signal.innerText=pick;
+
+if(pick==="BUY") signal.style.color="lime";
+if(pick==="SELL") signal.style.color="red";
+if(pick==="HOLD") signal.style.color="yellow";
+}
+setInterval(updateSignal,3000);
+
+/* MOMENTUM */
+setInterval(()=>{
+momentum.innerText="Pulse: "+Math.floor(Math.random()*100);
+},2000);
+
+/* CHAT */
+chatInput.addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+chatLog.innerText=">> "+chatInput.value;
+chatInput.value="";
+}
+});
+
+/* RADAR ANIMATION */
+let radius=0;
+function drawRadar(){
+ctx.clearRect(0,0,200,200);
+ctx.beginPath();
+ctx.arc(100,100,radius,0,Math.PI*2);
+ctx.strokeStyle="cyan";
+ctx.stroke();
+radius+=2;
+if(radius>100) radius=0;
+requestAnimationFrame(drawRadar);
+}
+drawRadar();
+</script>
+
 </body>
 </html>
