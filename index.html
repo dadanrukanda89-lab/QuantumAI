@@ -1,64 +1,575 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI - drukanda</title>
-    <style>
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 0; }
-        
-        /* Nama ADMIN: DRUKANDA Kecil di Atas */
-        .admin-tag { text-align: center; padding: 5px; color: #fbbf24; font-size: 0.6em; border-bottom: 1px solid #1e293b; letter-spacing: 2px; }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QuantumAI v6 Sulung Futuristik (merged v15)</title>
+  <meta name="description" content="QuantumAI v6 Sulung Futuristik — dashboard + Quantum ChatGPT (frontend).">
+  <style>
+    /* ---------- RESET & BASE ---------- */
+    :root{
+      --bg:#071027;
+      --panel:#0b1220;
+      --accent:#00e0ff;
+      --accent-2:#7b61ff;
+      --glass: rgba(255,255,255,0.04);
+      --muted: rgba(255,255,255,0.6);
+      --glass-2: rgba(255,255,255,0.03);
+      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:
+      radial-gradient(1200px 500px at 10% 10%, rgba(123,97,255,0.07), transparent 6%),
+      linear-gradient(180deg, #02101a 0%, #041226 40%, #071027 100%);
+      color: #e6f7ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      font-size:15px;
+      }
 
-        /* Gambar Radar Utama (Link Langsung) */
-        .radar-top { width: 100%; border-bottom: 2px solid #00f2ff; display: block; box-shadow: 0 0 10px #00f2ff; }
+    a{color:var(--accent)}
+    .wrap{
+      max-width:1220px;
+      margin:28px auto;
+      padding:20px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:20px;
+    }
 
-        .content { padding: 10px; }
+    /* ---------- Header ---------- */
+    header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:18px;
+      border-radius:14px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 6px 30px rgba(3,8,20,0.6);
+      position:relative;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .brand{
+      display:flex;flex-direction:column;
+      gap:4px;
+    }
+    .brand h1{margin:0;font-size:20px;letter-spacing:0.6px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
 
-        /* Sinyal Mini - Gak Makan Tempat */
-        .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .mini-card { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 5px; border-radius: 4px; font-size: 0.55em; border-left: 2px solid #00f2ff; }
+    /* satellite (decor) */
+    .sat-wrap{margin-left:auto; min-width:320px; height:80px; display:flex;align-items:center;justify-content:flex-end}
+    .sat-svg{width:300px;height:80px;display:block;filter:drop-shadow(0 8px 18px rgba(0,0,0,0.6))}
 
-        /* Kotak Chart/Satelit (Pindah Sini & Tidak Nutup) */
-        .chart-box { 
-            border: 1px solid #334155; border-radius: 8px; height: 130px; 
-            margin-bottom: 15px; background: #000; position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .satelit-img { width: 90%; opacity: 0.5; filter: hue-rotate(180deg); }
+    /* ---------- Left: main panel ---------- */
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:14px;padding:18px;
+      min-height:520px;
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;flex-direction:column;gap:12px;
+    }
 
-        /* Chat Kotak Panjang Manis - Paling Bawah */
-        .chat-bottom { 
-            border: 2px solid #a3e635; border-radius: 8px; background: #000; 
-            box-shadow: 0 0 15px rgba(163, 230, 53, 0.2); 
-        }
-        .chat-h { background: #a3e635; color: #000; padding: 3px; font-weight: bold; font-size: 0.6em; text-align: center; }
-        .chat-b { padding: 8px; font-size: 0.6em; color: #4ade80; height: 50px; overflow-y: auto; }
-    </style>
+    .title-row{display:flex;gap:12px;align-items:center}
+    .title-row h2{margin:0}
+    .pill{background:linear-gradient(90deg,var(--accent),var(--accent-2)); padding:6px 10px;border-radius:999px;font-weight:600;font-size:13px;color:#001b22}
+
+    /* big long execution box */
+    .long-box{
+      background:linear-gradient(180deg,var(--glass),var(--glass-2));
+      border-radius:12px;padding:14px; flex:1; overflow:auto;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    textarea#exec{
+      width:100%;height:260px;resize:vertical;
+      background:transparent;border:none;outline:none;color:inherit;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:14px;line-height:1.5;
+    }
+
+    .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
+    button{
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      color:var(--accent);border:1px solid rgba(255,255,255,0.03);
+      padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    button.ghost{color:var(--muted);border:1px dashed rgba(255,255,255,0.03)}
+    button.danger{color:#ff9b9b}
+
+    .status-bar{margin-left:auto;color:var(--muted);font-size:13px}
+
+    /* console + logs */
+    .console{
+      margin-top:12px;border-radius:10px;padding:10px;background:rgba(0,0,0,0.12);
+      font-family: ui-monospace, monospace; font-size:13px; color:#e6f7ff; height:120px; overflow:auto;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    /* ---------- Right: sidebar ---------- */
+    .sidebar{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:14px;padding:14px; height:100%;
+      border:1px solid rgba(255,255,255,0.03); display:flex;flex-direction:column;gap:12px;
+    }
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .muted{color:var(--muted);font-size:13px}
+    .stat-grid{display:flex;gap:12px;align-items:center}
+
+    /* chat area (bottom of sidebar but full width on small) */
+    .chat{
+      grid-column:2; /* by default right */
+    }
+
+    .chat-box{display:flex;flex-direction:column;gap:8px}
+    .chat-log{height:240px;overflow:auto;background:rgba(0,0,0,0.12);padding:10px;border-radius:8px;font-family:inherit;border:1px solid rgba(255,255,255,0.03)}
+    .chat-input{display:flex;gap:8px}
+    input.chat-text{
+      flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;
+    }
+
+    /* small responsive */
+    @media (max-width:980px){
+      .wrap{grid-template-columns:1fr; padding:12px}
+      .sat-wrap{display:none}
+      .sidebar{order:2}
+      .panel{order:1}
+      .chat{grid-column:1}
+    }
+
+    /* ---------- fancy animated orbiting satellite ---------- */
+    .orbit{
+      position:relative;width:300px;height:80px;
+    }
+    .sat{
+      position:absolute; left:20px; top:0; width:20px;height:20px;border-radius:50%; background:linear-gradient(135deg,#fff,#7b61ff);
+      transform-origin: 140px 40px;
+      animation: orbit 6s linear infinite;
+      box-shadow:0 8px 18px rgba(123,97,255,0.18),0 2px 6px rgba(0,0,0,0.6);
+    }
+    .sat::after{content:"";position:absolute;inset:0;border-radius:50%;filter:blur(6px);opacity:0.6}
+    .trail{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+    @keyframes orbit{
+      from{transform:rotate(0deg) translateX(140px) rotate(0deg)}
+      to{transform:rotate(360deg) translateX(140px) rotate(-360deg)}
+    }
+
+    /* momentum glows */
+    .pulse{
+      position:absolute;right:16px;top:12px;width:56px;height:56px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(0,224,255,0.35), transparent 20%),
+                  radial-gradient(circle at 70% 70%, rgba(123,97,255,0.2), transparent 30%);
+      filter: blur(4px);opacity:0.9;
+      animation: pulse 2.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%{transform:scale(1);opacity:0.9}
+      50%{transform:scale(1.18);opacity:0.6}
+      100%{transform:scale(1);opacity:0.9}
+    }
+
+    /* micro UI */
+    .meta-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .small{font-size:13px;color:var(--muted)}
+    .tag{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
+
+  </style>
 </head>
 <body>
-    <div class="admin-tag">ADMIN: DRUKANDA</div>
-    
-    <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="radar-top">
+  <div class="wrap">
 
-    <div class="content">
-        <div class="signal-grid">
-            <div class="mini-card"><span style="color:#00f2ff">STATUS:</span> ACTIVE</div>
-            <div class="mini-card"><span style="color:#00f2ff">RISK:</span> SECURE</div>
+    <!-- header / brand -->
+    <header>
+      <div class="brand">
+        <h1>QuantumAI <span style="opacity:.85;font-weight:600">v6 Sulung Futuristik</span></h1>
+        <p class="muted">Integrated with v15 modules • Quantum ChatGPT assistant • Auto-execution engine (frontend)</p>
+      </div>
+
+      <div class="pill">Merged • v6 ↔ v15</div>
+
+      <div class="sat-wrap" aria-hidden="true">
+        <!-- small animated orbiting satellite -->
+        <div class="orbit">
+          <svg class="sat-svg" viewBox="0 0 300 80" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#00e0ff" />
+                <stop offset="1" stop-color="#7b61ff" />
+              </linearGradient>
+            </defs>
+            <g>
+              <ellipse cx="150" cy="40" rx="140" ry="22" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1.2"/>
+            </g>
+          </svg>
+          <div class="sat"></div>
+          <div class="trail"></div>
+        </div>
+      </div>
+
+      <div class="pulse" title="momentum"></div>
+    </header>
+
+    <!-- left main -->
+    <main class="panel" aria-labelledby="main-title">
+      <div class="title-row">
+        <h2 id="main-title">Command & Execution Console</h2>
+        <div class="meta-row" style="margin-left:8px">
+          <div class="tag small">Auto-exec ready</div>
+          <div class="small" style="margin-left:6px;color:var(--muted)">Mode: <strong style="color:var(--accent)">Simulate / Live</strong></div>
+        </div>
+        <div class="status-bar" id="engine-status">Idle</div>
+      </div>
+
+      <div class="long-box">
+        <!-- big long command box (user pastes strategy, script, or JSON) -->
+        <textarea id="exec" placeholder="Paste strategy / script / JSON here — everything will be parsed and prepared for execution. Example: { 'name':'sateliteMomentum','type':'trade','params':{...} }"></textarea>
+
+        <div class="controls">
+          <button id="btn-run">▶ Execute</button>
+          <button id="btn-sim" class="ghost">🛰️ Simulate</button>
+          <button id="btn-stop" class="danger">■ Stop</button>
+          <button id="btn-clear" class="ghost">Clear</button>
+          <div style="width:8px"></div>
+          <button id="btn-save" class="ghost">Save (local)</button>
+
+          <div style="flex:1"></div>
+          <div class="small muted">Engine: <strong id="engine-mode">SIM</strong></div>
         </div>
 
-        <div class="chart-box">
-            <img src="https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000061290.png" class="satelit-img">
-            <div style="position:absolute; top:5px; left:8px; font-size:0.5em; color:#00f2ff;">RADAR SYNCED</div>
+        <div class="console" id="console">
+          <!-- log lines will appear here -->
+          <div style="opacity:.6">Console initialized — awaiting commands...</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- right sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="small muted">System</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+          <div style="font-weight:700;font-size:20px">QuantumAI</div>
+          <div style="margin-left:auto;text-align:right">
+            <div class="small muted">Version</div>
+            <div style="font-weight:800">v6 • Sulung • merged-v15</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="small muted">Telemetry</div>
+        <div class="stat-grid" style="margin-top:8px">
+          <div>
+            <div style="font-weight:700">0</div>
+            <div class="small muted">Active Orders</div>
+          </div>
+          <div>
+            <div style="font-weight:700">0</div>
+            <div class="small muted">Alerts</div>
+          </div>
+          <div>
+            <div style="font-weight:700">—</div>
+            <div class="small muted">Lat (ms)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="small muted">Quick Actions</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="act-1" class="ghost">Load Satellite Momentum</button>
+          <button id="act-2" class="ghost">Inject v15 Modules</button>
+        </div>
+      </div>
+
+      <div class="card chat" id="quantum-chat">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Quantum ChatGPT</div>
+          <div class="small muted">Assistant • Auto mode</div>
         </div>
 
-        <div class="chat-bottom">
-            <div class="chat-h">QUANTUMAI CHAT INTERFACE</div>
-            <div class="chat-b">
-                [SYSTEM] >> Drukanda Logged In.<br>
-                [CORE]   >> All systems online.
-            </div>
+        <div class="chat-box" style="margin-top:10px">
+          <div class="chat-log" id="chat-log" aria-live="polite">
+            <div style="opacity:.6">Quantum ChatGPT ready. Ask or press Execute to let assistant analyze command.</div>
+          </div>
+
+          <div class="chat-input">
+            <input class="chat-text" id="chat-text" placeholder="Ask Quantum ChatGPT (ex: explain 'sateliteMomentum' params)"/>
+            <button id="chat-send">Send</button>
+          </div>
+
+          <div class="small muted" style="margin-top:6px">Note: Frontend-only demo. Connect <em>API_ENDPOINT</em> below to enable real ChatGPT responses.</div>
         </div>
-    </div>
+      </div>
+
+      <div class="card">
+        <div class="small muted">Integration</div>
+        <div style="margin-top:8px">
+          <div class="small muted">API Endpoint</div>
+          <input id="api-endpoint" placeholder="https://your-server.example/api/ai" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:inherit" />
+          <div class="small muted" style="margin-top:6px">API Key (if needed)</div>
+          <input id="api-key" placeholder="Bearer TOKEN..." style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:inherit" />
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- ========== JS: frontend logic ========== -->
+  <script>
+    // ---------- Utilities ----------
+    const $ = sel => document.querySelector(sel);
+    const logConsole = msg => {
+      const c = $('#console');
+      const time = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.textContent = `[${time}] ${msg}`;
+      c.appendChild(line);
+      c.scrollTop = c.scrollHeight;
+    };
+
+    const appendChat = (who, text) => {
+      const log = $('#chat-log');
+      const el = document.createElement('div');
+      el.style.marginBottom = '8px';
+      el.innerHTML = '<strong style="color:var(--accent)">'+who+':</strong> <span style="margin-left:8px">'+escapeHtml(text)+'</span>';
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+    };
+
+    function escapeHtml(s){
+      return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    // ---------- state ----------
+    let engineRunning = false;
+    let engineMode = 'SIM'; // SIM or LIVE
+    let engineInterval = null;
+
+    // ---------- DOM refs ----------
+    const execBox = $('#exec');
+    const btnRun = $('#btn-run');
+    const btnStop = $('#btn-stop');
+    const btnSim = $('#btn-sim');
+    const btnClear = $('#btn-clear');
+    const btnSave = $('#btn-save');
+    const engineStatus = $('#engine-status');
+    const engineModeLabel = $('#engine-mode');
+
+    // chat
+    const chatSend = $('#chat-send');
+    const chatText = $('#chat-text');
+
+    // integr
+    const apiEndpointInput = $('#api-endpoint');
+    const apiKeyInput = $('#api-key');
+
+    // ---------- main actions ----------
+    btnRun.addEventListener('click', () => startEngine(false));
+    btnSim.addEventListener('click', () => startEngine(true));
+    btnStop.addEventListener('click', stopEngine);
+    btnClear.addEventListener('click', ()=> execBox.value = '');
+    btnSave.addEventListener('click', saveLocal);
+
+    document.getElementById('act-1').addEventListener('click', loadSatelliteMomentum);
+    document.getElementById('act-2').addEventListener('click', injectV15);
+
+    chatSend.addEventListener('click', async () => {
+      const q = chatText.value.trim();
+      if(!q) return;
+      appendChat('You', q);
+      chatText.value = '';
+      // try call backend if endpoint set
+      const endpoint = apiEndpointInput.value.trim();
+      if(!endpoint){
+        appendChat('Quantum', 'API endpoint not configured. (This is a frontend demo response) — Suggestion: attach this command to engine.Execute()');
+        return;
+      }
+      appendChat('Quantum','Thinking…');
+      try{
+        const res = await callAiEndpoint(endpoint, {prompt:q});
+        // Expect backend returns {reply: "..."}
+        appendChat('Quantum', res.reply || JSON.stringify(res).substring(0,800));
+      }catch(err){
+        appendChat('Quantum','Error: '+err.message);
+      }
+    });
+
+    // ---------- engine functions ----------
+    function startEngine(sim=true){
+      if(engineRunning){ logConsole('Engine already running'); return; }
+      engineRunning = true;
+      engineMode = sim ? 'SIM' : 'LIVE';
+      engineModeLabel.textContent = engineMode;
+      engineStatus.textContent = 'Running (' + engineMode + ')';
+      logConsole('Engine started in ' + engineMode + ' mode');
+
+      // parse content (try JSON, fallback to script)
+      let payload;
+      const raw = execBox.value.trim();
+      try{
+        payload = raw ? JSON.parse(raw) : null;
+      }catch(e){
+        payload = { script: raw || 'no-op', note: 'non-json payload' };
+      }
+
+      // call assistant to analyze (if endpoint present)
+      maybeAnalyze(payload);
+
+      // simple simulated execution loop that logs steps, for demo
+      let step = 0;
+      engineInterval = setInterval(() => {
+        step++;
+        logConsole(`Step ${step} • executing module: sat-momentum (simulated)`);
+        // when live mode, attempt to call backend for actual execution
+        if(!sim){
+          const endpoint = apiEndpointInput.value.trim();
+          if(endpoint){
+            // fire-and-forget call to backend (no blocking)
+            postExecution(endpoint, payload).then(r=> logConsole('Backend exec response: '+(r && r.status ? r.status : 'ok')))
+            .catch(e=> logConsole('Backend exec error: '+e.message));
+          } else {
+            logConsole('No backend endpoint set — running local simulation only');
+          }
+        }
+        if(step>=5) {
+          // auto-stop for safety in demo mode
+          stopEngine();
+          logConsole('Engine auto-stopped after demo steps');
+        }
+      }, 1200);
+    }
+
+    function stopEngine(){
+      if(!engineRunning){ logConsole('Engine is already stopped'); return; }
+      engineRunning = false;
+      clearInterval(engineInterval);
+      engineInterval = null;
+      engineStatus.textContent = 'Stopped';
+      engineModeLabel.textContent = 'IDLE';
+      logConsole('Engine stopped');
+    }
+
+    function saveLocal(){
+      const data = execBox.value;
+      const blob = new Blob([data], {type:'text/plain;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'quantum_command.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      logConsole('Saved current command to quantum_command.txt');
+    }
+
+    async function maybeAnalyze(payload){
+      const endpoint = apiEndpointInput.value.trim();
+      if(!endpoint) return;
+      // call assistant to analyze payload (optional)
+      try{
+        const res = await callAiEndpoint(endpoint, {prompt: 'Analyze and summarize payload: ' + (JSON.stringify(payload).slice(0,200))});
+        if(res && res.reply) appendChat('Quantum','Analysis: ' + res.reply);
+        logConsole('Assistant analysis complete');
+      }catch(e){
+        logConsole('Analysis failed: ' + e.message);
+      }
+    }
+
+    // ---------- helper: call AI endpoint (expects server to forward to OpenAI or similar) ----------
+    async function callAiEndpoint(endpoint, body){
+      // Expects backend to accept JSON { prompt: "..."} and return JSON { reply: "..." }
+      const key = apiKeyInput.value.trim();
+      const res = await fetch(endpoint, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          ...(key?{'Authorization': key}:{})
+        },
+        body: JSON.stringify(body)
+      });
+      if(!res.ok) throw new Error('AI endpoint returned ' + res.status);
+      return await res.json();
+    }
+
+    // ---------- helper: execution post ----------
+    async function postExecution(endpoint, payload){
+      // Expects backend /execute or similar, here we forward to endpoint
+      const key = apiKeyInput.value.trim();
+      const res = await fetch(endpoint, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          ...(key?{'Authorization': key}:{})
+        },
+        body: JSON.stringify({ action:'execute', payload })
+      });
+      if(!res.ok) throw new Error('Execute endpoint returned '+res.status);
+      return await res.json();
+    }
+
+    // ---------- demo helpers ----------
+    function loadSatelliteMomentum(){
+      const example = {
+        name: 'satelliteMomentum',
+        version: 'merged-v15',
+        strategy: {
+          timeframe: '1m',
+          indicators: ['sma(50)','rsi(14)'],
+          trigger: 'momentum-cross',
+          risk: 0.002
+        },
+        notes: 'Auto-trade using satellite momentum filter — demo parameters.'
+      };
+      execBox.value = JSON.stringify(example, null, 2);
+      logConsole('Loaded "satelliteMomentum" preset into command box');
+    }
+
+    function injectV15(){
+      const t = execBox.value ? JSON.parseSafe?.(execBox.value) : null;
+      // merge v15 modules (demo: append a modules array)
+      try{
+        let base = t || {};
+        base.v15_injected = true;
+        base.modules = base.modules || [];
+        base.modules.push({name:'v15-market-adapter', ver:'1.0.0'});
+        execBox.value = JSON.stringify(base, null, 2);
+        logConsole('Injected v15 modules into payload');
+      }catch(e){
+        // fallback if parsing fails, append as text
+        execBox.value += "\\n\\n/* + v15 modules appended */\\n";
+        logConsole('Injected v15 modules into raw script (fallback)');
+      }
+    }
+
+    // safe JSON parse polyfill
+    JSON.parseSafe = function(s){
+      try{return JSON.parse(s);}
+      catch(e){return null;}
+    };
+
+    // ---------- small convenience: handle Enter to send chat ----------
+    chatText.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); chatSend.click(); }
+    });
+
+    // init: load small demo
+    window.addEventListener('load', ()=>{
+      // prefill a short example
+      execBox.value = `{
+  "name": "sateliteMomentum",
+  "type": "strategy",
+  "params": {
+    "symbol": "BTC/USDT",
+    "timeframe": "1m",
+    "risk": 0.002
+  }
+}`;
+      logConsole('QuantumAI frontend ready. Fill command and press Execute.');
+    });
+
+    // ---------- small UX polish: disable text selection during drag/anim (optional) ----------
+    document.body.style.userSelect = 'text';
+  </script>
 </body>
 </html>
