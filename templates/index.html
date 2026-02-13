@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuantumAI Dashboard</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff00; font-family: monospace; text-align: center; }
+        .box { border: 2px solid #00ff00; padding: 20px; margin: 50px auto; width: 300px; box-shadow: 0 0 15px #00ff00; }
+        .signal { font-size: 2em; font-weight: bold; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>QUANTUM AI CORE v6</h1>
+    <div class="box">
+        <div>STATUS: <span style="color:white">ACTIVE</span></div>
+        <div id="trend" class="signal">LOADING...</div>
+        <div id="confidence">CONFIDENCE: 0%</div>
+    </div>
+
+    <script>
+        async function getSignal() {
+            const res = await fetch('/signal');
+            const data = await res.json();
+            document.getElementById('trend').innerText = data.trend;
+            document.getElementById('trend').style.color = data.trend === 'BUY' ? '#00ff00' : '#ff0000';
+            document.getElementById('confidence').innerText = `CONFIDENCE: ${data.confidence}%`;
+        }
+        setInterval(getSignal, 3000); // Update tiap 3 detik
+        getSignal();
+    </script>
+</body>
+</html>
