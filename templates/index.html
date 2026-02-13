@@ -1,31 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>QuantumAI Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumAI v6 Sulung</title>
     <style>
-        body { background: #0a0a0a; color: #00ff00; font-family: monospace; text-align: center; }
-        .box { border: 2px solid #00ff00; padding: 20px; margin: 50px auto; width: 300px; box-shadow: 0 0 15px #00ff00; }
-        .signal { font-size: 2em; font-weight: bold; margin: 20px 0; }
+        body { background: #000810; color: #00f2ff; font-family: sans-serif; text-align: center; padding: 20px; }
+        .header { border: 2px solid #00f2ff; padding: 10px; border-radius: 10px; box-shadow: 0 0 15px #00f2ff; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .block { border: 1px solid #00f2ff; padding: 10px; background: rgba(0, 30, 60, 0.8); border-radius: 8px; }
+        input { width: 85%; background: #000; border: 1px solid #008899; color: #00f2ff; padding: 5px; margin-top: 5px; }
+        .btn-toggle { background: #00f2ff; color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 5px; margin: 20px 0; cursor: pointer; width: 100%; }
+        #chartArea { display: none; border: 1px solid #ff00ff; padding: 20px; background: #000; border-radius: 10px; box-shadow: 0 0 15px #ff00ff; }
+        .footer { margin-top: 40px; font-size: 11px; color: #008899; }
+        .brand { font-size: 18px; color: #fff; font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1>QUANTUM AI CORE v6</h1>
-    <div class="box">
-        <div>STATUS: <span style="color:white">ACTIVE</span></div>
-        <div id="trend" class="signal">LOADING...</div>
-        <div id="confidence">CONFIDENCE: 0%</div>
+    <div class="header"><h1>« QuantumAI v6 Sulung »</h1></div>
+    <div class="grid">
+        <div class="block"><label>DATA FEED</label><input type="text" placeholder="Scanning..."></div>
+        <div class="block"><label>AI SIGNAL</label><input type="text" placeholder="Waiting..."></div>
+        <div class="block"><label>MOMENTUM</label><input type="text" placeholder="Analyzing..."></div>
+        <div class="block"><label>RISK MGMT</label><input type="text" placeholder="Safe Mode"></div>
     </div>
-
+    <button class="btn-toggle" onclick="toggle()">📊 BUKA / TUTUP CHART</button>
+    <div id="chartArea">
+        <h3 style="color:#ff00ff">REAL-TIME CHART ACTIVE</h3>
+        <div style="height:100px; background:linear-gradient(transparent, #1a001a); border:1px solid #444;"></div>
+    </div>
+    <div class="footer">
+        Developed by dadanrukanda89-lab | QuantumAI Protocol 2026
+        <div class="brand">“drukanda”</div>
+    </div>
     <script>
-        async function getSignal() {
-            const res = await fetch('/signal');
-            const data = await res.json();
-            document.getElementById('trend').innerText = data.trend;
-            document.getElementById('trend').style.color = data.trend === 'BUY' ? '#00ff00' : '#ff0000';
-            document.getElementById('confidence').innerText = `CONFIDENCE: ${data.confidence}%`;
+        function toggle() {
+            var x = document.getElementById("chartArea");
+            x.style.display = (x.style.display === "none") ? "block" : "none";
         }
-        setInterval(getSignal, 3000); // Update tiap 3 detik
-        getSignal();
     </script>
 </body>
 </html>
