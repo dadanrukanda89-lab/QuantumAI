@@ -1,21 +1,19 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from app.quantum_engine import QuantumEngine
 import os
+import uvicorn
 
 app = FastAPI()
-engine = QuantumEngine()
 
-# Menunjuk ke folder templates yang sudah kamu buat
+# Menunjuk ke folder templates yang sudah kamu buat di luar folder app
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_dashboard(request: Request):
-    # Ini yang memanggil index.html kamu
+    # Memanggil file index.html yang ada di folder templates
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/signal")
-async def get_signal():
-    # Ini yang mengirim sinyal BUY/SELL ke dashboard
-    return engine.generate_signal()
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
