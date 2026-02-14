@@ -1,16 +1,10 @@
-from flask import Flask, send_from_directory
-import os
+from flask import Flask
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('.', path)
+    return "<h1>Quantum AI Running 🔥</h1>"
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=8000)
