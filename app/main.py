@@ -1,19 +1,26 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-import os
-import uvicorn
+from flask import Flask, render_template, jsonify
+import random
 
-app = FastAPI()
+app = Flask(__name__)
 
-# Menunjuk ke folder templates yang sudah kamu buat di luar folder app
-templates = Jinja2Templates(directory="templates")
+# Route utama untuk panggil "Baju"
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-@app.get("/", response_class=HTMLResponse)
-async def read_dashboard(request: Request):
-    # Memanggil file index.html yang ada di folder templates
-    return templates.TemplateResponse("index.html", {"request": request})
+# Endpoint "Mesin" untuk kirim data real-time (JSON)
+@app.route('/update_engine')
+def update_engine():
+    data = {
+        "status": "ONLINE",
+        "market_vol": f"{random.uniform(2.1, 2.9):.2f}B",
+        "signal": random.choice(["BUY", "SELL", "HOLD"]),
+        "momentum": random.randint(40, 95),
+        "risk_sl": f"{random.uniform(1.042, 1.045):.5f}",
+        "risk_tp": f"{random.uniform(1.055, 1.058):.5f}",
+        "log": f"> [CORE] Analyzing Liquidity at {random.randint(100, 999)}ms..."
+    }
+    return jsonify(data)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    app.run(debug=True)
