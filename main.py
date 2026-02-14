@@ -1,15 +1,11 @@
-from flask import Flask, send_from_directory
+from flask import Flask, render_template
 import os
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return send_from_directory('.', 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('.', path)
+    return render_template("index.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
