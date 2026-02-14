@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,47 +7,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background: #010409; color: #00d4ff; font-family: sans-serif; }
-        .neon-card { border: 2px solid #00d4ff; background: rgba(0,20,40,0.8); transition: 0.3s; }
-        .neon-card:active { transform: scale(1.4); z-index: 50; } /* Zoom di HP */
+        .neon-box { 
+            border: 2px solid #00d4ff; background: rgba(0,20,40,0.8); 
+            box-shadow: 0 0 15px #00d4ff66; transition: 0.4s;
+        }
+        /* ZOOM RAKSASA PAS DI-TAP */
+        .neon-box:active { transform: scale(1.5); z-index: 100; border-color: #fff; }
     </style>
 </head>
 <body class="p-5">
-    <h1 class="text-center text-xl mb-10 font-bold uppercase tracking-widest">QuantumAI v6 Sulung</h1>
-    <div class="space-y-6">
-        <div class="neon-card p-4 rounded-xl text-center">
-            <p class="text-[10px] uppercase">Market Volume</p>
-            <div id="vol" class="text-emerald-400 font-mono text-lg">SCANNING...</div>
+    <h1 class="text-center text-xl mb-10 font-bold uppercase tracking-widest text-white shadow-blue-500">" QuantumAI v6 Sulung "</h1>
+    
+    <div class="space-y-6 max-w-md mx-auto">
+        <div class="neon-box p-4 rounded-xl text-center">
+            <p class="text-[10px] text-gray-400">DATA FEED / API</p>
+            <div id="vol" class="text-emerald-400 font-mono text-lg font-bold">SCANNING...</div>
         </div>
+
         <div class="grid grid-cols-2 gap-4">
-            <div class="neon-card p-4 rounded-xl text-center border-l-4 border-emerald-500">
-                <p class="text-[10px]">SIGNAL</p>
-                <div id="signal" class="font-bold text-xl">---</div>
+            <div class="neon-box p-5 rounded-xl text-center border-l-4 border-emerald-500">
+                <p class="text-[10px] text-gray-400">AI SIGNAL</p>
+                <div id="signal" class="font-black text-xl text-white">---</div>
             </div>
-            <div class="neon-card p-4 rounded-xl text-center">
-                <p class="text-[10px]">MOMENTUM</p>
-                <div class="h-2 w-full bg-gray-800 rounded-full mt-2">
-                    <div id="bar" class="h-full bg-cyan-400" style="width: 0%"></div>
-                </div>
+            <div class="neon-box p-5 rounded-xl">
+                <p class="text-[10px] text-gray-400 mb-2">MOMENTUM</p>
+                <div class="h-2 w-full bg-gray-900 rounded-full"><div id="bar" class="h-full bg-cyan-400" style="width: 0%"></div></div>
             </div>
         </div>
-        <div class="neon-card p-4 rounded-xl bg-black h-32 overflow-y-auto font-mono text-[10px] text-emerald-500">
-            <div id="log">> Initializing...</div>
+
+        <div class="neon-box p-4 rounded-xl bg-black h-40 overflow-y-auto font-mono text-[10px] text-emerald-500">
+            <div id="log">> Neural Link Established...</div>
         </div>
     </div>
+
     <script>
-        async function update() {
+        async function up() {
             try {
-                const res = await fetch('/update_engine');
-                const data = await res.json();
-                document.getElementById('vol').innerText = data.vol;
-                document.getElementById('signal').innerText = data.signal;
-                document.getElementById('bar').style.width = data.momentum + '%';
+                const r = await fetch('/update_engine');
+                const d = await r.json();
+                document.getElementById('vol').innerText = 'VOL: ' + d.vol;
+                document.getElementById('signal').innerText = d.signal;
+                document.getElementById('bar').style.width = d.momentum + '%';
                 const l = document.getElementById('log');
-                l.innerHTML += `<div>${data.log_msg}</div>`;
+                l.innerHTML += `<div>${d.log_msg}</div>`;
                 l.scrollTop = l.scrollHeight;
             } catch (e) {}
         }
-        setInterval(update, 2000);
+        setInterval(up, 2000);
     </script>
 </body>
 </html>
