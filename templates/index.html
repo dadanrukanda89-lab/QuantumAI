@@ -1,121 +1,172 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 | Sulung Machine</title>
-    <style>
-        :root { --neon: #00ff7f; --blue: #00d2ff; --bg: #050a0f; }
-        
-        body { 
-            margin: 0; background: var(--bg); color: #fff;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            display: flex; flex-direction: column; align-items: center;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<title>QuantumAI Secure</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* Border Glow Luar Mesin */
-        .machine-frame {
-            width: 95vw; max-width: 500px;
-            margin-top: 60px; padding: 15px;
-            border: 2px solid var(--blue);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-            background: rgba(0,0,0,0.9);
-            border-radius: 10px;
-            position: relative;
-        }
-
-        /* Label Operator di Atas */
-        .header {
-            position: absolute; top: -45px; left: 0; width: 100%;
-            display: flex; justify-content: space-between;
-            font-size: 0.8rem; color: var(--neon); letter-spacing: 2px;
-        }
-
-        /* Kotak Signal Gede */
-        .block-main {
-            border: 1px solid var(--neon);
-            margin-bottom: 20px; padding: 20px;
-            text-align: center; background: rgba(0, 255, 127, 0.05);
-            box-shadow: inset 0 0 15px rgba(0, 255, 127, 0.1);
-        }
-
-        .label { font-size: 0.7rem; color: var(--blue); text-transform: uppercase; margin-bottom: 10px; }
-        
-        #sig-val { font-size: 4rem; font-weight: 900; text-shadow: 0 0 20px var(--neon); }
-        
-        /* Bar Momentum */
-        .block-stats { display: flex; gap: 10px; margin-bottom: 20px; }
-        .stat-card { 
-            flex: 1; border: 1px solid var(--blue); padding: 10px; 
-            text-align: center; background: rgba(0,0,0,0.5);
-        }
-        
-        #mom-val { font-size: 2rem; color: var(--blue); font-weight: bold; }
-
-        /* Terminal Chat (Hajar yang Gede) */
-        .terminal {
-            background: #000; border: 1px solid #333; height: 150px;
-            font-family: 'Courier New', monospace; font-size: 0.7rem;
-            padding: 10px; overflow-y: auto; color: #aaa;
-            border-top: 3px solid var(--blue);
-        }
-
-        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
-    </style>
+<style>
+body{margin:0;font-family:Segoe UI;background:#050814;color:white}
+.hidden{display:none}
+.login-screen{
+height:100vh;display:flex;justify-content:center;align-items:center;
+background:#050814;
+}
+.login-box{
+background:#0a0f25;padding:40px;border-radius:15px;
+border:1px solid #00f2ff;text-align:center;
+box-shadow:0 0 30px #00f2ff33;
+}
+input{
+padding:10px;margin:10px;width:200px;border-radius:8px;border:none;
+}
+button{
+padding:10px 20px;background:#8f00ff;border:none;color:white;
+border-radius:8px;cursor:pointer;
+}
+.header{
+display:flex;justify-content:space-between;
+padding:15px;background:#0a0f25;border-bottom:1px solid #00f2ff;
+}
+.grid{
+display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;padding:20px;
+}
+.card{
+background:#111733;padding:20px;border-radius:15px;
+border:1px solid #00f2ff;position:relative;
+}
+.zoom-btn{
+position:absolute;top:10px;right:10px;
+background:#8f00ff;border:none;padding:5px 10px;color:white;
+border-radius:6px;cursor:pointer;
+}
+.card.zoomed{
+position:fixed;top:5%;left:5%;width:90%;height:85%;
+z-index:999;background:#111733;overflow:auto;
+}
+.green{color:#00ff88}
+.red{color:#ff0055}
+</style>
 </head>
 <body>
 
-    <div class="machine-frame">
-        <div class="header">
-            <span>ID: DRUKANDA // V6</span>
-            <span>STATUS: ACTIVE</span>
-        </div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen">
+<div class="login-box">
+<h2>QuantumAI Secure Login</h2>
+<input type="text" id="username" placeholder="Username"><br>
+<input type="password" id="password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+<p id="loginMsg" style="color:red"></p>
+</div>
+</div>
 
-        <div class="block-main">
-            <div class="label">--- AI CORE SIGNAL PULSE ---</div>
-            <div id="sig-val">SCAN</div>
-        </div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
 
-        <div class="block-stats">
-            <div class="stat-card">
-                <div class="label">MOMENTUM</div>
-                <div id="mom-val">0%</div>
-            </div>
-            <div class="stat-card">
-                <div class="label">VOLATILITY</div>
-                <div id="vol-val" style="font-size: 1.2rem; margin-top:5px;">2.41B</div>
-            </div>
-        </div>
+<div class="header">
+<div>drukanda</div>
+<div>QuantumAI v6 Secure</div>
+<div><button onclick="logout()">Logout</button></div>
+</div>
 
-        <div class="label" style="margin-bottom: 5px;">> QUANTUM_CHAT_LOG</div>
-        <div class="terminal" id="log-stream">
-            <div class="log-entry">> Initializing Sulung Workflow...</div>
-            <div class="log-entry">> Operator Drukanda Authorized.</div>
-        </div>
-    </div>
+<div class="grid">
 
-    <script>
-        async function sync() {
-            try {
-                const r = await fetch('/update_engine');
-                const d = await r.json();
-                
-                const s = document.getElementById('sig-val');
-                s.innerText = d.signal;
-                s.style.color = (d.signal === 'BUY') ? '#00ff7f' : (d.signal === 'SELL' ? '#ff4444' : '#fff');
-                
-                document.getElementById('mom-val').innerText = d.momentum + '%';
-                document.getElementById('vol-val').innerText = d.vol;
-                
-                const log = document.getElementById('log-stream');
-                const div = document.createElement('div');
-                div.className = 'log-entry';
-                div.innerText = "> " + d.log_msg;
-                log.prepend(div);
-            } catch(e) {}
-        }
-        setInterval(sync, 3000);
-    </script>
+<div class="card">
+<button class="zoom-btn" onclick="zoomCard(this)">Zoom</button>
+<h3>AI Signal</h3>
+<div id="signal">WAITING</div>
+<button onclick="generateSignal()">Generate</button>
+</div>
+
+<div class="card">
+<button class="zoom-btn" onclick="zoomCard(this)">Zoom</button>
+<h3>Chart</h3>
+<canvas id="chart"></canvas>
+</div>
+
+</div>
+</div>
+
+<script>
+
+/* ========= SECURITY LAYER ========= */
+
+const USER_HASH = btoa("admin123"); // demo hashed password
+let sessionToken=null;
+let sessionTimeout=null;
+
+function login(){
+let u=document.getElementById("username").value;
+let p=btoa(document.getElementById("password").value);
+
+if(u==="admin" && p===USER_HASH){
+    sessionToken=generateToken();
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    startSessionTimer();
+}else{
+    document.getElementById("loginMsg").innerText="Invalid login!";
+}
+}
+
+function logout(){
+sessionToken=null;
+location.reload();
+}
+
+function generateToken(){
+return Math.random().toString(36).substring(2);
+}
+
+function startSessionTimer(){
+sessionTimeout=setTimeout(()=>{
+    alert("Session expired!");
+    logout();
+},300000); // 5 menit auto logout
+}
+
+/* Disable basic inspect */
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.onkeydown = function(e) {
+if (e.keyCode == 123) return false;
+if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+}
+
+/* ========= DASHBOARD ENGINE ========= */
+
+function zoomCard(btn){
+btn.parentElement.classList.toggle("zoomed");
+}
+
+function generateSignal(){
+if(!sessionToken) return alert("Unauthorized");
+const s=["BUY","SELL","HOLD"];
+document.getElementById("signal").innerText=
+s[Math.floor(Math.random()*3)];
+}
+
+/* Chart */
+const ctx=document.getElementById('chart').getContext('2d');
+let price=100;
+const chart=new Chart(ctx,{
+type:'line',
+data:{labels:[],datasets:[{data:[],borderColor:'#00f2ff'}]},
+options:{animation:false}
+});
+setInterval(()=>{
+if(!sessionToken) return;
+price+=(Math.random()-0.5)*2;
+chart.data.labels.push('');
+chart.data.datasets[0].data.push(price);
+if(chart.data.labels.length>20){
+chart.data.labels.shift();
+chart.data.datasets[0].data.shift();
+}
+chart.update();
+},1000);
+
+</script>
 </body>
 </html>
