@@ -5,106 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuantumAI v6 Sulung</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
         body { 
-            background: radial-gradient(circle, #000d1a 0%, #00050a 100%); 
-            color: #00f2ff; font-family: 'Segoe UI', sans-serif; 
-            margin: 0; padding: 10px; overflow-x: hidden;
+            background: #000; color: #fff; font-family: 'Orbitron', sans-serif; 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+            background-image: radial-gradient(circle at center, #001529 0%, #000 100%);
         }
-        /* Efek Glow Header */
-        .main-header {
-            border: 1px solid #00f2ff; border-radius: 5px;
-            padding: 10px; margin-bottom: 20px;
-            text-shadow: 0 0 10px #00f2ff;
-            background: rgba(0, 242, 255, 0.05);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+
+        .container { width: 90%; max-width: 400px; text-align: center; }
+
+        .header-box {
+            border: 1px solid #00f2ff; padding: 10px; margin-bottom: 25px;
+            box-shadow: 0 0 15px #00f2ff, inset 0 0 10px #00f2ff;
+            background: rgba(0, 242, 255, 0.1); border-radius: 4px;
         }
-        /* Grid Layout ala Workflow */
-        .workflow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
+
+        .node-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; position: relative; }
+
+        /* Garis Penghubung Tengah */
+        .node-grid::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 2px; height: 100%; background: #00f2ff; transform: translate(-50%, -50%);
+            z-index: -1; opacity: 0.3;
+        }
+
         .node {
-            border: 1px solid #00f2ff; border-radius: 4px;
-            padding: 8px; background: rgba(0, 15, 30, 0.9);
-            position: relative; box-shadow: inset 0 0 10px rgba(0, 242, 255, 0.1);
-        }
-        /* Warna-warni tiap blok */
-        .node.blue { border-color: #00f2ff; box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
-        .node.green { border-color: #33ff00; box-shadow: 0 0 10px rgba(51, 255, 0, 0.3); }
-        .node.orange { border-color: #ff9900; box-shadow: 0 0 10px rgba(255, 153, 0, 0.3); }
-        .node.purple { border-color: #cc00ff; box-shadow: 0 0 10px rgba(204, 0, 255, 0.3); }
-
-        .node-label { font-size: 10px; font-weight: bold; margin-bottom: 5px; display: block; text-align: left; }
-        .node input { 
-            width: 90%; background: transparent; border: none; 
-            color: #fff; font-size: 11px; outline: none;
-        }
-        
-        /* Tombol Toggle Futuristik */
-        .toggle-btn {
-            width: 100%; margin: 20px 0; padding: 12px;
-            background: linear-gradient(90deg, #00f2ff, #008899);
-            color: #000; font-weight: bold; border: none;
-            border-radius: 2px; cursor: pointer;
-            box-shadow: 0 0 15px #00f2ff;
+            background: #000; border: 1px solid #fff; border-radius: 2px;
+            padding: 10px; position: relative; box-shadow: 0 0 8px rgba(255,255,255,0.2);
         }
 
-        #chartContainer {
-            display: none; border: 1px solid #cc00ff;
-            background: #000; margin-top: 10px; border-radius: 5px;
-            padding: 10px; box-shadow: 0 0 20px rgba(204, 0, 255, 0.4);
+        /* Warna Border sesuai Desain Kamu */
+        .node.blue { border-color: #00f2ff; box-shadow: 0 0 12px #00f2ff; }
+        .node.green { border-color: #39ff14; box-shadow: 0 0 12px #39ff14; }
+        .node.orange { border-color: #ff9900; box-shadow: 0 0 12px #ff9900; }
+        .node.purple { border-color: #bc13fe; box-shadow: 0 0 12px #bc13fe; }
+
+        .label { font-size: 8px; display: block; margin-bottom: 5px; font-weight: bold; }
+        .value { font-size: 11px; color: #fff; word-break: break-all; }
+
+        /* Tombol Utama */
+        .main-btn {
+            width: 100%; padding: 12px; margin-top: 25px;
+            background: #00f2ff; color: #000; border: none;
+            font-family: 'Orbitron', sans-serif; font-weight: bold;
+            box-shadow: 0 0 20px #00f2ff; cursor: pointer; border-radius: 2px;
         }
-        
-        .footer { margin-top: 30px; font-size: 9px; opacity: 0.6; }
-        .brand { color: #fff; font-size: 14px; font-weight: bold; margin-top: 5px; }
+
+        .footer { margin-top: 30px; font-size: 9px; color: #444; }
+        .signature { font-size: 18px; color: #fff; margin-top: 5px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="main-header">
-        <h2 style="margin:0; font-size: 16px;">« QuantumAI v6 Sulung Workflow »</h2>
+<div class="container">
+    <div class="header-box">
+        <h2 style="margin:0; font-size: 14px;">« QUANTUMAI V6 SULUNG »</h2>
     </div>
 
-    <div class="workflow-grid">
+    <div class="node-grid">
         <div class="node blue">
-            <span class="node-label" style="color:#00f2ff">DATA FEED / API</span>
-            <input type="text" value="Scanning Market Data..." readonly>
+            <span class="label" style="color:#00f2ff">DATA FEED</span>
+            <div class="value" id="data-feed">SCANNING...</div>
         </div>
         <div class="node green">
-            <span class="node-label" style="color:#33ff00">AI CORE SIGNAL</span>
-            <input type="text" value="WAITING FOR SIGNAL" readonly>
+            <span class="label" style="color:#39ff14">AI SIGNAL</span>
+            <div class="value" id="ai-signal">WAITING</div>
         </div>
         <div class="node orange">
-            <span class="node-label" style="color:#ff9900">SATELLITE MOMENTUM</span>
-            <input type="text" value="Radar Pulse Analysis..." readonly>
+            <span class="label" style="color:#ff9900">MOMENTUM</span>
+            <div class="value" id="momentum">PULSE: OK</div>
         </div>
         <div class="node purple">
-            <span class="node-label" style="color:#cc00ff">RISK ENGINE</span>
-            <input type="text" value="SL / TP / Trailing Steps" readonly>
+            <span class="label" style="color:#bc13fe">RISK ENGINE</span>
+            <div class="value" id="risk">SECURED</div>
         </div>
     </div>
 
-    <button class="toggle-btn" onclick="toggleChart()">📊 ACTIVATE RADAR / CHART</button>
-
-    <div id="chartContainer">
-        <div style="font-size: 10px; color:#cc00ff; margin-bottom:10px;">[ REAL-TIME SPECTRUM SCANNER ]</div>
-        <div style="height: 120px; background: repeating-linear-gradient(0deg, #000, #001a1a 2px); border: 0.5px solid #333; position: relative;">
-             <div style="position: absolute; width: 100%; height: 2px; background: #00f2ff; box-shadow: 0 0 10px #00f2ff; animation: scan 3s infinite linear;"></div>
-        </div>
-    </div>
+    <button class="main-btn">📊 OPEN CHART SYSTEM</button>
 
     <div class="footer">
-        Developed by dadanrukanda89-lab | QuantumAI Protocol 2026
-        <div class="brand">“drukanda”</div>
+        Dadanrukanda89-lab Protocol v6.0
+        <div class="signature">“drukanda”</div>
     </div>
+</div>
 
-    <script>
-        function toggleChart() {
-            var x = document.getElementById("chartContainer");
-            x.style.display = (x.style.display === "none") ? "block" : "none";
-        }
-        /* Efek animasi scan bisa ditambah di CSS nanti */
-    </script>
-    <style>
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-    </style>
 </body>
 </html>
