@@ -9,22 +9,22 @@ class ChatHubModule extends StatelessWidget {
 
     return Positioned(
       right: 20,
-      bottom: 20,
+      bottom: 120,
       child: Container(
-        width: 140,
-        height: 100,
+        width: 180,
+        height: 150,
         decoration: BoxDecoration(
-          color: Colors.purpleAccent.withOpacity(0.2),
-          border: Border.all(color: Colors.purpleAccent, width: 2),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.blueAccent.withOpacity(0.2),
+          border: Border.all(color: Colors.blueAccent, width: 2),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: const Center(
           child: Text(
             "Chat Hub",
             style: TextStyle(
-                color: Colors.purpleAccent,
+                color: Colors.blueAccent,
                 fontWeight: FontWeight.bold,
-                fontSize: 14),
+                fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ),
