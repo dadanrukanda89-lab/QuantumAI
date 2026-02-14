@@ -7,104 +7,78 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-        body { background: #010409; color: #00d4ff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
+        body { background: #010409; color: #00d4ff; font-family: 'Orbitron', sans-serif; min-height: 100vh; }
         
-        /* ZOOM SUPER GEDE SAAT DI-TAP/HOVER */
-        .neon-card {
-            background: rgba(0, 30, 60, 0.7);
+        .neon-border {
             border: 2px solid #00d4ff;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-        }
-        .neon-card:hover, .neon-card:active {
-            transform: scale(1.5); /* Zoom 1.5x biar puas liatnya */
-            z-index: 999;
-            box-shadow: 0 0 50px #00d4ff;
-            background: #001a33;
-            border-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+            background: rgba(0, 20, 40, 0.8);
+            transition: all 0.4s ease;
         }
 
-        .text-glow { text-shadow: 0 0 10px #00d4ff; }
-        #chartPanel { display: none; }
-        #chartPanel.open { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* ZOOM RAKSASA 1.6x */
+        .neon-border:hover, .neon-border:active {
+            transform: scale(1.6);
+            z-index: 999;
+            box-shadow: 0 0 60px #00d4ff;
+            background: #001a33;
+            border-color: #fff;
+        }
+
+        .glow-text { text-shadow: 0 0 15px #00d4ff; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-8">
 
-    <h1 class="text-center text-2xl mb-12 text-glow italic uppercase tracking-widest">" QuantumAI v6 Sulung Workflow "</h1>
+    <h1 class="text-center text-2xl mb-16 glow-text italic uppercase">" QuantumAI v6 Sulung Workflow "</h1>
 
-    <div class="max-w-4xl mx-auto space-y-8">
+    <div class="max-w-4xl mx-auto space-y-12">
         <div class="flex justify-center">
-            <div class="neon-card p-4 w-72 rounded-lg text-center">
-                <p class="text-[10px] mb-2 text-white uppercase">" Data Feed / API "</p>
-                <div class="text-[9px] font-mono text-emerald-400">
-                    STATUS: <span id="status">ONLINE</span> | VOL: <span id="vol">--</span>
+            <div class="neon-border p-6 w-80 rounded-xl text-center">
+                <p class="text-[10px] mb-2 text-white font-bold uppercase">" Data Feed / API "</p>
+                <div class="text-[11px] font-mono text-emerald-400">
+                    STATUS: <span id="status">ONLINE</span><br>VOL: <span id="vol">SCANNING...</span>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-6">
-            <div class="neon-card p-5 rounded-xl border-l-4 border-emerald-400">
-                <p class="text-[10px] mb-4">" AI CORE SIGNAL "</p>
-                <div id="signal" class="text-center text-xl font-black">---</div>
+        <div class="grid grid-cols-2 gap-10">
+            <div class="neon-border p-6 rounded-2xl border-l-8 border-emerald-500">
+                <p class="text-[11px] mb-4 font-bold">" AI CORE SIGNAL "</p>
+                <div id="signal" class="text-center text-2xl font-black tracking-widest text-white">---</div>
             </div>
 
-            <div class="neon-card p-5 rounded-xl">
-                <p class="text-[10px] mb-4">" MOMENTUM "</p>
-                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden">
-                    <div id="m-bar" class="h-full bg-cyan-400" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div class="neon-card p-5 rounded-xl border-l-4 border-orange-500">
-                <p class="text-[10px] mb-4 text-orange-400">" RISK ENGINE "</p>
-                <div class="text-[9px] font-mono">SL: <span id="sl">--</span><br>TP: <span id="tp">--</span></div>
-            </div>
-
-            <div class="neon-card p-5 rounded-xl">
-                <p class="text-[10px] mb-4 uppercase">" News Intelligence "</p>
-                <div class="text-[8px] italic animate-pulse">Scanning orbital markets...</div>
-            </div>
-        </div>
-
-        <div class="text-center py-6">
-            <button onclick="document.getElementById('chartPanel').classList.toggle('open')" class="neon-card px-8 py-3 rounded-full text-[10px] font-bold text-white uppercase">" Buka/Tutup Chart "</button>
-            <div id="chartPanel" class="mt-6 neon-card p-6 rounded-2xl bg-black">
-                <div class="h-40 flex items-end justify-between gap-1 border-b border-l border-sky-900 p-2">
-                    <div class="bg-emerald-500 w-full h-1/2"></div>
-                    <div class="bg-rose-500 w-full h-3/4"></div>
-                    <div class="bg-emerald-500 w-full h-full"></div>
-                    <div class="bg-emerald-500 w-full h-2/3"></div>
+            <div class="neon-border p-6 rounded-2xl">
+                <p class="text-[11px] mb-4 font-bold">" MOMENTUM "</p>
+                <div class="h-3 w-full bg-slate-900 rounded-full">
+                    <div id="m-bar" class="h-full bg-cyan-400 shadow-[0_0_15px_#00d4ff]" style="width: 50%"></div>
                 </div>
             </div>
         </div>
 
-        <div class="neon-card p-4 rounded-b-3xl bg-black/80">
-            <div id="terminal" class="h-32 overflow-y-auto text-[10px] font-mono text-emerald-400 space-y-1">
-                <p>> [SYSTEM] Neural Engine Active...</p>
+        <div class="neon-border p-6 rounded-b-3xl bg-black/90 mt-10">
+            <p class="text-[10px] mb-3 text-cyan-300 font-bold italic">" QUANTUMAI LOG INTERFACE "</p>
+            <div id="terminal" class="h-40 overflow-y-auto text-[11px] font-mono text-emerald-500 space-y-2">
+                <p>> [SYSTEM] Neural Engine Synchronized...</p>
             </div>
         </div>
     </div>
 
     <script>
-        async function updateDashboard() {
+        async function runEngine() {
             try {
-                const r = await fetch('/update_engine');
-                const d = await r.json();
-                document.getElementById('vol').innerText = d.vol;
-                document.getElementById('signal').innerText = d.signal;
-                document.getElementById('m-bar').style.width = d.momentum + '%';
-                document.getElementById('sl').innerText = d.sl;
-                document.getElementById('tp').innerText = d.tp;
+                const res = await fetch('/update_engine');
+                const data = await res.json();
+                document.getElementById('vol').innerText = data.vol;
+                document.getElementById('signal').innerText = data.signal;
+                document.getElementById('m-bar').style.width = data.momentum + '%';
                 
                 const term = document.getElementById('terminal');
-                term.innerHTML += `<p>${d.log}</p>`;
+                term.innerHTML += `<p>${data.log_msg || data.log}</p>`;
                 term.scrollTop = term.scrollHeight;
-            } catch (e) {}
+            } catch (e) { console.log("Engine offline"); }
         }
-        setInterval(updateDashboard, 2000);
+        setInterval(runEngine, 2000);
     </script>
 </body>
 </html>
