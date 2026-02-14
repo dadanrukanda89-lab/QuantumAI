@@ -1,59 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>QuantumAI v6 | Command Center</title>
     <style>
-        body { background: #010409; color: #00d4ff; font-family: sans-serif; }
-        .neon-box { 
-            border: 2px solid #00d4ff; background: rgba(0,20,40,0.8); 
-            box-shadow: 0 0 15px #00d4ff66; transition: 0.4s;
+        body {
+            background-color: #050505;
+            color: #00ff7f;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
         }
-        /* ZOOM RAKSASA PAS DI-TAP */
-        .neon-box:active { transform: scale(1.5); z-index: 100; border-color: #fff; }
+
+        /* Identitas Drukanda */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(0, 255, 127, 0.05);
+            border-bottom: 2px solid #00ff7f;
+            box-shadow: 0 0 20px rgba(0, 255, 127, 0.2);
+        }
+
+        .user-id {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* Container Mesin - Bisa Scroll Samping */
+        .machine-grid {
+            display: flex;
+            gap: 25px;
+            padding: 30px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .block {
+            min-width: 350px;
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid #00ff7f;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: inset 0 0 15px rgba(0, 255, 127, 0.1);
+        }
+
+        .label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
+        .value { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 15px 0; text-shadow: 0 0 10px #00ff7f; }
+
+        /* Momentum Bar */
+        .bar-bg { width: 100%; height: 25px; background: #1a1a1a; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .bar-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00ff7f, #008f4f); transition: width 1s; }
+
+        /* Chart Umpetan */
+        #chart-zone { display: none; padding: 20px; border-top: 1px solid #333; }
+        .btn-toggle {
+            background: #00ff7f; color: #000; border: none; padding: 12px 30px;
+            font-weight: bold; cursor: pointer; margin: 20px; border-radius: 3px;
+            transition: 0.3s;
+        }
+        .btn-toggle:hover { background: #fff; box-shadow: 0 0 20px #00ff7f; }
+
+        /* Terminal Chat */
+        .terminal {
+            background: #000; height: 180px; margin: 20px; padding: 15px;
+            font-family: 'Courier New', monospace; font-size: 0.9rem;
+            border: 1px solid #1a1a1a; overflow-y: auto; color: #00ff7f;
+        }
     </style>
 </head>
-<body class="p-5">
-    <h1 class="text-center text-xl mb-10 font-bold uppercase tracking-widest text-white shadow-blue-500">" QuantumAI v6 Sulung "</h1>
-    
-    <div class="space-y-6 max-w-md mx-auto">
-        <div class="neon-box p-4 rounded-xl text-center">
-            <p class="text-[10px] text-gray-400">DATA FEED / API</p>
-            <div id="vol" class="text-emerald-400 font-mono text-lg font-bold">SCANNING...</div>
+<body>
+
+    <div class="header">
+        <div class="user-id">OPERATOR: drukanda</div>
+        <div style="font-size: 0.9rem;">CORE STATUS: <span style="color: #fff;">ACTIVE</span></div>
+    </div>
+
+    <div class="machine-grid">
+        
+        <div class="block">
+            <div class="label">AI Core Signal</div>
+            <div id="sig-val" class="value">---</div>
+            <div style="text-align: center; font-size: 0.8rem;" id="sig-msg">Waiting for data...</div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div class="neon-box p-5 rounded-xl text-center border-l-4 border-emerald-500">
-                <p class="text-[10px] text-gray-400">AI SIGNAL</p>
-                <div id="signal" class="font-black text-xl text-white">---</div>
-            </div>
-            <div class="neon-box p-5 rounded-xl">
-                <p class="text-[10px] text-gray-400 mb-2">MOMENTUM</p>
-                <div class="h-2 w-full bg-gray-900 rounded-full"><div id="bar" class="h-full bg-cyan-400" style="width: 0%"></div></div>
+        <div class="block">
+            <div class="label">Neural Momentum</div>
+            <div id="mom-val" class="value" style="font-size: 2.5rem;">0%</div>
+            <div class="bar-bg">
+                <div id="mom-fill" class="bar-fill"></div>
             </div>
         </div>
 
-        <div class="neon-box p-4 rounded-xl bg-black h-40 overflow-y-auto font-mono text-[10px] text-emerald-500">
-            <div id="log">> Neural Link Established...</div>
+        <div class="block">
+            <div class="label">Market Volume</div>
+            <div id="vol-val" class="value" style="font-size: 2.5rem;">0.00B</div>
+            <div style="color: #444; font-size: 0.7rem; text-align: center;">V6 SULUNG PROTOCOL</div>
+        </div>
+
+    </div>
+
+    <center>
+        <button class="btn-toggle" onclick="toggleChart()">ACCESS MARKET VISUALIZER</button>
+    </center>
+
+    <div id="chart-zone">
+        <div style="height: 400px; background: #0a0a0a; border: 1px solid #00ff7f; display: flex; align-items: center; justify-content: center;">
+            <p>[ CHART SYSTEM INITIALIZING... ]</p>
         </div>
     </div>
 
+    <div class="terminal" id="log-box">
+        <div>> [SYS] Initiating QuantumAI v6 Workflow...</div>
+        <div>> [SYS] Handshake with operator "drukanda" successful.</div>
+    </div>
+
     <script>
-        async function up() {
-            try {
-                const r = await fetch('/update_engine');
-                const d = await r.json();
-                document.getElementById('vol').innerText = 'VOL: ' + d.vol;
-                document.getElementById('signal').innerText = d.signal;
-                document.getElementById('bar').style.width = d.momentum + '%';
-                const l = document.getElementById('log');
-                l.innerHTML += `<div>${d.log_msg}</div>`;
-                l.scrollTop = l.scrollHeight;
-            } catch (e) {}
+        function toggleChart() {
+            var x = document.getElementById("chart-zone");
+            x.style.display = (x.style.display === "block") ? "none" : "block";
         }
-        setInterval(up, 2000);
+
+        async function updateEngine() {
+            try {
+                const response = await fetch('/update_engine');
+                const data = await response.json();
+                
+                document.getElementById('sig-val').innerText = data.signal;
+                document.getElementById('sig-val').style.color = (data.signal === 'BUY') ? '#00ff7f' : (data.signal === 'SELL' ? '#ff4444' : '#fff');
+                
+                document.getElementById('mom-val').innerText = data.momentum + '%';
+                document.getElementById('mom-fill').style.width = data.momentum + '%';
+                
+                document.getElementById('vol-val').innerText = data.vol;
+
+                const logBox = document.getElementById('log-box');
+                const newLog = document.createElement('div');
+                newLog.innerText = data.log_msg;
+                logBox.prepend(newLog);
+            } catch (e) {
+                console.log("Sync error");
+            }
+        }
+
+        setInterval(updateEngine, 3000); // Update setiap 3 detik
     </script>
 </body>
 </html>
