@@ -3,67 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 Dashboard</title>
+    <title>QuantumAI v6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-        body { background: #010409; color: #00d4ff; font-family: 'Orbitron', sans-serif; min-height: 100vh; }
-        .neon-card {
-            background: rgba(0, 20, 40, 0.9); border: 2px solid #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); transition: all 0.4s ease;
-        }
-        /* ZOOM RAKSASA 1.6x */
-        .neon-card:hover, .neon-card:active {
-            transform: scale(1.6); z-index: 999; box-shadow: 0 0 60px #00d4ff;
-            background: #001a33; border-color: #fff;
-        }
-        .glow-text { text-shadow: 0 0 15px #00d4ff; }
+        body { background: #010409; color: #00d4ff; font-family: sans-serif; }
+        .neon-card { border: 2px solid #00d4ff; background: rgba(0,20,40,0.8); transition: 0.3s; }
+        .neon-card:active { transform: scale(1.4); z-index: 50; } /* Zoom di HP */
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <h1 class="text-center text-xl md:text-2xl mb-12 glow-text italic uppercase">" QuantumAI v6 Sulung Workflow "</h1>
-    <div class="max-w-4xl mx-auto space-y-10">
-        <div class="flex justify-center">
-            <div class="neon-card p-4 w-72 rounded-xl text-center">
-                <p class="text-[10px] mb-2 text-white font-bold uppercase">" Data Feed / API "</p>
-                <div class="text-[11px] font-mono text-emerald-400">
-                    STATUS: <span id="status">ONLINE</span> | VOL: <span id="vol">--</span>
+<body class="p-5">
+    <h1 class="text-center text-xl mb-10 font-bold uppercase tracking-widest">QuantumAI v6 Sulung</h1>
+    <div class="space-y-6">
+        <div class="neon-card p-4 rounded-xl text-center">
+            <p class="text-[10px] uppercase">Market Volume</p>
+            <div id="vol" class="text-emerald-400 font-mono text-lg">SCANNING...</div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="neon-card p-4 rounded-xl text-center border-l-4 border-emerald-500">
+                <p class="text-[10px]">SIGNAL</p>
+                <div id="signal" class="font-bold text-xl">---</div>
+            </div>
+            <div class="neon-card p-4 rounded-xl text-center">
+                <p class="text-[10px]">MOMENTUM</p>
+                <div class="h-2 w-full bg-gray-800 rounded-full mt-2">
+                    <div id="bar" class="h-full bg-cyan-400" style="width: 0%"></div>
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-2 gap-8">
-            <div class="neon-card p-5 rounded-2xl border-l-4 border-emerald-500">
-                <p class="text-[11px] mb-4">" AI CORE SIGNAL "</p>
-                <div id="signal" class="text-center text-xl font-black">---</div>
-            </div>
-            <div class="neon-card p-5 rounded-2xl">
-                <p class="text-[11px] mb-4">" MOMENTUM "</p>
-                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden">
-                    <div id="m-bar" class="h-full bg-cyan-400" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-        <div class="neon-card p-5 rounded-b-3xl bg-black/90">
-            <p class="text-[10px] mb-3 text-cyan-300 italic">" QUANTUMAI LOG INTERFACE "</p>
-            <div id="terminal" class="h-40 overflow-y-auto text-[10px] font-mono text-emerald-500 space-y-2">
-                <p>> [SYSTEM] Neural Engine Active...</p>
-            </div>
+        <div class="neon-card p-4 rounded-xl bg-black h-32 overflow-y-auto font-mono text-[10px] text-emerald-500">
+            <div id="log">> Initializing...</div>
         </div>
     </div>
     <script>
-        async function runEngine() {
+        async function update() {
             try {
                 const res = await fetch('/update_engine');
                 const data = await res.json();
                 document.getElementById('vol').innerText = data.vol;
                 document.getElementById('signal').innerText = data.signal;
-                document.getElementById('m-bar').style.width = data.momentum + '%';
-                const term = document.getElementById('terminal');
-                term.innerHTML += `<p>${data.log_msg}</p>`;
-                term.scrollTop = term.scrollHeight;
-            } catch (e) { console.log("Engine offline"); }
+                document.getElementById('bar').style.width = data.momentum + '%';
+                const l = document.getElementById('log');
+                l.innerHTML += `<div>${data.log_msg}</div>`;
+                l.scrollTop = l.scrollHeight;
+            } catch (e) {}
         }
-        setInterval(runEngine, 2000);
+        setInterval(update, 2000);
     </script>
 </body>
 </html>
