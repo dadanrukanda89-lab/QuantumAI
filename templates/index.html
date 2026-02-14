@@ -2,209 +2,100 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>QuantumAI v6 | Sulung Workflow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>QuantumAI v6 | Sulung Protocol</title>
     <style>
-        :root {
-            --neon-blue: #00d2ff;
-            --neon-green: #00ff7f;
-            --neon-purple: #9d50bb;
-            --bg-dark: #000205;
+        :root { --neon: #00ff7f; }
+        body, html { 
+            margin: 0; padding: 0; background: #000; 
+            width: 100%; height: 100%; overflow: hidden; 
+            font-family: 'Courier New', monospace;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: #fff;
-            font-family: 'Orbitron', 'Courier New', monospace;
-            margin: 0;
-            overflow: auto; /* Memungkinkan scroll jika di-zoom */
-            background-image: 
-                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px; /* Efek Grid Mesin */
-        }
-
-        /* Top Identity Bar */
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            border-bottom: 2px solid var(--neon-blue);
-            background: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 0 15px var(--neon-blue);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .drukanda-tag {
-            color: var(--neon-green);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        /* Zoomable Machine Content */
-        .main-workflow {
-            min-width: 1200px; /* Melebar agar bisa di-zoom ke samping */
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transform-origin: top center;
-            transition: transform 0.3s ease;
-        }
-
-        /* Engine Block Styles */
-        .engine-card {
-            background: rgba(0, 10, 20, 0.9);
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3), inset 0 0 15px rgba(0, 210, 255, 0.1);
-            padding: 20px;
-            margin: 15px;
-            border-radius: 5px;
-            position: relative;
-        }
-
-        .engine-card::before {
-            content: "SYSTEM_NODE";
+        /* Container Meja Gambar (Bisa di-Zoom & Geser) */
+        #viewport {
+            width: 1000px; /* Lebar standar workflow */
+            height: 1500px; 
             position: absolute;
-            top: -10px;
-            left: 10px;
-            background: var(--neon-blue);
-            color: #000;
-            font-size: 0.6rem;
-            padding: 2px 5px;
+            transform-origin: 0 0;
+            cursor: grab;
+            background-image: url('https://raw.githubusercontent.com/dadanrukanda89-lab/QuantumAI/main/1000069403.png'); /* Gambar workflow lo */
+            background-size: contain;
+            background-repeat: no-repeat;
         }
 
-        .value-display {
-            font-size: 3.5rem;
-            text-align: center;
-            text-shadow: 0 0 20px var(--neon-green);
-            margin: 10px 0;
+        /* Overlay Data (Nempel di atas kotak gambar) */
+        .data-overlay { position: absolute; color: var(--neon); font-weight: bold; text-align: center; pointer-events: none; }
+
+        /* Koordinat Posisi Data (Gue pasin sama gambar lo) */
+        #sig-val { top: 310px; left: 60px; width: 180px; font-size: 2.2rem; text-shadow: 0 0 10px var(--neon); }
+        #mom-val { top: 310px; left: 320px; width: 180px; font-size: 2.2rem; }
+        #vol-val { top: 110px; left: 60px; width: 180px; font-size: 1rem; color: #00d2ff; }
+        
+        /* Terminal Chat nempel di kotak bawah */
+        #log-stream { 
+            top: 715px; left: 185px; width: 630px; height: 120px; 
+            overflow: hidden; font-size: 0.7rem; text-align: left; 
+            padding: 10px; line-height: 1.2;
         }
 
-        /* Interactive Elements */
-        .btn-toggle {
-            background: transparent;
-            color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
-            padding: 10px 25px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
+        /* UI Kontrol Floating */
+        .controls {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: flex; gap: 10px; background: rgba(0,0,0,0.7);
+            padding: 10px; border: 1px solid var(--neon); border-radius: 30px;
         }
-
-        .btn-toggle:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
-
-        /* Chat Interface */
-        .chat-box {
-            width: 800px;
-            height: 180px;
-            background: rgba(0,0,0,0.9);
-            border: 1px solid var(--neon-purple);
-            margin-top: 30px;
-            padding: 15px;
-            font-size: 0.8rem;
-            color: var(--neon-purple);
-            overflow-y: auto;
-        }
-
-        /* Zoom Controls (Floating) */
-        .zoom-controls {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 2000;
-        }
-
-        .z-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--neon-green);
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .btn { background: none; border: 1px solid var(--neon); color: var(--neon); padding: 8px 15px; border-radius: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <nav class="top-nav">
-        <div class="drukanda-tag">drukanda // OPERATOR</div>
-        <div style="color: var(--neon-blue);">QUANTUM_CORE: ACTIVE</div>
-    </nav>
-
-    <div class="zoom-controls">
-        <button class="z-btn" onclick="adjustZoom(0.1)">+</button>
-        <button class="z-btn" onclick="adjustZoom(-0.1)">-</button>
+    <div class="controls">
+        <button class="btn" onclick="adjustZoom(0.2)">ZOOM IN</button>
+        <button class="btn" onclick="adjustZoom(-0.2)">ZOOM OUT</button>
+        <div style="color:var(--neon); padding-top:5px; font-size:0.8rem;">DRUKANDA // V6</div>
     </div>
 
-    <div class="main-workflow" id="workflow">
-        
-        <div style="display: flex; gap: 30px;">
-            <div class="engine-card" style="width: 400px;">
-                <div style="color: var(--neon-green); font-size: 0.7rem;">AI CORE SIGNAL</div>
-                <div id="sig-val" class="value-display">SCANNING</div>
-            </div>
-
-            <div class="engine-card" style="width: 400px;">
-                <div style="color: var(--neon-blue); font-size: 0.7rem;">MOMENTUM PULSE</div>
-                <div id="mom-val" class="value-display" style="font-size: 2.5rem;">0%</div>
-                <div style="width: 100%; height: 8px; background: #111; margin-top: 15px;">
-                    <div id="mom-bar" style="width: 0%; height: 100%; background: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue);"></div>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-toggle" onclick="toggleChart()">TOGGLE VISUALIZER</button>
-
-        <div id="chart-area" style="display:none; width: 900px; height: 350px; border: 1px solid #333; margin-top: 20px; background: #000;">
-            <p style="text-align:center; padding-top: 150px; color: #444;">[ REAL-TIME CHART INTERFACE LOADED ]</p>
-        </div>
-
-        <div class="chat-box" id="log-stream">
-            <div>> [SYS] Handshake with operator "drukanda" successful.</div>
-        </div>
-
+    <div id="viewport">
+        <div id="sig-val" class="data-overlay">SCAN</div>
+        <div id="mom-val" class="data-overlay">0%</div>
+        <div id="vol-val" class="data-overlay">VOL: 0.00B</div>
+        <div id="log-stream" class="data-overlay"></div>
     </div>
 
     <script>
-        let scale = 0.8;
+        let scale = 0.4; // Start zoom agak jauh biar kelihatan semua
+        const view = document.getElementById('viewport');
+
         function adjustZoom(amt) {
-            scale += amt;
-            document.getElementById('workflow').style.transform = `scale(${scale})`;
+            scale = Math.min(Math.max(0.2, scale + amt), 2);
+            view.style.transform = `scale(${scale})`;
         }
 
-        function toggleChart() {
-            const c = document.getElementById('chart-area');
-            c.style.display = (c.style.display === 'none') ? 'block' : 'none';
-        }
+        // Fitur Drag/Geser (Untuk HP & Mouse)
+        let isDragging = false; let startX, startY, scrollX, scrollY;
+        document.addEventListener('mousedown', e => { isDragging = true; startX = e.pageX; startY = e.pageY; });
+        document.addEventListener('mousemove', e => {
+            if(!isDragging) return;
+            window.scrollBy(startX - e.pageX, startY - e.pageY);
+            startX = e.pageX; startY = e.pageY;
+        });
+        document.addEventListener('mouseup', () => isDragging = false);
 
         async function sync() {
             try {
                 const r = await fetch('/update_engine');
                 const d = await r.json();
-                
                 document.getElementById('sig-val').innerText = d.signal;
                 document.getElementById('sig-val').style.color = (d.signal === 'BUY') ? '#00ff7f' : (d.signal === 'SELL' ? '#ff4444' : '#fff');
-                
                 document.getElementById('mom-val').innerText = d.momentum + '%';
-                document.getElementById('mom-bar').style.width = d.momentum + '%';
-                
+                document.getElementById('vol-val').innerText = "VOL: " + d.vol;
                 const log = document.getElementById('log-stream');
                 log.innerHTML = `<div>> ${d.log_msg}</div>` + log.innerHTML;
             } catch (e) {}
         }
         setInterval(sync, 3000);
+        adjustZoom(0); // Initial set
     </script>
 </body>
 </html>
