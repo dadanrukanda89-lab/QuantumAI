@@ -3,140 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 - Online Dashboard</title>
+    <title>QuantumAI v6 - Operational Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
-            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); 
-            color: #e2e8f0; 
-            font-family: 'Courier New', monospace; 
-            min-height: 100vh;
+            background-color: #010409; 
+            color: #00d4ff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
-        /* Efek Glow & Zoom Smooth */
-        .block-card { 
-            border: 1px solid rgba(56, 189, 248, 0.3); 
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+        /* Efek Glow Futuristik */
+        .neon-border {
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2), inset 0 0 10px rgba(0, 212, 255, 0.1);
+            background: rgba(0, 20, 40, 0.8);
+            transition: all 0.3s ease;
         }
-        /* Trigger Zoom tiap blok */
-        .block-card:hover { 
-            transform: scale(1.08); 
-            z-index: 40; 
-            border-color: #38bdf8;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
+        .neon-border:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+            z-index: 10;
         }
-        .neon-text { text-shadow: 0 0 10px #38bdf8; }
-        
-        /* Animasi Chart */
-        #chartPanel {
-            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
+        .line-connector {
+            background: linear-gradient(180deg, #00d4ff 0%, transparent 100%);
+            width: 2px; height: 40px; margin: 0 auto;
         }
-        #chartPanel.active {
-            max-height: 500px;
-            opacity: 1;
-            margin-top: 20px;
-        }
+        .text-neon { text-shadow: 0 0 5px #00d4ff; }
+        #chartArea { transition: max-height 0.5s ease, opacity 0.5s ease; }
+        .hidden { display: none; opacity: 0; max-height: 0; }
     </style>
 </head>
-<body class="p-4 md:p-10">
+<body class="p-4 md:p-8 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
 
-    <div class="text-center mb-16">
-        <h1 class="text-xl md:text-3xl font-bold neon-text tracking-[0.3em] uppercase border-b-2 border-sky-500 pb-2 inline-block">
-            " QuantumAI v6 Sulung Workflow "
+    <div class="text-center mb-6">
+        <h1 class="text-2xl md:text-4xl font-bold text-neon tracking-tighter italic uppercase">
+            « QuantumAI v6 Operational Dashboard »
         </h1>
     </div>
 
-    <div class="max-w-5xl mx-auto space-y-12">
-        
-        <div class="flex justify-center">
-            <div class="block-card p-6 w-72 text-center rounded-lg">
-                <h2 class="text-sky-400 font-bold mb-2">" Data Feed / API "</h2>
-                <div class="text-[10px] space-y-1 opacity-70">
-                    <p>Market Data | Candlestick</p>
-                    <p>Indicators | Volume</p>
-                </div>
+    <div class="flex justify-center mb-2">
+        <div class="neon-border p-4 w-80 text-center rounded-sm">
+            <h2 class="border-b border-sky-800 pb-1 mb-2 font-bold text-xs">" Data Feed / API "</h2>
+            <div id="data-feed-content" class="text-[10px] text-left space-y-1 text-emerald-400">
+                <p>> Status: <span class="animate-pulse">ONLINE</span></p>
+                <p>> Market: Crypto/Forex</p>
+                <p>> Volume: 2.4B Scanning...</p>
             </div>
         </div>
+    </div>
+    <div class="line-connector"></div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="block-card p-5 rounded-lg border-l-4 border-l-sky-500">
-                <h3 class="text-sky-400 text-xs font-bold mb-4 uppercase">" AI Core Signal "</h3>
-                <div class="flex justify-around font-black text-xs">
-                    <span class="text-emerald-400 animate-pulse">BUY</span>
-                    <span class="text-slate-600">SELL</span>
-                    <span class="text-slate-600">HOLD</span>
-                </div>
-            </div>
+    <div class="flex justify-center mb-4">
+        <div class="neon-border px-10 py-2 bg-sky-900/40 border-double border-4">
+            <span class="text-xs font-black tracking-widest">BACKEND CORE SYSTEM</span>
+        </div>
+    </div>
 
-            <div class="block-card p-5 rounded-lg">
-                <h3 class="text-sky-400 text-xs font-bold mb-3 uppercase">" Satellite Momentum "</h3>
-                <div class="h-1 bg-sky-900 w-full overflow-hidden">
-                    <div class="bg-sky-400 h-full w-1/2 animate-[ping_2s_infinite]"></div>
-                </div>
-                <p class="text-[9px] mt-2 opacity-50">Radar Pulse: Active</p>
-            </div>
-
-            <div class="block-card p-5 rounded-lg border-l-4 border-l-orange-500">
-                <h3 class="text-orange-400 text-xs font-bold mb-3 uppercase">" Risk Engine "</h3>
-                <p class="text-[10px] leading-relaxed italic text-orange-200/70">SL / TP / BE<br>Trailing Steps Active</p>
-            </div>
-
-            <div class="block-card p-5 rounded-lg">
-                <h3 class="text-sky-400 text-xs font-bold mb-2 uppercase">" News Intelligence "</h3>
-                <div class="text-[9px] space-y-1 text-slate-400">
-                    <p>> Breaking News...</p>
-                    <p>> Scanning Alerts...</p>
-                </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <div class="neon-border p-4 rounded-tl-3xl">
+            <h3 class="text-[10px] font-bold mb-3 italic">" AI CORE SIGNAL "</h3>
+            <div class="flex justify-between text-xs font-black">
+                <span id="signal-buy" class="text-emerald-500 opacity-50">BUY</span>
+                <span id="signal-sell" class="text-rose-600">SELL</span>
+                <span id="signal-hold" class="text-yellow-500 opacity-50">HOLD</span>
             </div>
         </div>
+        <div class="neon-border p-4">
+            <h3 class="text-[10px] font-bold mb-2 italic">" SATELLITE MOMENTUM "</h3>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-sky-400 h-full animate-progress" style="width: 65%"></div>
+            </div>
+        </div>
+        <div class="neon-border p-4">
+            <h3 class="text-[10px] font-bold mb-2 italic text-orange-400">" RISK ENGINE "</h3>
+            <p class="text-[9px]">SL: 1.0430 | TP: 1.0550</p>
+        </div>
+        <div class="neon-border p-4 rounded-tr-3xl">
+            <h3 class="text-[10px] font-bold mb-2 italic">" NEWS INTELLIGENCE "</h3>
+            <marquee class="text-[9px] text-white">FED Interest Rate Decision Pending... Market Volatility High...</marquee>
+        </div>
+    </div>
 
-        <div class="flex flex-col items-center">
-            <button onclick="toggleChart()" class="group relative px-6 py-2 font-bold text-sky-400 transition-all duration-300">
-                <span class="absolute inset-0 border border-sky-500 rounded-md"></span>
-                <span class="relative uppercase text-xs tracking-widest">" Buka/Tutup Chart "</span>
-            </button>
-            
-            <div id="chartPanel" class="w-full">
-                <div class="block-card p-6 border-emerald-500/30 bg-black/40 rounded-xl shadow-2xl">
-                    <h2 class="text-emerald-400 text-xs font-bold mb-6 tracking-widest">" Real-Time Chart Analysis "</h2>
-                    <div class="flex items-end justify-between gap-2 h-40 border-l border-b border-slate-800 p-2">
-                        <div class="bg-emerald-500/80 w-full h-[60%] hover:bg-emerald-400 transition-all"></div>
-                        <div class="bg-rose-500/80 w-full h-[85%] hover:bg-rose-400 transition-all"></div>
-                        <div class="bg-emerald-500/80 w-full h-[40%]"></div>
-                        <div class="bg-emerald-500/80 w-full h-[70%]"></div>
-                        <div class="bg-rose-500/80 w-full h-[30%]"></div>
-                        <div class="bg-emerald-500/80 w-full h-[95%]"></div>
+    <div class="flex justify-center mt-6 flex-col items-center">
+        <div class="line-connector"></div>
+        <div class="neon-border p-2 w-96 text-center text-[10px] font-bold uppercase tracking-widest">
+            " AutoTrade & Manual Control "
+        </div>
+    </div>
+
+    <div class="mt-8 flex flex-col items-center">
+        <button onclick="toggleChart()" class="mb-4 px-8 py-2 bg-sky-600 hover:bg-sky-400 text-white font-black text-xs rounded-full border-b-4 border-sky-900 transition-all active:transform active:translate-y-1">
+            BUKA/TUTUP CHART
+        </button>
+
+        <div id="chartArea" class="hidden w-full max-w-5xl">
+            <div class="neon-border p-6 bg-black">
+                <h2 class="text-xs font-bold mb-4 text-emerald-400">" REAL-TIME CHART ANALYSIS "</h2>
+                <div class="h-64 w-full bg-[url('https://media.istockphoto.com/id/1147065133/vector/financial-graph-with-uptrend-line-and-candlestick-chart-in-stock-market-on-blue-background.jpg?s=612x612&w=0&k=20&c=6DaxvGk863vHpx0O832tLidX3BInX_E_lR945Dq3Vyk=')] bg-cover opacity-60">
                     </div>
-                </div>
             </div>
         </div>
+    </div>
 
-        <div class="block-card p-4 border-sky-500 bg-black/90 max-w-3xl mx-auto rounded-md">
-            <h2 class="text-sky-400 text-[10px] font-bold mb-2 tracking-tighter uppercase">" QuantumAI Chat Interface "</h2>
-            <div class="bg-slate-950 p-4 h-32 overflow-y-auto text-[11px] text-emerald-500 font-mono border border-slate-900 rounded">
-                <p class="opacity-50">[SYSTEM] >> Authentication Success...</p>
-                <p>[SYSTEM] >> Syncing all ONLINE. Market scan...</p>
-                <p>[CORE] >> Backend system: active.</p>
-                <p class="text-sky-400">[USER] >> Initiate full-spectrum scan.</p>
-                <p class="animate-pulse">_</p>
-            </div>
+    <div class="mt-8 max-w-4xl mx-auto neon-border border-emerald-500 bg-black p-4 rounded-b-3xl">
+        <p class="text-[10px] font-bold mb-2 text-emerald-500">" REAL-TIME ENGINE LOG "</p>
+        <div id="terminal" class="bg-black h-32 overflow-y-auto font-mono text-[10px] p-2 text-emerald-400">
+            <p>[SYSTEM] >> Welcome to QuantumAI v6...</p>
+            <p>[SYSTEM] >> Connecting to Exchange API...</p>
+            <p>[CORE] >> Analysing Market Momentum...</p>
+            <p class="animate-pulse">_</p>
         </div>
-
     </div>
 
-    <div class="mt-20 text-center text-[10px] text-slate-600 tracking-[0.2em] pb-10">
-        " Developed by dadanrukanda89-lab | QuantumAI Protocol 2026 "
-    </div>
+    <footer class="mt-12 text-center text-[9px] opacity-40 italic">
+        Developed by dadanrukanda89-lab | QuantumAI Protocol 2026
+    </footer>
 
     <script>
         function toggleChart() {
-            const chart = document.getElementById('chartPanel');
-            chart.classList.toggle('active');
+            const chart = document.getElementById('chartArea');
+            chart.classList.toggle('hidden');
+            chart.style.opacity = chart.classList.contains('hidden') ? "0" : "1";
         }
     </script>
 </body>
