@@ -2,86 +2,101 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>QuantumAI v6 | Sulung Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumAI v6 | Sulung Machine</title>
     <style>
-        :root { --neon: #00ff7f; --blue: #00d2ff; }
+        :root { --neon: #00ff7f; --blue: #00d2ff; --bg: #050a0f; }
         
-        /* Dasar Body */
-        body, html { 
-            margin: 0; padding: 0; background: #000; 
-            width: 100%; height: 100%; overflow: auto;
-            font-family: 'Courier New', monospace;
+        body { 
+            margin: 0; background: var(--bg); color: #fff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden;
         }
 
-        /* Container Blueprint Utama */
-        #machine-core {
+        /* Border Glow Luar Mesin */
+        .machine-frame {
+            width: 95vw; max-width: 500px;
+            margin-top: 60px; padding: 15px;
+            border: 2px solid var(--blue);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+            background: rgba(0,0,0,0.9);
+            border-radius: 10px;
             position: relative;
-            width: 100%; /* Menyesuaikan lebar HP lo */
-            max-width: 600px; /* Biar gak kegedean di PC */
-            aspect-ratio: 10 / 14.5; /* Sesuai proporsi gambar workflow lo */
-            background-image: url('https://i.ibb.co/vz0X0pS/1000069403.png'); /* Link Gambar Anti-Gagal */
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #222;
         }
 
-        /* Mapping Data (Posisi % Persen di CSS) */
-        /* Biar mau di HP atau PC, posisi angka tetep di dalem kotak */
-        .data-overlay { 
-            position: absolute; font-weight: bold; 
-            text-align: center; pointer-events: none;
+        /* Label Operator di Atas */
+        .header {
+            position: absolute; top: -45px; left: 0; width: 100%;
+            display: flex; justify-content: space-between;
+            font-size: 0.8rem; color: var(--neon); letter-spacing: 2px;
         }
 
-        /* Angka BUY/SELL */
-        #sig-val { 
-            top: 21.5%; left: 5%; width: 20%; 
-            font-size: 1.2rem; text-shadow: 0 0 10px var(--neon); 
+        /* Kotak Signal Gede */
+        .block-main {
+            border: 1px solid var(--neon);
+            margin-bottom: 20px; padding: 20px;
+            text-align: center; background: rgba(0, 255, 127, 0.05);
+            box-shadow: inset 0 0 15px rgba(0, 255, 127, 0.1);
         }
 
-        /* Angka Momentum % */
-        #mom-val { 
-            top: 21.5%; left: 33%; width: 19%; 
-            font-size: 1.2rem; color: var(--blue);
+        .label { font-size: 0.7rem; color: var(--blue); text-transform: uppercase; margin-bottom: 10px; }
+        
+        #sig-val { font-size: 4rem; font-weight: 900; text-shadow: 0 0 20px var(--neon); }
+        
+        /* Bar Momentum */
+        .block-stats { display: flex; gap: 10px; margin-bottom: 20px; }
+        .stat-card { 
+            flex: 1; border: 1px solid var(--blue); padding: 10px; 
+            text-align: center; background: rgba(0,0,0,0.5);
+        }
+        
+        #mom-val { font-size: 2rem; color: var(--blue); font-weight: bold; }
+
+        /* Terminal Chat (Hajar yang Gede) */
+        .terminal {
+            background: #000; border: 1px solid #333; height: 150px;
+            font-family: 'Courier New', monospace; font-size: 0.7rem;
+            padding: 10px; overflow-y: auto; color: #aaa;
+            border-top: 3px solid var(--blue);
         }
 
-        /* Log Terminal (Kotak Hitam Bawah) */
-        #log-stream { 
-            top: 50.5%; left: 18.5%; width: 63%; height: 8%; 
-            overflow: hidden; font-size: 0.5rem; text-align: left; 
-            color: #9d50bb; display: flex; flex-direction: column-reverse;
-        }
-
-        /* Status Vol (Kiri Atas) */
-        #vol-val { top: 7.5%; left: 6%; width: 18%; font-size: 0.6rem; color: var(--blue); }
-
-        /* Floating Nav */
-        .operator-panel {
-            position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.8);
-            border-bottom: 1px solid var(--neon); padding: 10px;
-            display: flex; justify-content: space-between; z-index: 100;
-        }
+        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="operator-panel">
-        <div style="color:var(--neon); font-size: 0.8rem;">DRUKANDA // V6</div>
-        <div style="color:white; font-size: 0.8rem;">CORE: <span id="status-core">ACTIVE</span></div>
-    </div>
+    <div class="machine-frame">
+        <div class="header">
+            <span>ID: DRUKANDA // V6</span>
+            <span>STATUS: ACTIVE</span>
+        </div>
 
-    <div style="height: 50px;"></div>
+        <div class="block-main">
+            <div class="label">--- AI CORE SIGNAL PULSE ---</div>
+            <div id="sig-val">SCAN</div>
+        </div>
 
-    <div id="machine-core">
-        <div id="sig-val" class="data-overlay">SCAN</div>
-        <div id="mom-val" class="data-overlay">0%</div>
-        <div id="vol-val" class="data-overlay">0.00B</div>
-        <div id="log-stream" class="data-overlay"></div>
+        <div class="block-stats">
+            <div class="stat-card">
+                <div class="label">MOMENTUM</div>
+                <div id="mom-val">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">VOLATILITY</div>
+                <div id="vol-val" style="font-size: 1.2rem; margin-top:5px;">2.41B</div>
+            </div>
+        </div>
+
+        <div class="label" style="margin-bottom: 5px;">> QUANTUM_CHAT_LOG</div>
+        <div class="terminal" id="log-stream">
+            <div class="log-entry">> Initializing Sulung Workflow...</div>
+            <div class="log-entry">> Operator Drukanda Authorized.</div>
+        </div>
     </div>
 
     <script>
-        async function updateData() {
+        async function sync() {
             try {
                 const r = await fetch('/update_engine');
                 const d = await r.json();
@@ -94,16 +109,13 @@
                 document.getElementById('vol-val').innerText = d.vol;
                 
                 const log = document.getElementById('log-stream');
-                const entry = document.createElement('div');
-                entry.innerText = "> " + d.log_msg;
-                log.appendChild(entry);
-                
-                // Jaga agar log tidak terlalu panjang
-                if (log.childNodes.length > 5) log.removeChild(log.firstChild);
-                
-            } catch(e) { console.log("Sync lost..."); }
+                const div = document.createElement('div');
+                div.className = 'log-entry';
+                div.innerText = "> " + d.log_msg;
+                log.prepend(div);
+            } catch(e) {}
         }
-        setInterval(updateData, 3000);
+        setInterval(sync, 3000);
     </script>
 </body>
 </html>
