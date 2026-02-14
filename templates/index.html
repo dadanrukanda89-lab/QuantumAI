@@ -3,109 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 Engine</title>
+    <title>QuantumAI v6 Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
         body { background: #010409; color: #00d4ff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
         
-        /* ZOOM LEBIH BESAR */
-        .glass-panel {
-            background: rgba(0, 20, 40, 0.8);
-            border: 1px solid #00d4ff;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+        /* ZOOM SUPER GEDE SAAT DI-TAP/HOVER */
+        .neon-card {
+            background: rgba(0, 30, 60, 0.7);
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
         }
-        .glass-panel:hover {
-            transform: scale(1.25); /* Zoom diperbesar lagi */
-            z-index: 100;
-            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
-            border-color: #fff;
+        .neon-card:hover, .neon-card:active {
+            transform: scale(1.5); /* Zoom 1.5x biar puas liatnya */
+            z-index: 999;
+            box-shadow: 0 0 50px #00d4ff;
+            background: #001a33;
+            border-color: #ffffff;
         }
 
         .text-glow { text-shadow: 0 0 10px #00d4ff; }
-        .hidden-chart { display: none; opacity: 0; }
-        .show-chart { display: block; opacity: 1; }
+        #chartPanel { display: none; }
+        #chartPanel.open { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="p-4">
+<body class="p-6">
 
-    <h1 class="text-center text-2xl mb-10 mt-5 text-glow italic">" QuantumAI v6 Operational Dashboard "</h1>
+    <h1 class="text-center text-2xl mb-12 text-glow italic uppercase tracking-widest">" QuantumAI v6 Sulung Workflow "</h1>
 
-    <div class="max-w-6xl mx-auto space-y-10">
+    <div class="max-w-4xl mx-auto space-y-8">
         <div class="flex justify-center">
-            <div class="glass-panel p-4 w-72 rounded-lg text-center">
-                <h2 class="text-[10px] mb-2 uppercase tracking-tighter italic">" Data Feed / API "</h2>
+            <div class="neon-card p-4 w-72 rounded-lg text-center">
+                <p class="text-[10px] mb-2 text-white uppercase">" Data Feed / API "</p>
                 <div class="text-[9px] font-mono text-emerald-400">
-                    STATUS: <span id="status">SCANNING...</span> | VOL: <span id="vol">0.0B</span>
+                    STATUS: <span id="status">ONLINE</span> | VOL: <span id="vol">--</span>
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="glass-panel p-5 rounded-xl border-l-4 border-emerald-500">
-                <h3 class="text-[10px] mb-4 italic">" AI CORE SIGNAL "</h3>
-                <div id="signal-display" class="font-black text-xl text-center">---</div>
+        <div class="grid grid-cols-2 gap-6">
+            <div class="neon-card p-5 rounded-xl border-l-4 border-emerald-400">
+                <p class="text-[10px] mb-4">" AI CORE SIGNAL "</p>
+                <div id="signal" class="text-center text-xl font-black">---</div>
             </div>
 
-            <div class="glass-panel p-5 rounded-xl">
-                <h3 class="text-[10px] mb-4 italic">" SATELLITE MOMENTUM "</h3>
-                <div class="h-2 w-full bg-slate-900 rounded-full"><div id="momentum-bar" class="h-full bg-cyan-400" style="width: 0%"></div></div>
+            <div class="neon-card p-5 rounded-xl">
+                <p class="text-[10px] mb-4">" MOMENTUM "</p>
+                <div class="h-2 w-full bg-slate-900 rounded-full overflow-hidden">
+                    <div id="m-bar" class="h-full bg-cyan-400" style="width: 0%"></div>
+                </div>
             </div>
 
-            <div class="glass-panel p-5 rounded-xl border-l-4 border-orange-500">
-                <h3 class="text-[10px] mb-4 italic text-orange-400">" RISK ENGINE "</h3>
+            <div class="neon-card p-5 rounded-xl border-l-4 border-orange-500">
+                <p class="text-[10px] mb-4 text-orange-400">" RISK ENGINE "</p>
                 <div class="text-[9px] font-mono">SL: <span id="sl">--</span><br>TP: <span id="tp">--</span></div>
             </div>
 
-            <div class="glass-panel p-5 rounded-xl">
-                <h3 class="text-[10px] mb-4 italic uppercase">" News Intelligence "</h3>
-                <marquee id="news" class="text-[8px] text-white">Connecting to global news feed...</marquee>
+            <div class="neon-card p-5 rounded-xl">
+                <p class="text-[10px] mb-4 uppercase">" News Intelligence "</p>
+                <div class="text-[8px] italic animate-pulse">Scanning orbital markets...</div>
             </div>
         </div>
 
-        <div class="text-center">
-            <button onclick="toggleChart()" class="glass-panel px-8 py-2 rounded-full text-[10px] font-bold mb-5 hover:bg-cyan-500 hover:text-black">" BUKA/TUTUP CHART "</button>
-            <div id="chartContainer" class="hidden-chart glass-panel p-6 rounded-3xl bg-black mx-auto max-w-4xl">
-                <div class="h-40 w-full border-b border-l border-sky-900 flex items-end gap-1">
-                    <div class="bg-emerald-500 w-full h-24"></div><div class="bg-rose-500 w-full h-32"></div><div class="bg-emerald-500 w-full h-16"></div><div class="bg-emerald-500 w-full h-40"></div>
+        <div class="text-center py-6">
+            <button onclick="document.getElementById('chartPanel').classList.toggle('open')" class="neon-card px-8 py-3 rounded-full text-[10px] font-bold text-white uppercase">" Buka/Tutup Chart "</button>
+            <div id="chartPanel" class="mt-6 neon-card p-6 rounded-2xl bg-black">
+                <div class="h-40 flex items-end justify-between gap-1 border-b border-l border-sky-900 p-2">
+                    <div class="bg-emerald-500 w-full h-1/2"></div>
+                    <div class="bg-rose-500 w-full h-3/4"></div>
+                    <div class="bg-emerald-500 w-full h-full"></div>
+                    <div class="bg-emerald-500 w-full h-2/3"></div>
                 </div>
             </div>
         </div>
 
-        <div class="glass-panel p-4 rounded-b-3xl bg-black max-w-3xl mx-auto">
-            <div id="log-console" class="h-32 overflow-y-auto font-mono text-[10px] text-emerald-500">
-                <p>> [SYSTEM] Initializing Engine...</p>
+        <div class="neon-card p-4 rounded-b-3xl bg-black/80">
+            <div id="terminal" class="h-32 overflow-y-auto text-[10px] font-mono text-emerald-400 space-y-1">
+                <p>> [SYSTEM] Neural Engine Active...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Fungsi Buka Tutup
-        function toggleChart() {
-            document.getElementById('chartContainer').classList.toggle('show-chart');
-        }
-
-        // FUNGSI MESIN (Update otomatis tanpa refresh)
-        async function fetchEngine() {
+        async function updateDashboard() {
             try {
-                const response = await fetch('/update_engine');
-                const data = await response.json();
+                const r = await fetch('/update_engine');
+                const d = await r.json();
+                document.getElementById('vol').innerText = d.vol;
+                document.getElementById('signal').innerText = d.signal;
+                document.getElementById('m-bar').style.width = d.momentum + '%';
+                document.getElementById('sl').innerText = d.sl;
+                document.getElementById('tp').innerText = d.tp;
                 
-                document.getElementById('status').innerText = data.status;
-                document.getElementById('vol').innerText = data.market_vol;
-                document.getElementById('signal-display').innerText = data.signal;
-                document.getElementById('momentum-bar').style.width = data.momentum + '%';
-                document.getElementById('sl').innerText = data.risk_sl;
-                document.getElementById('tp').innerText = data.risk_tp;
-                
-                const consoleLog = document.getElementById('log-console');
-                consoleLog.innerHTML += `<p>${data.log}</p>`;
-                consoleLog.scrollTop = consoleLog.scrollHeight;
-            } catch (e) { console.log("Engine offline..."); }
+                const term = document.getElementById('terminal');
+                term.innerHTML += `<p>${d.log}</p>`;
+                term.scrollTop = term.scrollHeight;
+            } catch (e) {}
         }
-
-        setInterval(fetchEngine, 2000); // Mesin update tiap 2 detik
+        setInterval(updateDashboard, 2000);
     </script>
 </body>
 </html>
