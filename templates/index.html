@@ -2,105 +2,108 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>QuantumAI v6 | Sulung Protocol</title>
     <style>
         :root { --neon: #00ff7f; --blue: #00d2ff; }
+        
+        /* Dasar Body */
         body, html { 
             margin: 0; padding: 0; background: #000; 
             width: 100%; height: 100%; overflow: auto;
             font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Container Mesin Utama */
-        #engine-room {
+        /* Container Blueprint Utama */
+        #machine-core {
             position: relative;
-            width: 1000px; /* Lebar Blueprint lo */
-            height: 1450px; /* Tinggi Blueprint lo */
-            margin: 0 auto;
-            background-image: url('https://i.ibb.co/vz0X0pS/1000069403.png'); /* Link Gambar Alternatif yang Stabil */
-            background-size: contain;
-            background-repeat: no-repeat;
-            transform-origin: top center;
-            transition: transform 0.2s;
+            width: 100%; /* Menyesuaikan lebar HP lo */
+            max-width: 600px; /* Biar gak kegedean di PC */
+            aspect-ratio: 10 / 14.5; /* Sesuai proporsi gambar workflow lo */
+            background-image: url('https://i.ibb.co/vz0X0pS/1000069403.png'); /* Link Gambar Anti-Gagal */
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #222;
         }
 
-        /* Mapping Data Nempel di Kotak Gambar */
-        .overlay { position: absolute; font-weight: bold; text-align: center; pointer-events: none; }
+        /* Mapping Data (Posisi % Persen di CSS) */
+        /* Biar mau di HP atau PC, posisi angka tetep di dalem kotak */
+        .data-overlay { 
+            position: absolute; font-weight: bold; 
+            text-align: center; pointer-events: none;
+        }
 
-        /* AI Core Signal Box */
+        /* Angka BUY/SELL */
         #sig-val { 
-            top: 318px; left: 50px; width: 200px; 
-            font-size: 2.2rem; text-shadow: 0 0 15px var(--neon); 
+            top: 21.5%; left: 5%; width: 20%; 
+            font-size: 1.2rem; text-shadow: 0 0 10px var(--neon); 
         }
 
-        /* Satellite Momentum Box */
+        /* Angka Momentum % */
         #mom-val { 
-            top: 318px; left: 325px; width: 195px; 
-            font-size: 2.2rem; color: var(--blue);
+            top: 21.5%; left: 33%; width: 19%; 
+            font-size: 1.2rem; color: var(--blue);
         }
 
-        /* Terminal Chat Box (Kotak Hitam Bawah) */
+        /* Log Terminal (Kotak Hitam Bawah) */
         #log-stream { 
-            top: 725px; left: 190px; width: 620px; height: 115px; 
-            overflow: hidden; font-size: 0.7rem; text-align: left; 
-            padding: 5px; line-height: 1.3; color: #9d50bb;
+            top: 50.5%; left: 18.5%; width: 63%; height: 8%; 
+            overflow: hidden; font-size: 0.5rem; text-align: left; 
+            color: #9d50bb; display: flex; flex-direction: column-reverse;
         }
 
-        /* Status Volatility (Kiri Atas) */
-        #vol-val { top: 115px; left: 65px; width: 170px; font-size: 0.9rem; color: var(--blue); }
+        /* Status Vol (Kiri Atas) */
+        #vol-val { top: 7.5%; left: 6%; width: 18%; font-size: 0.6rem; color: var(--blue); }
 
-        /* Tombol Kontrol */
-        .ui-fixed {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 1000; display: flex; gap: 10px; background: rgba(0,0,0,0.8);
-            padding: 12px 25px; border: 1px solid var(--neon); border-radius: 50px;
+        /* Floating Nav */
+        .operator-panel {
+            position: fixed; top: 0; width: 100%; background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid var(--neon); padding: 10px;
+            display: flex; justify-content: space-between; z-index: 100;
         }
-        .b-ui { background: none; border: 1px solid var(--neon); color: var(--neon); padding: 5px 15px; border-radius: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="ui-fixed">
-        <button class="b-ui" onclick="zoom(0.1)">ZOOM +</button>
-        <button class="b-ui" onclick="zoom(-0.1)">ZOOM -</button>
-        <div style="color:var(--neon); font-size:0.7rem; margin-top:5px; margin-left:10px;">OPERATOR: DRUKANDA</div>
+    <div class="operator-panel">
+        <div style="color:var(--neon); font-size: 0.8rem;">DRUKANDA // V6</div>
+        <div style="color:white; font-size: 0.8rem;">CORE: <span id="status-core">ACTIVE</span></div>
     </div>
 
-    <div id="engine-room">
-        <div id="sig-val" class="overlay">WAIT</div>
-        <div id="mom-val" class="overlay">0%</div>
-        <div id="vol-val" class="overlay">VOL: 0.00B</div>
-        <div id="log-stream" class="overlay"></div>
+    <div style="height: 50px;"></div>
+
+    <div id="machine-core">
+        <div id="sig-val" class="data-overlay">SCAN</div>
+        <div id="mom-val" class="data-overlay">0%</div>
+        <div id="vol-val" class="data-overlay">0.00B</div>
+        <div id="log-stream" class="data-overlay"></div>
     </div>
 
     <script>
-        let sc = 0.5;
-        const room = document.getElementById('engine-room');
-
-        function zoom(n) {
-            sc += n;
-            room.style.transform = `scale(${sc})`;
-        }
-        zoom(0); // init
-
-        async function refresh() {
+        async function updateData() {
             try {
-                const res = await fetch('/update_engine');
-                const data = await res.json();
+                const r = await fetch('/update_engine');
+                const d = await r.json();
                 
                 const s = document.getElementById('sig-val');
-                s.innerText = data.signal;
-                s.style.color = (data.signal === 'BUY') ? '#00ff7f' : (data.signal === 'SELL' ? '#ff4444' : '#fff');
+                s.innerText = d.signal;
+                s.style.color = (d.signal === 'BUY') ? '#00ff7f' : (d.signal === 'SELL' ? '#ff4444' : '#fff');
                 
-                document.getElementById('mom-val').innerText = data.momentum + '%';
-                document.getElementById('vol-val').innerText = "VOL: " + data.vol;
+                document.getElementById('mom-val').innerText = d.momentum + '%';
+                document.getElementById('vol-val').innerText = d.vol;
                 
-                const l = document.getElementById('log-stream');
-                l.innerHTML = `<div>> ${data.log_msg}</div>` + l.innerHTML;
-            } catch (e) {}
+                const log = document.getElementById('log-stream');
+                const entry = document.createElement('div');
+                entry.innerText = "> " + d.log_msg;
+                log.appendChild(entry);
+                
+                // Jaga agar log tidak terlalu panjang
+                if (log.childNodes.length > 5) log.removeChild(log.firstChild);
+                
+            } catch(e) { console.log("Sync lost..."); }
         }
-        setInterval(refresh, 3000);
+        setInterval(updateData, 3000);
     </script>
 </body>
 </html>
