@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify
 import random
+import os
 
 app = Flask(__name__)
 
@@ -9,17 +10,15 @@ def index():
 
 @app.route('/update_engine')
 def update_engine():
-    # Simulasi data mesin yang sinkron dengan workflow QuantumAI v6
     data = {
         "status": "ONLINE",
         "vol": f"{random.uniform(2.4, 2.9):.2f}B",
         "signal": random.choice(["BUY", "SELL", "HOLD"]),
         "momentum": random.randint(60, 98),
-        "sl": f"{random.uniform(1.0431, 1.0439):.5f}",
-        "tp": f"{random.uniform(1.0551, 1.0559):.5f}",
         "log_msg": f"> [CORE] Signal pulse detected at {random.randint(10, 50)}ms"
     }
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
