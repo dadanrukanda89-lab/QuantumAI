@@ -9,7 +9,7 @@ def index():
 
 @app.route('/update_engine')
 def update_engine():
-    # Simulasi data mesin yang sinkron dengan workflow
+    # Simulasi data mesin yang sinkron dengan workflow QuantumAI v6
     data = {
         "status": "ONLINE",
         "vol": f"{random.uniform(2.4, 2.9):.2f}B",
