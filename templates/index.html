@@ -3,172 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumAI v6 - Operational Dashboard</title>
+    <title>QuantumAI v6 Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=JetBrains+Mono&display=swap');
+        body { background: #010409; color: #00d4ff; font-family: 'Orbitron', sans-serif; overflow-x: hidden; }
         
-        :root {
-            --neon-blue: #00d4ff;
-            --neon-green: #00ff9d;
-            --neon-orange: #ff9d00;
-        }
-
-        body { 
-            background: radial-gradient(circle at center, #0a192f 0%, #010409 100%);
-            color: var(--neon-blue);
-            font-family: 'Orbitron', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Efek Kaca & Cahaya (Glassmorphism) */
+        /* ZOOM LEBIH BESAR */
         .glass-panel {
-            background: rgba(0, 20, 40, 0.7);
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-            backdrop-filter: blur(8px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid #00d4ff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+            cursor: pointer;
         }
-
-        /* Fitur Zoom Tiap Blok */
         .glass-panel:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            transform: scale(1.25); /* Zoom diperbesar lagi */
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6);
             border-color: #fff;
-            z-index: 50;
         }
 
-        .text-glow { text-shadow: 0 0 10px var(--neon-blue); }
-        .text-glow-green { text-shadow: 0 0 10px var(--neon-green); }
-        
-        /* Garis Konektor ala Cyberpunk */
-        .connector {
-            width: 2px;
-            height: 30px;
-            background: linear-gradient(to bottom, var(--neon-blue), transparent);
-            margin: 0 auto;
-        }
-
-        /* Animasi Chart */
-        #chartArea {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: all 0.6s ease-in-out;
-        }
-        #chartArea.active {
-            max-height: 600px;
-            opacity: 1;
-        }
-
-        /* Custom Scrollbar Terminal */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: var(--neon-blue); }
+        .text-glow { text-shadow: 0 0 10px #00d4ff; }
+        .hidden-chart { display: none; opacity: 0; }
+        .show-chart { display: block; opacity: 1; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4">
 
-    <div class="text-center mb-6">
-        <h1 class="text-xl md:text-3xl font-bold text-glow tracking-[0.4em] uppercase italic">
-            " QuantumAI v6 Sulung Workflow "
-        </h1>
-        <div class="connector"></div>
-    </div>
+    <h1 class="text-center text-2xl mb-10 mt-5 text-glow italic">" QuantumAI v6 Operational Dashboard "</h1>
 
-    <div class="flex justify-center mb-8">
-        <div class="glass-panel p-4 w-full max-w-sm rounded-lg text-center border-b-4">
-            <h2 class="text-[10px] font-bold mb-2 tracking-widest uppercase">" Data Feed / API "</h2>
-            <div class="grid grid-cols-2 text-[9px] font-mono text-emerald-400">
-                <p>STATUS: <span class="animate-pulse">ONLINE</span></p>
-                <p>API: CONNECTED</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto mb-10">
-        
-        <div class="glass-panel p-5 rounded-xl border-l-4 border-l-cyan-500">
-            <h3 class="text-[10px] font-bold mb-4 italic">" AI CORE SIGNAL "</h3>
-            <div class="flex justify-between font-black text-sm">
-                <span class="text-emerald-500 text-glow-green animate-pulse">BUY</span>
-                <span class="text-slate-800">SELL</span>
-                <span class="text-slate-800">HOLD</span>
+    <div class="max-w-6xl mx-auto space-y-10">
+        <div class="flex justify-center">
+            <div class="glass-panel p-4 w-72 rounded-lg text-center">
+                <h2 class="text-[10px] mb-2 uppercase tracking-tighter italic">" Data Feed / API "</h2>
+                <div class="text-[9px] font-mono text-emerald-400">
+                    STATUS: <span id="status">SCANNING...</span> | VOL: <span id="vol">0.0B</span>
+                </div>
             </div>
         </div>
 
-        <div class="glass-panel p-5 rounded-xl">
-            <h3 class="text-[10px] font-bold mb-4 italic">" SATELLITE MOMENTUM "</h3>
-            <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-blue-600 to-cyan-400 w-3/4 animate-pulse"></div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-emerald-500">
+                <h3 class="text-[10px] mb-4 italic">" AI CORE SIGNAL "</h3>
+                <div id="signal-display" class="font-black text-xl text-center">---</div>
             </div>
-            <p class="text-[8px] mt-2 opacity-60">Scanning Orbital Pulse...</p>
-        </div>
 
-        <div class="glass-panel p-5 rounded-xl border-l-4 border-l-orange-500">
-            <h3 class="text-[10px] font-bold mb-4 italic text-orange-400">" RISK ENGINE "</h3>
-            <div class="text-[9px] space-y-1 font-mono text-orange-200">
-                <p>SL: 1.04350</p>
-                <p>TP: 1.05680</p>
+            <div class="glass-panel p-5 rounded-xl">
+                <h3 class="text-[10px] mb-4 italic">" SATELLITE MOMENTUM "</h3>
+                <div class="h-2 w-full bg-slate-900 rounded-full"><div id="momentum-bar" class="h-full bg-cyan-400" style="width: 0%"></div></div>
             </div>
-        </div>
 
-        <div class="glass-panel p-5 rounded-xl">
-            <h3 class="text-[10px] font-bold mb-4 italic">" NEWS INTELLIGENCE "</h3>
-            <div class="overflow-hidden h-10">
-                <marquee direction="up" scrollamount="1" class="text-[8px] text-white font-mono">
-                    > FED Interest Rate 5.5%<br>
-                    > BTC Liquidity Spike<br>
-                    > Volatility Index High
-                </marquee>
+            <div class="glass-panel p-5 rounded-xl border-l-4 border-orange-500">
+                <h3 class="text-[10px] mb-4 italic text-orange-400">" RISK ENGINE "</h3>
+                <div class="text-[9px] font-mono">SL: <span id="sl">--</span><br>TP: <span id="tp">--</span></div>
+            </div>
+
+            <div class="glass-panel p-5 rounded-xl">
+                <h3 class="text-[10px] mb-4 italic uppercase">" News Intelligence "</h3>
+                <marquee id="news" class="text-[8px] text-white">Connecting to global news feed...</marquee>
             </div>
         </div>
-    </div>
 
-    <div class="flex justify-center mb-8">
-        <button onclick="toggleChart()" class="glass-panel px-10 py-3 rounded-full text-[10px] font-bold tracking-[0.2em] hover:bg-cyan-500 hover:text-black transition-all active:scale-95 border-2">
-            " BUKA / TUTUP CHART "
-        </button>
-    </div>
+        <div class="text-center">
+            <button onclick="toggleChart()" class="glass-panel px-8 py-2 rounded-full text-[10px] font-bold mb-5 hover:bg-cyan-500 hover:text-black">" BUKA/TUTUP CHART "</button>
+            <div id="chartContainer" class="hidden-chart glass-panel p-6 rounded-3xl bg-black mx-auto max-w-4xl">
+                <div class="h-40 w-full border-b border-l border-sky-900 flex items-end gap-1">
+                    <div class="bg-emerald-500 w-full h-24"></div><div class="bg-rose-500 w-full h-32"></div><div class="bg-emerald-500 w-full h-16"></div><div class="bg-emerald-500 w-full h-40"></div>
+                </div>
+            </div>
+        </div>
 
-    <div id="chartArea" class="max-w-5xl mx-auto mb-10">
-        <div class="glass-panel p-6 rounded-3xl bg-black/90">
-            <h2 class="text-xs font-bold mb-6 tracking-widest text-emerald-400 uppercase">" Real-Time Intalysece Chart "</h2>
-            <div class="h-64 flex items-end gap-1.5 border-b border-l border-slate-800 p-2">
-                <div class="bg-emerald-500/80 w-full h-[60%] hover:h-[65%] transition-all"></div>
-                <div class="bg-emerald-500/80 w-full h-[80%]"></div>
-                <div class="bg-rose-500/80 w-full h-[40%]"></div>
-                <div class="bg-emerald-500/80 w-full h-[95%]"></div>
-                <div class="bg-rose-500/80 w-full h-[30%]"></div>
-                <div class="bg-emerald-500/80 w-full h-[75%]"></div>
-                <div class="bg-rose-500/80 w-full h-[55%]"></div>
-                <div class="bg-emerald-500/80 w-full h-[90%]"></div>
+        <div class="glass-panel p-4 rounded-b-3xl bg-black max-w-3xl mx-auto">
+            <div id="log-console" class="h-32 overflow-y-auto font-mono text-[10px] text-emerald-500">
+                <p>> [SYSTEM] Initializing Engine...</p>
             </div>
         </div>
     </div>
-
-    <div class="max-w-4xl mx-auto glass-panel p-4 rounded-b-3xl border-t-0">
-        <div class="flex items-center gap-3 mb-3 border-b border-sky-900 pb-2">
-            <div class="w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
-            <span class="text-[10px] font-bold tracking-widest">" QUANTUMAI LOG INTERFACE "</span>
-        </div>
-        <div class="h-40 overflow-y-auto custom-scroll font-mono text-[11px] space-y-2 text-emerald-400 p-2 bg-black/50 rounded">
-            <p>> [SYSTEM] >> Authentication Success...</p>
-            <p>> [WSTEM] >> Syncing all ONLINE. Market scan...</p>
-            <p>> [CORE]  >> Backend system: ACTIVE.</p>
-            <p class="text-cyan-400">> [USER]  >> Initiate full-spectrum scan.</p>
-            <p class="animate-pulse text-white">_</p>
-        </div>
-    </div>
-
-    <footer class="mt-20 text-center text-[9px] opacity-30 tracking-[0.5em] pb-10">
-        " Developed by dadanrukanda89-lab | 2026 "
-    </footer>
 
     <script>
+        // Fungsi Buka Tutup
         function toggleChart() {
-            document.getElementById('chartArea').classList.toggle('active');
+            document.getElementById('chartContainer').classList.toggle('show-chart');
         }
+
+        // FUNGSI MESIN (Update otomatis tanpa refresh)
+        async function fetchEngine() {
+            try {
+                const response = await fetch('/update_engine');
+                const data = await response.json();
+                
+                document.getElementById('status').innerText = data.status;
+                document.getElementById('vol').innerText = data.market_vol;
+                document.getElementById('signal-display').innerText = data.signal;
+                document.getElementById('momentum-bar').style.width = data.momentum + '%';
+                document.getElementById('sl').innerText = data.risk_sl;
+                document.getElementById('tp').innerText = data.risk_tp;
+                
+                const consoleLog = document.getElementById('log-console');
+                consoleLog.innerHTML += `<p>${data.log}</p>`;
+                consoleLog.scrollTop = consoleLog.scrollHeight;
+            } catch (e) { console.log("Engine offline..."); }
+        }
+
+        setInterval(fetchEngine, 2000); // Mesin update tiap 2 detik
     </script>
 </body>
 </html>
