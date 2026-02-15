@@ -1,124 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuantumAI PIN Access</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QuantumAI v6 Dashboard Live</title>
 <style>
-body{
-margin:0;
-font-family:Segoe UI;
-background:#050814;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
-
-.pin-box{
-background:#0a0f25;
-padding:40px;
-border-radius:20px;
-border:1px solid #00f2ff;
-text-align:center;
-box-shadow:0 0 30px #00f2ff44;
-width:90%;
-max-width:350px;
-}
-
-h2{margin-bottom:25px}
-
-.pin-input{
-font-size:28px;
-text-align:center;
-letter-spacing:15px;
-padding:10px;
-width:80%;
-border:none;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-.keypad{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-}
-
-.key{
-padding:15px;
-font-size:20px;
-background:#111733;
-border:1px solid #00f2ff;
-border-radius:10px;
-cursor:pointer;
-}
-
-.key:active{
-background:#8f00ff;
-}
-
-.error{
-color:#ff0055;
-margin-top:15px;
-}
+  body {margin:0;height:100vh;background:radial-gradient(circle at center,#021226,#01000f);
+    color:cyan;font-family:'Segoe UI',sans-serif;overflow:hidden;}
+  .grid{position:absolute;width:100%;height:100%;
+    background-image:linear-gradient(rgba(0,255,255,.05)1px,transparent 1px),
+                     linear-gradient(90deg,rgba(0,255,255,.05)1px,transparent 1px);
+    background-size:24px 24px;z-index:0;}
+  .core-glow{position:absolute;width:400px;height:400px;
+    background:radial-gradient(circle,rgba(0,255,255,.4),transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 3s infinite alternate;z-index:0;}
+  @keyframes pulse{from{opacity:.4;}to{opacity:.8;}}
+  .module{position:absolute;width:160px;height:100px;border:2px solid cyan;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;background-color:rgba(0,255,255,.08);
+    box-shadow:0 0 10px cyan;z-index:2;text-align:center;}
+  .ai-core{top:50%;left:50%;transform:translate(-50%,-50%);}
+  .chat-hub{bottom:200px;right:40px;border-color:#9b59b6;box-shadow:0 0 10px #9b59b6;}
+  .radar{top:40px;left:40px;border-color:#3498db;box-shadow:0 0 10px #3498db;}
+  .risk{top:40px;right:40px;border-color:#e67e22;box-shadow:0 0 10px #e67e22;}
+  .storage{bottom:40px;left:40px;border-color:#2ecc71;box-shadow:0 0 10px #2ecc71;}
+  .control{bottom:40px;left:50%;transform:translateX(-50%);
+    border-color:#e74c3c;box-shadow:0 0 10px #e74c3c;cursor:pointer;}
+  .chart{position:absolute;bottom:-250px;left:50%;transform:translateX(-50%);
+    width:80%;height:200px;background:rgba(0,255,255,.1);border:2px solid cyan;border-radius:10px;
+    box-shadow:0 0 15px cyan;transition:bottom .6s ease;z-index:3;}
+  .chart.active{bottom:100px;}
+  .drukanda{position:absolute;top:10px;left:15px;color:cyan;font-size:14px;
+    font-weight:bold;opacity:.7;letter-spacing:1px;}
+  .pin-screen{position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;
+    flex-direction:column;z-index:9999;color:cyan;}
+  .pin-screen input{background:transparent;border:1px solid cyan;color:cyan;
+    padding:8px 12px;border-radius:6px;outline:none;text-align:center;margin-top:10px;letter-spacing:4px;}
+  .pin-screen button{margin-top:15px;padding:6px 18px;background:cyan;color:#000;
+    border:none;border-radius:6px;font-weight:bold;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<div class="pin-box">
-<h2>QuantumAI Secure PIN</h2>
+<div class="drukanda">drukanda</div>
 
-<input type="password" id="pin" maxlength="4" class="pin-input" readonly>
-
-<div class="keypad">
-<div class="key" onclick="addPin(1)">1</div>
-<div class="key" onclick="addPin(2)">2</div>
-<div class="key" onclick="addPin(3)">3</div>
-<div class="key" onclick="addPin(4)">4</div>
-<div class="key" onclick="addPin(5)">5</div>
-<div class="key" onclick="addPin(6)">6</div>
-<div class="key" onclick="addPin(7)">7</div>
-<div class="key" onclick="addPin(8)">8</div>
-<div class="key" onclick="addPin(9)">9</div>
-<div class="key" onclick="clearPin()">C</div>
-<div class="key" onclick="addPin(0)">0</div>
-<div class="key" onclick="submitPin()">OK</div>
+<div class="pin-screen" id="pinScreen">
+  <h3>Enter Security PIN</h3>
+  <input type="password" id="pinInput" maxlength="6" placeholder="******">
+  <button onclick="checkPin()">Unlock</button>
 </div>
 
-<div id="errorMsg" class="error"></div>
+<div class="grid"></div>
+<div class="core-glow"></div>
 
+<div class="module ai-core"><h2>AI Core</h2></div>
+<div class="module chat-hub"><h2>Chat Hub</h2></div>
+<div class="module radar"><h2>Radar Momentum</h2></div>
+<div class="module risk"><h2>Risk Panel</h2></div>
+<div class="module storage"><h2>Storage / Data</h2></div>
+<div class="module control" onclick="toggleChart()"><h2>Control Panel</h2></div>
+
+<div class="chart" id="chartBox">
+  <canvas id="chartCanvas" width="800" height="200"></canvas>
 </div>
 
 <script>
+const backendURL = "https://YOUR-BACKEND-URL.koyeb.app"; // ganti dengan URL backend lo
 
-const CORRECT_PIN = "2026"; // GANTI PIN DI SINI
-let inputPin = "";
-
-function addPin(num){
-if(inputPin.length < 4){
-inputPin += num;
-document.getElementById("pin").value = "*".repeat(inputPin.length);
-}
-}
-
-function clearPin(){
-inputPin="";
-document.getElementById("pin").value="";
+// --- PIN ---
+function checkPin(){
+  const pin=document.getElementById('pinInput').value;
+  if(pin==='246810'){
+    document.getElementById('pinScreen').style.display='none';
+    startLive();
+  } else alert('PIN salah!');
 }
 
-function submitPin(){
-if(inputPin === CORRECT_PIN){
-window.location.href="dashboard.html"; // arahkan ke dashboard
-}else{
-document.getElementById("errorMsg").innerText="PIN Salah!";
-clearPin();
-}
+// --- START LIVE ---
+function startLive(){
+  updateLiveData();
+  updateBrokerInfo();
+  setInterval(updateLiveData,2000);
+  setInterval(updateBrokerInfo,3000);
 }
 
+// --- TOGGLE CHART ---
+function toggleChart(){
+  document.getElementById('chartBox').classList.toggle('active');
+}
+
+// --- UPDATE DATA CHART ---
+async function updateLiveData(){
+  try{
+    const res=await fetch(`${backendURL}/api/signal`);
+    const data=await res.json();
+    const ctx=document.getElementById('chartCanvas').getContext('2d');
+    ctx.clearRect(0,0,800,200);
+    ctx.beginPath(); ctx.moveTo(0,100);
+    data.signals.forEach((v,i)=>{
+      const y=100 - v*80;
+      ctx.lineTo(i*40,y);
+    });
+    ctx.strokeStyle='lime'; ctx.lineWidth=2; ctx.stroke();
+  }catch(err){console.error(err);}
+}
+
+// --- BROKER INFO DEMO ---
+async function updateBrokerInfo(){
+  try{
+    const res=await fetch(`${backendURL}/api/broker-demo`);
+    const data=await res.json();
+    document.querySelector('.ai-core').innerHTML =
+      `<h2>AI Core<br>Balance: ${data.balance}<br>Pos: ${data.open_positions}</h2>`;
+  }catch(e){console.error(e);}
+}
 </script>
-
 </body>
 </html>
