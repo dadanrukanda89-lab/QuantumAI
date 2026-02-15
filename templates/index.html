@@ -13,7 +13,8 @@
     background-size:24px 24px;z-index:0;}
   .core-glow{position:absolute;width:400px;height:400px;
     background:radial-gradient(circle,rgba(0,255,255,.4),transparent 70%);
-    top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 3s infinite alternate;z-index:0;}
+    top:50%;left:50%;transform:translate(-50%,-50%);
+    animation:pulse 3s infinite alternate;z-index:0;}
   @keyframes pulse{from{opacity:.4;}to{opacity:.8;}}
   .module{position:absolute;width:160px;height:100px;border:2px solid cyan;border-radius:12px;
     display:flex;align-items:center;justify-content:center;background-color:rgba(0,255,255,.08);
@@ -31,25 +32,11 @@
   .chart.active{bottom:100px;}
   .drukanda{position:absolute;top:10px;left:15px;color:cyan;font-size:14px;
     font-weight:bold;opacity:.7;letter-spacing:1px;}
-  .pin-screen{position:fixed;top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;
-    flex-direction:column;z-index:9999;color:cyan;}
-  .pin-screen input{background:transparent;border:1px solid cyan;color:cyan;
-    padding:8px 12px;border-radius:6px;outline:none;text-align:center;margin-top:10px;letter-spacing:4px;}
-  .pin-screen button{margin-top:15px;padding:6px 18px;background:cyan;color:#000;
-    border:none;border-radius:6px;font-weight:bold;cursor:pointer;}
 </style>
 </head>
 <body>
 
 <div class="drukanda">drukanda</div>
-
-<div class="pin-screen" id="pinScreen">
-  <h3>Enter Security PIN</h3>
-  <input type="password" id="pinInput" maxlength="6" placeholder="******">
-  <button onclick="checkPin()">Unlock</button>
-</div>
-
 <div class="grid"></div>
 <div class="core-glow"></div>
 
@@ -67,52 +54,55 @@
 <script>
 const backendURL = "https://YOUR-BACKEND-URL.koyeb.app"; // ganti dengan URL backend lo
 
-// --- PIN ---
-function checkPin(){
-  const pin=document.getElementById('pinInput').value;
-  if(pin==='246810'){
-    document.getElementById('pinScreen').style.display='none';
-    startLive();
-  } else alert('PIN salah!');
-}
+// Langsung hidup otomatis
+window.onload = () => {
+  startLive();
+};
 
-// --- START LIVE ---
-function startLive(){
-  updateLiveData();
-  updateBrokerInfo();
-  setInterval(updateLiveData,2000);
-  setInterval(updateBrokerInfo,3000);
-}
-
-// --- TOGGLE CHART ---
-function toggleChart(){
+// Toggle chart tampil / sembunyi
+function toggleChart() {
   document.getElementById('chartBox').classList.toggle('active');
 }
 
-// --- UPDATE DATA CHART ---
-async function updateLiveData(){
-  try{
-    const res=await fetch(`${backendURL}/api/signal`);
-    const data=await res.json();
-    const ctx=document.getElementById('chartCanvas').getContext('2d');
-    ctx.clearRect(0,0,800,200);
-    ctx.beginPath(); ctx.moveTo(0,100);
-    data.signals.forEach((v,i)=>{
-      const y=100 - v*80;
-      ctx.lineTo(i*40,y);
-    });
-    ctx.strokeStyle='lime'; ctx.lineWidth=2; ctx.stroke();
-  }catch(err){console.error(err);}
+// Start mode live
+function startLive() {
+  updateLiveData();
+  updateBrokerInfo();
+  setInterval(updateLiveData, 2000);
+  setInterval(updateBrokerInfo, 3000);
 }
 
-// --- BROKER INFO DEMO ---
-async function updateBrokerInfo(){
-  try{
-    const res=await fetch(`${backendURL}/api/broker-demo`);
-    const data=await res.json();
+// Update data sinyal AI
+async function updateLiveData() {
+  try {
+    const res = await fetch(`${backendURL}/api/signal`);
+    const data = await res.json();
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    ctx.clearRect(0, 0, 800, 200);
+    ctx.beginPath();
+    ctx.moveTo(0, 100);
+    data.signals.forEach((v, i) => {
+      const y = 100 - v * 80;
+      ctx.lineTo(i * 40, y);
+    });
+    ctx.strokeStyle = 'lime';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// Update info broker demo
+async function updateBrokerInfo() {
+  try {
+    const res = await fetch(`${backendURL}/api/broker-demo`);
+    const data = await res.json();
     document.querySelector('.ai-core').innerHTML =
       `<h2>AI Core<br>Balance: ${data.balance}<br>Pos: ${data.open_positions}</h2>`;
-  }catch(e){console.error(e);}
+  } catch (e) {
+    console.error(e);
+  }
 }
 </script>
 </body>
