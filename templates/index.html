@@ -1,178 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QuantumAI v6 Sulung Workflow — Glow Edition</title>
 <style>
-:root {
-  --cyan: #00e5ff;
-  --purple: #9b59b6;
-  --gold: #ffd36b;
-  --green: #2ecc71;
-  --bg: #03061a;
+:root{
+  --cyan:#00e5ff;
+  --purple:#b26eff;
+  --gold:#ffd36b;
+  --green:#2ecc71;
+  --bg:#03061a;
 }
-html, body {
-  height: 100%;
-  margin: 0;
-  background: radial-gradient(circle at 20% 10%, #03102a, #02030a 60%);
-  color: var(--cyan);
-  font-family: 'Inter', Segoe UI, Roboto, system-ui;
-  overflow-x: hidden;
+html,body{
+  margin:0;padding:0;
+  background:radial-gradient(circle at center,#01020a 0%,#020617 80%);
+  font-family:'Orbitron',sans-serif;
+  color:var(--cyan);
+  overflow-x:hidden;
+  height:100%;
 }
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 10px;
-}
-.header {
-  text-align: center;
-  padding: 10px 0;
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-size: 18px;
-}
-.stage {
-  position: relative;
-  height: 85vh;
-  background: transparent;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.grid {
-  position: absolute;
-  inset: 0;
+
+/* grid + glow */
+.grid{
+  position:fixed;inset:0;
   background-image:
-    linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
-  background-size: 30px 30px;
-  z-index: 0;
+    linear-gradient(rgba(0,229,255,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.05) 1px,transparent 1px);
+  background-size:40px 40px;
+  z-index:0;
 }
-.glow {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  transform: translate(-50%, -50%);
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00e5ff22, transparent 65%);
-  filter: blur(18px);
-  z-index: 1;
+.glow{
+  position:fixed;
+  top:50%;left:50%;
+  width:400px;height:400px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,255,0.18),transparent 70%);
+  filter:blur(20px);
+  z-index:0;
 }
 
-/* Box */
-.box {
-  position: absolute;
-  width: 200px;
-  height: 90px;
-  border-radius: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-  border: 2px solid rgba(0,229,255,0.1);
-  backdrop-filter: blur(4px);
-  z-index: 2;
-  transition: all 0.3s ease;
-}
-.box h4 {
-  margin: 0;
-  color: var(--cyan);
-  font-size: 14px;
-}
-.box small {
-  display: block;
-  color: #9fefff;
-  opacity: .85;
-  margin-top: 5px;
-  font-size: 11px;
-}
-.box:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(0,229,255,0.2);
-}
+/* container + header */
+.container{max-width:1100px;margin:0 auto;padding:10px;text-align:center;z-index:2;position:relative}
+h1{font-size:18px;color:var(--cyan);text-shadow:0 0 10px #00ffff80;margin:10px 0}
 
-/* 🔹 Posisi blok (presisi kayak poster) */
-#datafeed { left: 5%; top: 5%; }
-#backend { left: 40%; top: 5%; }
-#sat { right: 5%; top: 5%; }
+/* module blocks */
+.box{
+  position:absolute;
+  width:200px;height:90px;
+  border:2px solid rgba(0,229,255,0.2);
+  border-radius:12px;
+  background:rgba(0,15,30,0.4);
+  box-shadow:0 0 15px rgba(0,229,255,0.2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:all .3s ease;
+  text-align:center;
+}
+.box h4{margin:0;font-size:14px;color:var(--cyan)}
+.box small{color:#aafaff;font-size:11px;opacity:.9;margin-top:5px}
+.box:hover{transform:scale(1.07);box-shadow:0 0 25px rgba(0,229,255,0.4)}
 
-#aicore { left: 15%; top: 32%; }
-#satmom { left: 40%; top: 32%; }
-#risk { right: 15%; top: 32%; }
+/* posisi presisi */
+.stage{position:relative;height:82vh;margin-top:10px}
+#datafeed{top:5%;left:5%}
+#backend{top:5%;left:50%;transform:translateX(-50%)}
+#sat{top:5%;right:5%}
+#aicore{top:32%;left:10%}
+#satmom{top:32%;left:50%;transform:translateX(-50%)}
+#risk{top:32%;right:10%}
+#storage{top:50%;left:50%;transform:translateX(-50%)}
+#autotrade{top:63%;left:5%;width:90%;height:60px}
+#chartL{bottom:140px;left:5%;width:45%;height:180px}
+#chartR{bottom:140px;right:5%;width:40%;height:180px}
+#chatbox{bottom:10px;left:50%;transform:translateX(-50%);width:95%;max-width:900px;height:130px;border-radius:10px;background:#02060b;border:2px solid rgba(0,229,255,0.08);display:flex;flex-direction:column;z-index:5}
 
-#storage { left: 40%; top: 50%; }
-#autotrade { left: 5%; top: 60%; width: 90%; height: 60px; }
+/* chat + input */
+.chat-log{flex:1;padding:6px;overflow:auto;color:#dff8ff;font-size:13px}
+.chat-input{display:flex;padding:6px;border-top:1px solid rgba(255,255,255,0.05)}
+.chat-input input{flex:1;padding:7px;border-radius:6px;border:1px solid rgba(255,255,255,0.05);background:transparent;color:var(--cyan);outline:none}
+.chat-input button{margin-left:8px;padding:7px 10px;border-radius:6px;border:none;background:var(--cyan);color:#001;font-weight:bold}
 
-#chartL { left: 5%; bottom: 130px; width: 45%; height: 180px; }
-#chartR { right: 5%; bottom: 130px; width: 40%; height: 180px; }
+/* chart */
+canvas{display:block;width:100%;height:100%;border-radius:6px;background:rgba(0,15,25,0.3)}
+/* focus zoom */
+.focus{transform:scale(1.18);box-shadow:0 0 30px rgba(0,229,255,0.4);z-index:10}
 
-#chatbox {
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  width: 95%;
-  max-width: 900px;
-  height: 130px;
-  border-radius: 10px;
-  background: #02060b;
-  border: 2px solid rgba(0,229,255,0.08);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
+/* responsive */
+@media(max-width:768px){
+  .box{width:45%;height:80px}
+  #datafeed{top:5%;left:5%}
+  #backend{top:5%;right:5%}
+  #sat{top:18%;left:50%;transform:translateX(-50%)}
+  #aicore{top:32%;left:5%}
+  #satmom{top:32%;right:5%}
+  #risk{top:45%;left:50%;transform:translateX(-50%)}
+  #storage{top:55%;left:5%}
+  #autotrade{top:67%;left:5%;width:90%}
+  #chartL,#chartR{width:90%;left:5%;right:auto;bottom:160px;height:150px}
+  #chatbox{bottom:10px;width:95%;height:120px}
 }
-
-/* Chat area */
-.chat-log {
-  flex: 1;
-  padding: 6px;
-  overflow-y: auto;
-  color: #dff8ff;
-  font-size: 13px;
-}
-.chat-input {
-  display: flex;
-  padding: 6px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-.chat-input input {
-  flex: 1;
-  padding: 7px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.05);
-  background: transparent;
-  color: var(--cyan);
-}
-.chat-input button {
-  margin-left: 8px;
-  padding: 7px 10px;
-  border-radius: 6px;
-  border: none;
-  background: var(--cyan);
-  color: #001;
-  cursor: pointer;
-}
-
-/* Focus (zoom per blok) */
-.focus {
-  transform: scale(1.2);
-  box-shadow: 0 0 30px rgba(0,229,255,0.25);
-  z-index: 5;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .box { width: 45%; height: 80px; }
-  #datafeed { left: 5%; top: 4%; }
-  #backend { right: 5%; top: 4%; left: auto; }
-  #sat { left: 50%; top: 18%; transform: translateX(-50%); }
-  #aicore { left: 5%; top: 32%; }
-  #satmom { right: 5%; top: 32%; }
-  #risk { left: 50%; top: 44%; transform: translateX(-50%); }
-  #storage { left: 5%; top: 55%; }
-  #autotrade { left: 5%; top: 67%; width: 90%; }
-  #chartL, #chartR { width: 90%; left: 5%; right: auto; bottom: 160px; height: 150px; }
-  #chatbox { bottom: 10px; width: 95%; height: 120px; }
-}
-.footer {
-  text-align: center;
-  font-size: 11px;
-  color: #9fefff;
-  opacity: .8;
-  margin-top: 5px;
-}
+.footer{text-align:center;font-size:12px;color:#9fefff;opacity:.8;margin-top:10px}
 </style>
+</head>
+
+<body>
+<div class="grid"></div>
+<div class="glow"></div>
+
+<div class="container">
+  <h1>QuantumAI v6 Sulung Workflow — Live Glow Edition</h1>
+  <div class="stage">
+
+    <div class="box" id="datafeed"><h4>Data Feed / API</h4><small>Market Data • Candlestick</small></div>
+    <div class="box" id="backend"><h4>Backend Core System</h4></div>
+    <div class="box" id="sat"><h4>Satellite Node</h4><small>External Feeds</small></div>
+
+    <div class="box" id="aicore"><h4>AI Core Signal</h4><small>BUY / SELL / HOLD</small></div>
+    <div class="box" id="satmom"><h4>Satellite Momentum</h4><small>Radar Pulse</small></div>
+    <div class="box" id="risk"><h4>Risk Engine</h4><small>SL / TP / BE</small></div>
+
+    <div class="box" id="storage"><h4>Secure Data Storage</h4><small>Encrypted Signals</small></div>
+    <div class="box" id="autotrade"><h4>AutoTrade & Manual Control</h4><small>MIFX • MT5 • Binance</small></div>
+
+    <div class="box" id="chartL"><h4>Real-Time Chart</h4><canvas id="chartCanvasL" width="800" height="180"></canvas></div>
+    <div class="box" id="chartR"><h4>Risk Management</h4><canvas id="chartCanvasR" width="400" height="180"></canvas></div>
+
+    <div class="box" id="chatbox">
+      <div class="chat-log" id="chatLog"><div><b>[SYSTEM]</b> QuantumAI core online — ready.</div></div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Type command (scan / buy / sell / status)">
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</div>
+</div>
+
+<script>
+const backendURL="https://REPLACE_WITH_BACKEND.koyeb.app";
+const pollInterval=2000;
+const q=id=>document.getElementById(id);
+const cL=q('chartCanvasL').getContext('2d'), cR=q('chartCanvasR').getContext('2d');
+
+function drawLine(ctx,vals,color){
+  const W=ctx.canvas.width,H=ctx.canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2;
+  const step=W/(vals.length-1);
+  vals.forEach((v,i)=>{const x=i*step,y=H/2-v*(H/2-8);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});
+  ctx.stroke();
+}
+async function fetchJson(p){try{const r=await fetch(backendURL+p);return await r.json()}catch{return null}}
+async function liveTick(){
+  const s=await fetchJson('/api/signal');if(s&&s.signals)drawLine(cL,s.signals,'#9fff6b');
+  const b=await fetchJson('/api/broker');if(b)q('aicore').innerHTML=`<h4>AI Core Signal</h4><small>${b.broker} • Bal:${b.balance}</small>`;
+}
+window.onload=()=>{liveTick();setInterval(liveTick,pollInterval)}
+
+async function sendChat(){
+  const txt=q('chatInput').value.trim();if(!txt)return;
+  q('chatLog').insertAdjacentHTML('beforeend',`<div><b
