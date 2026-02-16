@@ -1,12 +1,23 @@
-from flask import Flask, render_template
-import os
+from fastapi import FastAPI
+from backend.app.database import engine, Base
+from backend.app.quantum_engine import QuantumEngine
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.route("/")
+# Inisialisasi Database dan AI
+Base.metadata.create_all(bind=engine)
+ai_engine = QuantumEngine()
+
+@app.get("/")
 def home():
-    return render_template("index.html")
+    return {"status": "QuantumAI Backend Online ✅"}
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+@app.get("/get-signal")
+def get_signal():
+    # Mengambil sinyal real-time dari quantum_engine.py
+    data = ai_engine.generate_signal()
+    return {
+        "status": "success",
+        "signal": data['trend'],
+        "value": data['base']
+    }
