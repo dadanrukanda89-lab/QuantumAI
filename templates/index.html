@@ -1,153 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QuantumAI v6 Sulung Workflow (Visual)</title>
+<title>QuantumAI v6 Sulung Workflow — Visual (Poster)</title>
 <style>
-html,body{
-  margin:0;padding:0;
-  background:radial-gradient(circle at center,#000010 0%,#010512 100%);
-  color:#00e5ff;
-  font-family:'Orbitron',sans-serif;
-  overflow:hidden;
-  height:100vh;
-}
+  :root{
+    --bg1:#03031a; --cyan:#00e5ff; --cyan-d:#007f8f; --mag:#d08cff; --gold:#ffd36b;
+    --glow-weak: 0 8px 30px rgba(0,229,255,0.06);
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#02061a 0,#000010 100%);font-family:Inter,Segoe UI,Roboto,system-ui;color:var(--cyan);overflow:auto}
+  /* stars */
+  canvas#stars{position:fixed;inset:0;z-index:0}
+  /* header */
+  .header{
+    width:100%;text-align:center;padding:18px 10px 6px;box-sizing:border-box;
+    letter-spacing:2px;font-weight:700;color:var(--cyan);font-size:20px;
+    text-shadow:0 0 18px rgba(0,229,255,0.12),0 0 6px rgba(255,255,255,0.02);
+  }
+  .container{position:relative;max-width:1000px;margin:0 auto;padding:10px 14px 120px;box-sizing:border-box;z-index:2}
+  .workflow{
+    position:relative;width:100%;height:calc(100vh - 120px);min-height:720px;background:transparent;overflow:visible;
+  }
 
-/* grid base */
-.grid{
-  position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(0,229,255,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,229,255,0.05) 1px, transparent 1px);
-  background-size:40px 40px;
-  z-index:0;
-}
+  /* central band line */
+  .central-bar{
+    position:absolute;left:6%;right:6%;top:28%;height:2px;background:linear-gradient(90deg,transparent,#00e5ff33,transparent);z-index:1;filter:blur(4px);
+  }
 
-/* zoom container */
-.scene{
-  transform-origin:center;
-  transition:transform 0.3s ease;
-}
+  /* module box common */
+  .box{
+    position:absolute; width:220px; height:94px; border-radius:12px; padding:10px; box-sizing:border-box;
+    border:2px solid rgba(255,255,255,0.06);
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2));
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    color:var(--cyan); text-align:left;
+  }
+  .box h4{margin:0;font-size:15px;color:var(--cyan)}
+  .box small{display:block;color:#9fefff;opacity:0.85;margin-top:6px;font-size:12px}
 
-/* glow background */
-.glow{
-  position:absolute;
-  width:460px;height:460px;
-  border-radius:50%;
-  left:50%;top:45%;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle,rgba(0,229,255,0.15),transparent 70%);
-  filter:blur(25px);
-  z-index:0;
-}
+  /* neon borders specific */
+  .neon-cyan{border-color:rgba(0,229,255,0.95); box-shadow:0 0 30px rgba(0,229,255,0.12)}
+  .neon-mag{border-color:rgba(208,140,255,0.95); box-shadow:0 0 30px rgba(208,140,255,0.12)}
+  .neon-gold{border-color:rgba(255,211,107,0.95); box-shadow:0 0 26px rgba(255,211,107,0.12)}
+  .neon-blue{border-color:rgba(78,160,255,0.95); box-shadow:0 0 26px rgba(78,160,255,0.12)}
+  .neon-green{border-color:rgba(46,204,113,0.95); box-shadow:0 0 26px rgba(46,204,113,0.12)}
 
-/* module block */
-.module{
-  position:absolute;
-  width:200px;height:100px;
-  border:2px solid rgba(0,229,255,0.3);
-  border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,rgba(0,229,255,0.05),rgba(0,0,0,0.1));
-  box-shadow:0 0 25px rgba(0,229,255,0.08);
-  text-align:center;
-  transition:transform 0.3s ease, box-shadow 0.3s;
-  cursor:default;
-}
-.module:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 30px rgba(0,229,255,0.4);
-}
+  /* positions (approx — tuned for mobile portrait, center-aligned) */
+  /* top row */
+  #datafeed{left:8%;top:6%}
+  #backend{left:50%;top:12%;transform:translateX(-50%)}
+  #satellite{right:8%;top:6%}
+  /* middle row boxes */
+  #ai{left:12%;top:30%}
+  #sat{left:calc(50% - 110px);top:30%;transform:translateX(-50%)}
+  #risk{right:12%;top:30%}
+  /* storage central */
+  #storage{left:50%;top:46%;transform:translateX(-50%)}
+  /* autotrade bar */
+  #autotrade{left:50%;top:58%;transform:translateX(-50%);width:78%;height:70px;border-radius:10px}
+  /* lower panels */
+  #chart{left:8%;bottom:160px;width:36%;height:260px;border-radius:10px}
+  #chart-right{right:8%;bottom:160px;width:36%;height:260px;border-radius:10px}
+  /* chat big box bottom center */
+  #chatbox{left:50%;bottom:24px;transform:translateX(-50%);width:86%;height:160px;border-radius:12px;background:rgba(4,4,6,0.9);border:2px solid rgba(0,200,160,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.6);}
 
-/* positions */
-#datafeed{top:8%;left:10%;}
-#backend{top:10%;left:50%;transform:translateX(-50%);}
-#aicore{top:38%;left:20%;}
-#radar{top:38%;left:50%;transform:translateX(-50%);}
-#risk{top:38%;right:20%;}
-#news{top:18%;right:10%;}
-#storage{top:55%;left:50%;transform:translateX(-50%);}
-#autotrade{top:68%;left:50%;transform:translateX(-50%);}
-#chart{bottom:10%;left:20%;}
-#chat{bottom:8%;left:50%;transform:translateX(-50%);}
-#riskpanel{bottom:10%;right:20%;}
+  /* chat content */
+  #chatbox .title{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.02);color:#a0ffde;font-weight:700}
+  #chatbox .log{padding:10px;height:84px;overflow:auto;color:#dbefff;background:transparent}
+  #chatbox .inputwrap{display:flex;padding:8px;border-top:1px solid rgba(255,255,255,0.02)}
+  #chatbox input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cyan);outline:none}
+  #chatbox button{margin-left:8px;padding:8px 12px;border-radius:8px;border:none;background:var(--cyan);color:#001;font-weight:700;cursor:pointer}
 
-/* text style */
-h3{margin:0;font-size:14px;color:#00f0ff;}
-small{color:#88ffff;font-size:11px;}
-footer{
-  position:absolute;bottom:4px;left:50%;
-  transform:translateX(-50%);
-  font-size:12px;color:#88ffff;
-  text-align:center;
-}
+  /* footer */
+  .signature{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#8feaf5;opacity:0.9}
 
-/* connectors */
-svg{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  z-index:0;
-}
-line{
-  stroke:#00e5ff;
-  stroke-opacity:0.25;
-  stroke-width:2;
-  stroke-linecap:round;
-  animation:flow 2s linear infinite;
-}
-@keyframes flow{
-  from{stroke-dashoffset:50;}
-  to{stroke-dashoffset:0;}
-}
+  /* tiny responsive */
+  @media(min-width:900px){
+    body{overflow:auto}
+    .workflow{height:calc(100vh - 160px)}
+    #chart{width:42%}
+    #chart-right{width:28%}
+  }
 </style>
 </head>
 <body>
-<div class="grid"></div>
-<div class="glow"></div>
-<svg id="lines">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#00e5ff" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <line x1="20%" y1="15%" x2="50%" y2="25%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="25%" x2="20%" y2="45%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="25%" x2="80%" y2="45%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="25%" x2="50%" y2="55%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="55%" x2="50%" y2="68%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="68%" x2="20%" y2="90%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-  <line x1="50%" y1="68%" x2="80%" y2="90%" stroke="url(#grad)" stroke-dasharray="20 10"/>
-</svg>
 
-<div class="scene">
-  <div class="module" id="datafeed"><h3>Data Feed / API</h3><small>Market Data • Candlestick • Volume</small></div>
-  <div class="module" id="backend"><h3>Backend Core System</h3></div>
-  <div class="module" id="aicore"><h3>AI Core Signal</h3><small>BUY • SELL • HOLD</small></div>
-  <div class="module" id="radar"><h3>Satellite Momentum</h3><small>Radar Pulse Analysis</small></div>
-  <div class="module" id="risk"><h3>Risk Engine</h3><small>SL / TP / BE</small></div>
-  <div class="module" id="news"><h3>News Intelligence</h3><small>Breaking News • Alerts</small></div>
-  <div class="module" id="storage"><h3>Secure Data Storage</h3><small>Encrypted JSON / News / Signals</small></div>
-  <div class="module" id="autotrade"><h3>AutoTrade & Manual Control</h3><small>MIFX • MT5 • Binance</small></div>
-  <div class="module" id="chart"><h3>Real-Time Chart</h3><small>M30 / H1 / H4 / D1</small></div>
-  <div class="module" id="chat"><h3>QuantumAI Chat Interface</h3><small>[SYSTEM] Ready for command</small></div>
-  <div class="module" id="riskpanel"><h3>Risk Management</h3><small>SL • TP • Trailing</small></div>
+<canvas id="stars"></canvas>
+
+<div class="header">QuantumAI v6 Sulung Workflow</div>
+<div class="container">
+  <div class="workflow" id="stage">
+    <div class="central-bar"></div>
+
+    <!-- top row -->
+    <div class="box neon-blue" id="datafeed"><h4>Data Feed / API</h4><small>Market Data · Candlestick · Volume</small></div>
+    <div class="box neon-cyan" id="backend"><h4>Backend Core System</h4></div>
+    <div class="box neon-mag" id="satellite"><h4>Satellite Node</h4><small>External Feeds · Telemetry</small></div>
+
+    <!-- middle row -->
+    <div class="box neon-green" id="ai"><h4>AI Core Signal</h4><small>BUY · SELL · HOLD</small></div>
+    <div class="box neon-cyan" id="sat"><h4>Satellite Momentum</h4><small>Radar Pulse Analysis</small></div>
+    <div class="box neon-gold" id="risk"><h4>Risk Engine</h4><small>SL · TP · BE · Trailing</small></div>
+
+    <!-- storage -->
+    <div class="box neon-cyan" id="storage"><h4>Secure Data Storage</h4><small>Encrypted JSON • Signals • News</small></div>
+
+    <!-- autotrade -->
+    <div class="box neon-cyan" id="autotrade"><h4>AutoTrade & Manual Control</h4><small>Mock MT5 • MIFX • Binance</small></div>
+
+    <!-- left chart -->
+    <div class="box neon-cyan" id="chart">
+      <h4>Real-Time Chart</h4>
+      <canvas id="leftChart" width="520" height="220" style="width:100%;height:calc(100% - 30px);margin-top:6px;background:transparent;border-radius:8px;"></canvas>
+    </div>
+
+    <!-- right chart / risk panel -->
+    <div class="box neon-gold" id="chart-right">
+      <h4>Risk Management</h4>
+      <small>SL · TP · Trailing Steps</small>
+      <div style="height:8px"></div>
+      <canvas id="mini" width="320" height="160" style="width:100%;height:calc(100% - 50px);"></canvas>
+    </div>
+
+    <!-- chat box -->
+    <div id="chatbox">
+      <div class="title">⚡ QuantumAI Chat Interface</div>
+      <div class="log" id="chatlog">
+        <div style="color:#9be3ff"><b>[SYSTEM]</b> QuantumAI core online — ready.</div>
+      </div>
+      <div class="inputwrap">
+        <input id="chatinput" placeholder="Type command (e.g. scan, buy, sell, status)"/>
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+
+    <div class="signature">Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</div>
+  </div>
 </div>
 
-<footer>Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</footer>
-
 <script>
-let zoom=1;
-window.addEventListener('wheel',e=>{
-  if(e.ctrlKey){
-    e.preventDefault();
-    zoom += e.deltaY * -0.001;
-    zoom=Math.min(Math.max(.6,zoom),1.8);
-    document.querySelector('.scene').style.transform=`scale(${zoom})`;
+/* ============ stars field ============ */
+const stars = document.getElementById('stars');
+const sctx = stars.getContext('2d');
+function resizeStars(){ stars.width = window.innerWidth; stars.height = window.innerHeight; drawStars(); }
+function drawStars(){
+  sctx.clearRect(0,0,stars.width,stars.height);
+  const count = Math.floor(window.innerWidth * window.innerHeight / 40000);
+  for(let i=0;i<count;i++){
+    const x = Math.random() * stars.width;
+    const y = Math.random() * stars.height;
+    const r = Math.random()*1.2;
+    sctx.beginPath(); sctx.fillStyle = 'rgba(0,229,255,'+(0.05+Math.random()*0.25)+')'; sctx.arc(x,y,r,0,Math.PI*2); sctx.fill();
   }
-},{passive:false});
+}
+window.addEventListener('resize', resizeStars);
+resizeStars();
+
+/* ============ anim connectors (SVG-like lines via canvas) ============ */
+const container = document.getElementById('stage');
+function connectLines(){
+  // remove old canvas if any
+  let c = document.getElementById('lineCanvas'); if(c) c.remove();
+  c = document.createElement('canvas'); c.id='lineCanvas'; c.style.position='absolute'; c.style.left='0'; c.style.top='0'; c.width = container.offsetWidth; c.height = container.offsetHeight; c.style.zIndex=1; container.appendChild(c);
+  const ctx = c.getContext('2d');
+  function nodeCenter(el){
+    const r = el.getBoundingClientRect(); const parentRect = container.getBoundingClientRect();
+    return {x: r.left - parentRect.left + r.width/2, y: r.top - parentRect.top + r.height/2};
+  }
+  const nodes = {
+    data: nodeCenter(document.getElementById('datafeed')),
+    backend: nodeCenter(document.getElementById('backend')),
+    ai: nodeCenter(document.getElementById('ai')),
+    sat: nodeCenter(document.getElementById('sat')),
+    risk: nodeCenter(document.getElementById('risk')),
+    storage: nodeCenter(document.getElementById('storage')),
+    autotrade: nodeCenter(document.getElementById('autotrade')),
+    chat: nodeCenter(document.getElementById('chatbox')),
+    chartL: nodeCenter(document.getElementById('chart')),
+    chartR: nodeCenter(document.getElementById('chart-right')),
+  };
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.lineWidth = 2;
+  function gradLine(a,b,colorA,colorB,alpha){
+    const g = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+    g.addColorStop(0,colorA); g.addColorStop(1,colorB);
+    ctx.strokeStyle = g; ctx.globalAlpha = alpha||0.6;
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.bezierCurveTo((a.x+b.x)/2,a.y,(a.x+b.x)/2,b.y,b.x,b.y); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  gradLine(nodes.data, nodes.backend,'rgba(0,229,255,0.02)','rgba(0,229,255,0.4)',0.8);
+  gradLine(nodes.backend, nodes.ai,'rgba(155,200,255,0.02)','rgba(0,229,255,0.6)',0.95);
+  gradLine(nodes.backend, nodes.sat,'rgba(155,200,255,0.02)','rgba(208,140,255,0.6)',0.9);
+  gradLine(nodes.ai, nodes.risk,'rgba(255,200,120,0.02)','rgba(255,170,80,0.6)',0.95);
+  gradLine(nodes.ai, nodes.storage,'rgba(0,229,255,0.02)','rgba(46,204,113,0.5)',0.85);
+  gradLine(nodes.ai, nodes.autotrade,'rgba(231,76,60,0.02)','rgba(231,76,60,0.6)',0.9);
+  gradLine(nodes.ai, nodes.chat,'rgba(155,89,182,0.02)','rgba(155,89,182,0.7)',0.95);
+}
+setTimeout(connectLines,400);
+window.addEventListener('resize', ()=>setTimeout(connectLines,200));
+
+/* ============ simple demo charts (no backend) ============ */
+function randomArray(n){ return Array.from({length:n}, ()=>((Math.random()*2)-1)); }
+const leftCtx = document.getElementById('leftChart').getContext('2d');
+function drawLeft(vals){
+  const W = document.getElementById('leftChart').width; const H = document.getElementById('leftChart').height;
+  leftCtx.clearRect(0,0,W,H);
+  leftCtx.fillStyle='rgba(0,0,0,0.12)'; leftCtx.fillRect(0,0,W,H);
+  leftCtx.strokeStyle='#9fff6b'; leftCtx.lineWidth=2; leftCtx.beginPath();
+  const step=W/(vals.length-1);
+  vals.forEach((v,i)=>{
+    const x=i*step; const y=H/2 - v*(H/2-10);
+    if(i===0) leftCtx.moveTo(x,y); else leftCtx.lineTo(x,y);
+  });
+  leftCtx.stroke();
+}
+const miniCtx = document.getElementById('mini').getContext('2d');
+function drawMini(vals){
+  miniCtx.clearRect(0,0,miniCtx.canvas.width,miniCtx.canvas.height);
+  miniCtx.fillStyle='rgba(0,0,0,0.08)'; miniCtx.fillRect(0,0,miniCtx.canvas.width,miniCtx.canvas.height);
+  miniCtx.strokeStyle='#ffd36b'; miniCtx.lineWidth=2; miniCtx.beginPath();
+  const step=miniCtx.canvas.width/(vals.length-1);
+  vals.forEach((v,i)=>{ const x=i*step; const y=miniCtx.canvas.height/2 - v*(miniCtx.canvas.height/2-6); if(i===0) miniCtx.moveTo(x,y); else miniCtx.lineTo(x,y); });
+  miniCtx.stroke();
+}
+setInterval(()=>{ drawLeft(randomArray(40)); drawMini(randomArray(30)); }, 1200);
+
+/* ============ radar animation ============ */
+const rcan = document.getElementById('chatbox') ? document.createElement('canvas') : null;
+(function drawRadarAnim(){
+  // small orbit just visual on sat box — simple pulsing dot
+  // For poster visual we used connectors and glow; skip heavy radar for now.
+  requestAnimationFrame(drawRadarAnim);
+})();
+
+/* ============ chat simple (local) ============ */
+function sendChat(){
+  const input = document.getElementById('chatinput');
+  const t = input.value.trim(); if(!t) return;
+  const log = document.getElementById('chatlog');
+  const you = document.createElement('div'); you.style.color='#9be3ff'; you.innerHTML = `<b>[YOU]</b> ${escapeHtml(t)}`;
+  log.appendChild(you);
+  input.value='';
+  // simple rule reply demo
+  setTimeout(()=>{ const ai = document.createElement('div'); ai.style.color='#ffd56b'; ai.innerHTML = `<b>[AI]</b> ${demoReply(t)}`; log.appendChild(ai); log.scrollTop = log.scrollHeight; }, 600);
+}
+function demoReply(txt){
+  const s = txt.toLowerCase();
+  if(s.includes('buy')) return 'Analyzing BUY setups... (demo)';
+  if(s.includes('sell')) return 'Scanning SELL pressure... (demo)';
+  if(s.includes('scan')) return 'Full-spectrum market scan complete — no alerts (demo).';
+  return 'Acknowledged: '+ (txt.length>0 ? txt : '...') + ' (demo)';
+}
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+/* init */
+window.onload = function(){ connectLines(); drawLeft(randomArray(40)); drawMini(randomArray(30)); };
 </script>
 </body>
 </html>
