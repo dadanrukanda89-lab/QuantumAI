@@ -45,4 +45,49 @@ pre {
 </head>
 <body>
   <h1>⚡ QuantumAI v6 Dashboard ⚡</h1>
-  <
+  <div id="status">Connecting to backend...</div>
+
+  <button onclick="scan()">SCAN</button>
+  <button onclick="buy()">BUY</button>
+  <button onclick="sell()">SELL</button>
+  <button onclick="status()">STATUS</button>
+
+  <pre id="output">[SYSTEM] Waiting for command...</pre>
+
+<script>
+  // 🔗 GANTI URL BACKEND DI SINI (pakai URL Koyeb backend kamu)
+  const backendURL = "https://quantumai-backend-xxxxx.koyeb.app";
+
+  function log(msg, color="#b8faff") {
+    document.getElementById("output").insertAdjacentHTML("beforeend", `\n<span style="color:${color}">${msg}</span>`);
+  }
+
+  async function send(text) {
+    const res = await fetch(backendURL + "/api/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text})
+    });
+    const data = await res.json();
+    log(`\n[AI] ${data.reply}`, "#ffd36b");
+  }
+
+  function scan(){ send("scan"); }
+  function buy(){ send("buy"); }
+  function sell(){ send("sell"); }
+  function status(){ send("status"); }
+
+  // Tes koneksi ke backend saat halaman dibuka
+  fetch(backendURL + "/")
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById("status").textContent = "✅ Connected: " + d.status;
+      log("[SYSTEM] Connected to backend ✅");
+    })
+    .catch(()=>{
+      document.getElementById("status").textContent = "❌ Backend not reachable";
+      log("[ERROR] Cannot connect to backend ❌", "red");
+    });
+</script>
+</body>
+</html>
