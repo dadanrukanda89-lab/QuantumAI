@@ -1,262 +1,180 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QuantumAI v6 Sulung Workflow — Visual (Poster)</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>QuantumAI v6 — Live Demo</title>
 <style>
-  :root{
-    --bg1:#03031a; --cyan:#00e5ff; --cyan-d:#007f8f; --mag:#d08cff; --gold:#ffd36b;
-    --glow-weak: 0 8px 30px rgba(0,229,255,0.06);
-  }
-  html,body{height:100%;margin:0;background:linear-gradient(180deg,#02061a 0,#000010 100%);font-family:Inter,Segoe UI,Roboto,system-ui;color:var(--cyan);overflow:auto}
-  /* stars */
-  canvas#stars{position:fixed;inset:0;z-index:0}
-  /* header */
-  .header{
-    width:100%;text-align:center;padding:18px 10px 6px;box-sizing:border-box;
-    letter-spacing:2px;font-weight:700;color:var(--cyan);font-size:20px;
-    text-shadow:0 0 18px rgba(0,229,255,0.12),0 0 6px rgba(255,255,255,0.02);
-  }
-  .container{position:relative;max-width:1000px;margin:0 auto;padding:10px 14px 120px;box-sizing:border-box;z-index:2}
-  .workflow{
-    position:relative;width:100%;height:calc(100vh - 120px);min-height:720px;background:transparent;overflow:visible;
-  }
+:root{--cyan:#00e5ff;--purple:#9b59b6;--gold:#ffd36b;--green:#2ecc71;--bg:#03061a}
+html,body{height:100%;margin:0;background:radial-gradient(circle at 20% 10%, #03102a, #02030a 60%);color:var(--cyan);font-family:Inter,Segoe UI,Roboto,system-ui;overflow:auto}
+.container{max-width:1100px;margin:0 auto;padding:12px}
+.header{ text-align:center;padding:12px 0;font-weight:700;letter-spacing:1px}
+.stage{position:relative;height:82vh;background:transparent;border-radius:8px;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03)1px,transparent 1px);background-size:30px 30px;z-index:0}
+.connectors{position:absolute;inset:0;z-index:1;pointer-events:none}
+.glow{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#00e5ff22,transparent 55%);filter:blur(18px);z-index:1}
 
-  /* central band line */
-  .central-bar{
-    position:absolute;left:6%;right:6%;top:28%;height:2px;background:linear-gradient(90deg,transparent,#00e5ff33,transparent);z-index:1;filter:blur(4px);
-  }
+/* module box */
+.box{position:absolute;width:210px;height:100px;border-radius:10px;padding:10px;box-sizing:border-box;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2));border:2px solid rgba(0,229,255,0.08);backdrop-filter:blur(4px);z-index:2}
+.box h4{margin:0;color:var(--cyan);font-size:15px}
+.box small{display:block;color:#9fefff;opacity:.85;margin-top:6px;font-size:12px}
+.box:hover{transform:scale(1.03);box-shadow:0 8px 40px rgba(0,229,255,0.08)}
 
-  /* module box common */
-  .box{
-    position:absolute; width:220px; height:94px; border-radius:12px; padding:10px; box-sizing:border-box;
-    border:2px solid rgba(255,255,255,0.06);
-    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2));
-    backdrop-filter: blur(6px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-    color:var(--cyan); text-align:left;
-  }
-  .box h4{margin:0;font-size:15px;color:var(--cyan)}
-  .box small{display:block;color:#9fefff;opacity:0.85;margin-top:6px;font-size:12px}
+/* positions */
+#datafeed{left:6%;top:6%}
+#backend{left:50%;top:9%;transform:translateX(-50%)}
+#sat{right:6%;top:6%}
+#aicore{left:12%;top:33%}
+#satmom{left:50%;top:33%;transform:translateX(-50%)}
+#risk{right:12%;top:33%}
+#storage{left:50%;top:48%;transform:translateX(-50%)}
+#autotrade{left:6%;top:60%;width:88%;height:56px;border-radius:8px}
+#chartL{left:6%;bottom:150px;width:48%;height:220px}
+#chartR{right:6%;bottom:150px;width:36%;height:220px}
+#chatbox{left:50%;bottom:12px;transform:translateX(-50%);width:92%;max-width:1000px;height:150px;border-radius:10px;background:#02060b;border:2px solid rgba(0,229,255,0.06);z-index:3;display:flex;flex-direction:column}
 
-  /* neon borders specific */
-  .neon-cyan{border-color:rgba(0,229,255,0.95); box-shadow:0 0 30px rgba(0,229,255,0.12)}
-  .neon-mag{border-color:rgba(208,140,255,0.95); box-shadow:0 0 30px rgba(208,140,255,0.12)}
-  .neon-gold{border-color:rgba(255,211,107,0.95); box-shadow:0 0 26px rgba(255,211,107,0.12)}
-  .neon-blue{border-color:rgba(78,160,255,0.95); box-shadow:0 0 26px rgba(78,160,255,0.12)}
-  .neon-green{border-color:rgba(46,204,113,0.95); box-shadow:0 0 26px rgba(46,204,113,0.12)}
+/* chart canvases */
+canvas{display:block;width:100%;height:100%}
 
-  /* positions (approx — tuned for mobile portrait, center-aligned) */
-  /* top row */
-  #datafeed{left:8%;top:6%}
-  #backend{left:50%;top:12%;transform:translateX(-50%)}
-  #satellite{right:8%;top:6%}
-  /* middle row boxes */
-  #ai{left:12%;top:30%}
-  #sat{left:calc(50% - 110px);top:30%;transform:translateX(-50%)}
-  #risk{right:12%;top:30%}
-  /* storage central */
-  #storage{left:50%;top:46%;transform:translateX(-50%)}
-  /* autotrade bar */
-  #autotrade{left:50%;top:58%;transform:translateX(-50%);width:78%;height:70px;border-radius:10px}
-  /* lower panels */
-  #chart{left:8%;bottom:160px;width:36%;height:260px;border-radius:10px}
-  #chart-right{right:8%;bottom:160px;width:36%;height:260px;border-radius:10px}
-  /* chat big box bottom center */
-  #chatbox{left:50%;bottom:24px;transform:translateX(-50%);width:86%;height:160px;border-radius:12px;background:rgba(4,4,6,0.9);border:2px solid rgba(0,200,160,0.12);box-shadow:0 12px 40px rgba(0,0,0,0.6);}
+/* chat */
+.chat-log{flex:1;padding:8px;overflow:auto;color:#dff8ff;font-size:13px}
+.chat-input{display:flex;padding:8px;border-top:1px solid rgba(255,255,255,0.02)}
+.chat-input input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cyan);outline:none}
+.chat-input button{margin-left:8px;padding:8px 12px;border-radius:8px;border:none;background:var(--cyan);color:#001;cursor:pointer}
 
-  /* chat content */
-  #chatbox .title{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.02);color:#a0ffde;font-weight:700}
-  #chatbox .log{padding:10px;height:84px;overflow:auto;color:#dbefff;background:transparent}
-  #chatbox .inputwrap{display:flex;padding:8px;border-top:1px solid rgba(255,255,255,0.02)}
-  #chatbox input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cyan);outline:none}
-  #chatbox button{margin-left:8px;padding:8px 12px;border-radius:8px;border:none;background:var(--cyan);color:#001;font-weight:700;cursor:pointer}
-
-  /* footer */
-  .signature{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:12px;color:#8feaf5;opacity:0.9}
-
-  /* tiny responsive */
-  @media(min-width:900px){
-    body{overflow:auto}
-    .workflow{height:calc(100vh - 160px)}
-    #chart{width:42%}
-    #chart-right{width:28%}
-  }
+/* zoom focus style */
+.focus{transform:scale(1.18);box-shadow:0 18px 60px rgba(0,229,255,0.12);z-index:50}
+.controls{position:absolute;right:12px;top:12px;z-index:5}
+.zoom-btn{background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.04);color:var(--cyan);padding:6px 8px;border-radius:6px;margin-left:6px;cursor:pointer}
+.footer{margin-top:8px;text-align:center;color:#9fefff;opacity:0.9;font-size:12px}
+@media(max-width:480px){ #chartL{left:6%;width:60%} #chartR{display:none} }
 </style>
 </head>
 <body>
-
-<canvas id="stars"></canvas>
-
-<div class="header">QuantumAI v6 Sulung Workflow</div>
 <div class="container">
-  <div class="workflow" id="stage">
-    <div class="central-bar"></div>
+  <div class="header">QuantumAI v6 Sulung Workflow — Live Demo</div>
 
-    <!-- top row -->
-    <div class="box neon-blue" id="datafeed"><h4>Data Feed / API</h4><small>Market Data · Candlestick · Volume</small></div>
-    <div class="box neon-cyan" id="backend"><h4>Backend Core System</h4></div>
-    <div class="box neon-mag" id="satellite"><h4>Satellite Node</h4><small>External Feeds · Telemetry</small></div>
+  <div class="stage" id="stage">
+    <div class="grid"></div>
+    <canvas id="connectors" class="connectors"></canvas>
+    <div class="glow"></div>
 
-    <!-- middle row -->
-    <div class="box neon-green" id="ai"><h4>AI Core Signal</h4><small>BUY · SELL · HOLD</small></div>
-    <div class="box neon-cyan" id="sat"><h4>Satellite Momentum</h4><small>Radar Pulse Analysis</small></div>
-    <div class="box neon-gold" id="risk"><h4>Risk Engine</h4><small>SL · TP · BE · Trailing</small></div>
+    <div class="box" id="datafeed"><h4>Data Feed / API</h4><small>Market data • candles • volume</small></div>
+    <div class="box" id="backend"><h4>Backend Core System</h4></div>
+    <div class="box" id="sat"><h4>Satellite Node</h4><small>External feeds</small></div>
 
-    <!-- storage -->
-    <div class="box neon-cyan" id="storage"><h4>Secure Data Storage</h4><small>Encrypted JSON • Signals • News</small></div>
+    <div class="box" id="aicore"><h4>AI Core Signal</h4><small>BUY • SELL • HOLD</small></div>
+    <div class="box" id="satmom"><h4>Satellite Momentum</h4><small>Radar pulse analysis</small></div>
+    <div class="box" id="risk"><h4>Risk Engine</h4><small>SL • TP • BE</small></div>
 
-    <!-- autotrade -->
-    <div class="box neon-cyan" id="autotrade"><h4>AutoTrade & Manual Control</h4><small>Mock MT5 • MIFX • Binance</small></div>
+    <div class="box" id="storage"><h4>Secure Data Storage</h4><small>Encrypted JSON • Signals • News</small></div>
+    <div class="box" id="autotrade"><h4>AutoTrade & Manual Control</h4><small>Mock MT5 • MIFX • Binance</small></div>
 
-    <!-- left chart -->
-    <div class="box neon-cyan" id="chart">
-      <h4>Real-Time Chart</h4>
-      <canvas id="leftChart" width="520" height="220" style="width:100%;height:calc(100% - 30px);margin-top:6px;background:transparent;border-radius:8px;"></canvas>
-    </div>
+    <div class="box" id="chartL"><h4>Real-Time Chart</h4><canvas id="chartCanvasL" width="800" height="220"></canvas></div>
+    <div class="box" id="chartR"><h4>Risk Management</h4><canvas id="chartCanvasR" width="400" height="220"></canvas></div>
 
-    <!-- right chart / risk panel -->
-    <div class="box neon-gold" id="chart-right">
-      <h4>Risk Management</h4>
-      <small>SL · TP · Trailing Steps</small>
-      <div style="height:8px"></div>
-      <canvas id="mini" width="320" height="160" style="width:100%;height:calc(100% - 50px);"></canvas>
-    </div>
-
-    <!-- chat box -->
-    <div id="chatbox">
-      <div class="title">⚡ QuantumAI Chat Interface</div>
-      <div class="log" id="chatlog">
-        <div style="color:#9be3ff"><b>[SYSTEM]</b> QuantumAI core online — ready.</div>
-      </div>
-      <div class="inputwrap">
-        <input id="chatinput" placeholder="Type command (e.g. scan, buy, sell, status)"/>
+    <div class="box" id="chatbox">
+      <div class="chat-log" id="chatLog"><div style="color:#9be3ff"><b>[SYSTEM]</b> QuantumAI core online — ready.</div></div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Type command (scan / buy / sell / status)" />
         <button onclick="sendChat()">Send</button>
       </div>
     </div>
 
-    <div class="signature">Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</div>
   </div>
+
+  <div class="footer">Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</div>
 </div>
 
 <script>
-/* ============ stars field ============ */
-const stars = document.getElementById('stars');
-const sctx = stars.getContext('2d');
-function resizeStars(){ stars.width = window.innerWidth; stars.height = window.innerHeight; drawStars(); }
-function drawStars(){
-  sctx.clearRect(0,0,stars.width,stars.height);
-  const count = Math.floor(window.innerWidth * window.innerHeight / 40000);
-  for(let i=0;i<count;i++){
-    const x = Math.random() * stars.width;
-    const y = Math.random() * stars.height;
-    const r = Math.random()*1.2;
-    sctx.beginPath(); sctx.fillStyle = 'rgba(0,229,255,'+(0.05+Math.random()*0.25)+')'; sctx.arc(x,y,r,0,Math.PI*2); sctx.fill();
-  }
-}
-window.addEventListener('resize', resizeStars);
-resizeStars();
+/* ========== CONFIG ========== */
+const backendURL = "https://REPLACE_WITH_BACKEND.koyeb.app"; // <-- ganti URL backend Koyeb setelah deploy
+const pollInterval = 2000;
 
-/* ============ anim connectors (SVG-like lines via canvas) ============ */
-const container = document.getElementById('stage');
-function connectLines(){
-  // remove old canvas if any
-  let c = document.getElementById('lineCanvas'); if(c) c.remove();
-  c = document.createElement('canvas'); c.id='lineCanvas'; c.style.position='absolute'; c.style.left='0'; c.style.top='0'; c.width = container.offsetWidth; c.height = container.offsetHeight; c.style.zIndex=1; container.appendChild(c);
-  const ctx = c.getContext('2d');
-  function nodeCenter(el){
-    const r = el.getBoundingClientRect(); const parentRect = container.getBoundingClientRect();
-    return {x: r.left - parentRect.left + r.width/2, y: r.top - parentRect.top + r.height/2};
-  }
-  const nodes = {
-    data: nodeCenter(document.getElementById('datafeed')),
-    backend: nodeCenter(document.getElementById('backend')),
-    ai: nodeCenter(document.getElementById('ai')),
-    sat: nodeCenter(document.getElementById('sat')),
-    risk: nodeCenter(document.getElementById('risk')),
-    storage: nodeCenter(document.getElementById('storage')),
-    autotrade: nodeCenter(document.getElementById('autotrade')),
-    chat: nodeCenter(document.getElementById('chatbox')),
-    chartL: nodeCenter(document.getElementById('chart')),
-    chartR: nodeCenter(document.getElementById('chart-right')),
-  };
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.lineWidth = 2;
-  function gradLine(a,b,colorA,colorB,alpha){
-    const g = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
-    g.addColorStop(0,colorA); g.addColorStop(1,colorB);
-    ctx.strokeStyle = g; ctx.globalAlpha = alpha||0.6;
-    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.bezierCurveTo((a.x+b.x)/2,a.y,(a.x+b.x)/2,b.y,b.x,b.y); ctx.stroke();
-    ctx.globalAlpha = 1;
-  }
-  gradLine(nodes.data, nodes.backend,'rgba(0,229,255,0.02)','rgba(0,229,255,0.4)',0.8);
-  gradLine(nodes.backend, nodes.ai,'rgba(155,200,255,0.02)','rgba(0,229,255,0.6)',0.95);
-  gradLine(nodes.backend, nodes.sat,'rgba(155,200,255,0.02)','rgba(208,140,255,0.6)',0.9);
-  gradLine(nodes.ai, nodes.risk,'rgba(255,200,120,0.02)','rgba(255,170,80,0.6)',0.95);
-  gradLine(nodes.ai, nodes.storage,'rgba(0,229,255,0.02)','rgba(46,204,113,0.5)',0.85);
-  gradLine(nodes.ai, nodes.autotrade,'rgba(231,76,60,0.02)','rgba(231,76,60,0.6)',0.9);
-  gradLine(nodes.ai, nodes.chat,'rgba(155,89,182,0.02)','rgba(155,89,182,0.7)',0.95);
-}
-setTimeout(connectLines,400);
-window.addEventListener('resize', ()=>setTimeout(connectLines,200));
+/* ======== helpers ======== */
+const q = id => document.getElementById(id);
+function center(el){ const r=el.getBoundingClientRect(); return {x: r.left + r.width/2, y: r.top + r.height/2}; }
 
-/* ============ simple demo charts (no backend) ============ */
-function randomArray(n){ return Array.from({length:n}, ()=>((Math.random()*2)-1)); }
-const leftCtx = document.getElementById('leftChart').getContext('2d');
-function drawLeft(vals){
-  const W = document.getElementById('leftChart').width; const H = document.getElementById('leftChart').height;
-  leftCtx.clearRect(0,0,W,H);
-  leftCtx.fillStyle='rgba(0,0,0,0.12)'; leftCtx.fillRect(0,0,W,H);
-  leftCtx.strokeStyle='#9fff6b'; leftCtx.lineWidth=2; leftCtx.beginPath();
-  const step=W/(vals.length-1);
-  vals.forEach((v,i)=>{
-    const x=i*step; const y=H/2 - v*(H/2-10);
-    if(i===0) leftCtx.moveTo(x,y); else leftCtx.lineTo(x,y);
+/* ======== connectors canvas ======== */
+const con = q('connectors'); const ctx = con.getContext('2d');
+function resizeCanvas(){ con.width = window.innerWidth; con.height = window.innerHeight; drawLines(); }
+window.addEventListener('resize', resizeCanvas);
+
+function drawLines(){
+  ctx.clearRect(0,0,con.width,con.height);
+  const nodes = ['datafeed','backend','aicore','satmom','risk','storage','autotrade','chatbox'];
+  const pts = nodes.map(id => {
+    const el = q(id); const r = el.getBoundingClientRect();
+    return {x: r.left + r.width/2, y: r.top + r.height/2};
   });
-  leftCtx.stroke();
+  ctx.lineWidth = 2;
+  // simple connections: backend -> ai, backend -> sat, ai->risk, ai->storage, ai->autotrade, ai->chat
+  function line(a,b,c1,c2){ const A=pts[a], B=pts[b]; const g = ctx.createLinearGradient(A.x,A.y,B.x,B.y); g.addColorStop(0,c1); g.addColorStop(1,c2); ctx.strokeStyle=g; ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.quadraticCurveTo((A.x+B.x)/2, A.y, B.x,B.y); ctx.stroke(); }
+  line(1,2,'rgba(155,200,255,0.04)','rgba(0,229,255,0.65)'); // backend->ai
+  line(1,3,'rgba(155,120,255,0.04)','rgba(208,140,255,0.6)'); // backend->sat
+  line(2,4,'rgba(0,229,255,0.02)','rgba(230,126,34,0.8)'); // ai->risk
+  line(2,5,'rgba(0,229,255,0.02)','rgba(46,204,113,0.7)'); // ai->storage
+  line(2,6,'rgba(0,229,255,0.02)','rgba(231,76,60,0.8)'); // ai->autotrade
+  line(2,7,'rgba(0,229,255,0.02)','rgba(155,89,182,0.85)'); // ai->chat
 }
-const miniCtx = document.getElementById('mini').getContext('2d');
-function drawMini(vals){
-  miniCtx.clearRect(0,0,miniCtx.canvas.width,miniCtx.canvas.height);
-  miniCtx.fillStyle='rgba(0,0,0,0.08)'; miniCtx.fillRect(0,0,miniCtx.canvas.width,miniCtx.canvas.height);
-  miniCtx.strokeStyle='#ffd36b'; miniCtx.lineWidth=2; miniCtx.beginPath();
-  const step=miniCtx.canvas.width/(vals.length-1);
-  vals.forEach((v,i)=>{ const x=i*step; const y=miniCtx.canvas.height/2 - v*(miniCtx.canvas.height/2-6); if(i===0) miniCtx.moveTo(x,y); else miniCtx.lineTo(x,y); });
-  miniCtx.stroke();
-}
-setInterval(()=>{ drawLeft(randomArray(40)); drawMini(randomArray(30)); }, 1200);
+setTimeout(resizeCanvas,300);
 
-/* ============ radar animation ============ */
-const rcan = document.getElementById('chatbox') ? document.createElement('canvas') : null;
-(function drawRadarAnim(){
-  // small orbit just visual on sat box — simple pulsing dot
-  // For poster visual we used connectors and glow; skip heavy radar for now.
-  requestAnimationFrame(drawRadarAnim);
-})();
-
-/* ============ chat simple (local) ============ */
-function sendChat(){
-  const input = document.getElementById('chatinput');
-  const t = input.value.trim(); if(!t) return;
-  const log = document.getElementById('chatlog');
-  const you = document.createElement('div'); you.style.color='#9be3ff'; you.innerHTML = `<b>[YOU]</b> ${escapeHtml(t)}`;
-  log.appendChild(you);
-  input.value='';
-  // simple rule reply demo
-  setTimeout(()=>{ const ai = document.createElement('div'); ai.style.color='#ffd56b'; ai.innerHTML = `<b>[AI]</b> ${demoReply(t)}`; log.appendChild(ai); log.scrollTop = log.scrollHeight; }, 600);
+/* ========== simple chart draw ======== */
+const cL = q('chartCanvasL').getContext('2d'), cR = q('chartCanvasR').getContext('2d');
+function drawLine(ctx,vals,color){
+  const W = ctx.canvas.width, H = ctx.canvas.height; ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(0,0,W,H);
+  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=2;
+  const step = W / Math.max( (vals.length-1),1);
+  vals.forEach((v,i)=>{ const x = i*step; const y = H/2 - v*(H/2 - 8); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.stroke();
 }
-function demoReply(txt){
-  const s = txt.toLowerCase();
-  if(s.includes('buy')) return 'Analyzing BUY setups... (demo)';
-  if(s.includes('sell')) return 'Scanning SELL pressure... (demo)';
-  if(s.includes('scan')) return 'Full-spectrum market scan complete — no alerts (demo).';
-  return 'Acknowledged: '+ (txt.length>0 ? txt : '...') + ' (demo)';
+
+/* ========== live fetch loop ======== */
+async function fetchJson(path){ try{ const r = await fetch(backendURL + path); return await r.json(); } catch(e){ console.error('fetch err',e); return null; } }
+async function liveTick(){
+  const s = await fetchJson('/api/signal'); if(s && s.signals) drawLine(cL, s.signals, '#9fff6b');
+  const r = await fetchJson('/api/radar'); // we ignore drawing angle here (can add radars)
+  const b = await fetchJson('/api/broker'); if(b) q('aicore').innerHTML = `<h4>AI Core Signal</h4><small>${b.broker} • Bal:${b.balance}</small>`;
+  drawLines();
+}
+let liveTimer;
+window.onload = async ()=>{ resizeCanvas(); await liveTick(); liveTimer = setInterval(liveTick, pollInterval); };
+
+/* ========== chat send ======== */
+function logHtml(html){ q('chatLog').insertAdjacentHTML('beforeend', html); q('chatLog').scrollTop = q('chatLog').scrollHeight; }
+async function sendChat(){
+  const txt = q('chatInput').value.trim(); if(!txt) return; logHtml(`<div style="color:#9be3ff"><b>[YOU]</b> ${escapeHtml(txt)}</div>`); q('chatInput').value='';
+  try{
+    const res = await fetch(backendURL + '/api/chat', {method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({text:txt})});
+    const j = await res.json(); logHtml(`<div style="color:#ffd56b"><b>[AI]</b> ${escapeHtml(j.reply)}</div>`);
+  }catch(e){ logHtml(`<div style="color:#ff6b6b"><b>[ERR]</b> Chat failed</div>`); }
 }
 function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 
-/* init */
-window.onload = function(){ connectLines(); drawLeft(randomArray(40)); drawMini(randomArray(30)); };
+/* ========== interactive zoom per-block ========= */
+const blocks = ['datafeed','backend','sat','aicore','satmom','risk','storage','autotrade','chartL','chartR','chatbox'];
+blocks.forEach(id=>{
+  const el = q(id);
+  el.style.touchAction = 'manipulation';
+  el.addEventListener('click', e=>{
+    // if already focused -> unfocus
+    if(el.classList.contains('focus')){ el.classList.remove('focus'); document.body.style.overflow='auto'; resizeCanvas(); return; }
+    // remove other focuses
+    blocks.forEach(i=>{ const o=q(i); if(o) o.classList.remove('focus'); });
+    el.classList.add('focus'); // visually zoom
+    // scroll so element center visible
+    const r = el.getBoundingClientRect(); window.scrollTo({top: window.scrollY + r.top - 80, behavior:'smooth'});
+    setTimeout(()=>{ drawLines(); }, 300);
+  });
+});
+// click outside to reset
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.box') && !e.target.closest('.chat-input')){ blocks.forEach(i=>{ const o=q(i); if(o) o.classList.remove('focus'); } ); }
+});
+
+/* ========== cleanup on unload ========= */
+window.addEventListener('beforeunload', ()=>{ if(liveTimer) clearInterval(liveTimer); });
 </script>
 </body>
 </html>
