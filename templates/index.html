@@ -1,180 +1,178 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>QuantumAI v6 — Live Demo</title>
 <style>
-:root{--cyan:#00e5ff;--purple:#9b59b6;--gold:#ffd36b;--green:#2ecc71;--bg:#03061a}
-html,body{height:100%;margin:0;background:radial-gradient(circle at 20% 10%, #03102a, #02030a 60%);color:var(--cyan);font-family:Inter,Segoe UI,Roboto,system-ui;overflow:auto}
-.container{max-width:1100px;margin:0 auto;padding:12px}
-.header{ text-align:center;padding:12px 0;font-weight:700;letter-spacing:1px}
-.stage{position:relative;height:82vh;background:transparent;border-radius:8px;overflow:hidden}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03)1px,transparent 1px);background-size:30px 30px;z-index:0}
-.connectors{position:absolute;inset:0;z-index:1;pointer-events:none}
-.glow{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#00e5ff22,transparent 55%);filter:blur(18px);z-index:1}
+:root {
+  --cyan: #00e5ff;
+  --purple: #9b59b6;
+  --gold: #ffd36b;
+  --green: #2ecc71;
+  --bg: #03061a;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(circle at 20% 10%, #03102a, #02030a 60%);
+  color: var(--cyan);
+  font-family: 'Inter', Segoe UI, Roboto, system-ui;
+  overflow-x: hidden;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+.header {
+  text-align: center;
+  padding: 10px 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 18px;
+}
+.stage {
+  position: relative;
+  height: 85vh;
+  background: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+  z-index: 0;
+}
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #00e5ff22, transparent 65%);
+  filter: blur(18px);
+  z-index: 1;
+}
 
-/* module box */
-.box{position:absolute;width:210px;height:100px;border-radius:10px;padding:10px;box-sizing:border-box;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2));border:2px solid rgba(0,229,255,0.08);backdrop-filter:blur(4px);z-index:2}
-.box h4{margin:0;color:var(--cyan);font-size:15px}
-.box small{display:block;color:#9fefff;opacity:.85;margin-top:6px;font-size:12px}
-.box:hover{transform:scale(1.03);box-shadow:0 8px 40px rgba(0,229,255,0.08)}
+/* Box */
+.box {
+  position: absolute;
+  width: 200px;
+  height: 90px;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+  border: 2px solid rgba(0,229,255,0.1);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+.box h4 {
+  margin: 0;
+  color: var(--cyan);
+  font-size: 14px;
+}
+.box small {
+  display: block;
+  color: #9fefff;
+  opacity: .85;
+  margin-top: 5px;
+  font-size: 11px;
+}
+.box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0,229,255,0.2);
+}
 
-/* positions */
-#datafeed{left:6%;top:6%}
-#backend{left:50%;top:9%;transform:translateX(-50%)}
-#sat{right:6%;top:6%}
-#aicore{left:12%;top:33%}
-#satmom{left:50%;top:33%;transform:translateX(-50%)}
-#risk{right:12%;top:33%}
-#storage{left:50%;top:48%;transform:translateX(-50%)}
-#autotrade{left:6%;top:60%;width:88%;height:56px;border-radius:8px}
-#chartL{left:6%;bottom:150px;width:48%;height:220px}
-#chartR{right:6%;bottom:150px;width:36%;height:220px}
-#chatbox{left:50%;bottom:12px;transform:translateX(-50%);width:92%;max-width:1000px;height:150px;border-radius:10px;background:#02060b;border:2px solid rgba(0,229,255,0.06);z-index:3;display:flex;flex-direction:column}
+/* 🔹 Posisi blok (presisi kayak poster) */
+#datafeed { left: 5%; top: 5%; }
+#backend { left: 40%; top: 5%; }
+#sat { right: 5%; top: 5%; }
 
-/* chart canvases */
-canvas{display:block;width:100%;height:100%}
+#aicore { left: 15%; top: 32%; }
+#satmom { left: 40%; top: 32%; }
+#risk { right: 15%; top: 32%; }
 
-/* chat */
-.chat-log{flex:1;padding:8px;overflow:auto;color:#dff8ff;font-size:13px}
-.chat-input{display:flex;padding:8px;border-top:1px solid rgba(255,255,255,0.02)}
-.chat-input input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--cyan);outline:none}
-.chat-input button{margin-left:8px;padding:8px 12px;border-radius:8px;border:none;background:var(--cyan);color:#001;cursor:pointer}
+#storage { left: 40%; top: 50%; }
+#autotrade { left: 5%; top: 60%; width: 90%; height: 60px; }
 
-/* zoom focus style */
-.focus{transform:scale(1.18);box-shadow:0 18px 60px rgba(0,229,255,0.12);z-index:50}
-.controls{position:absolute;right:12px;top:12px;z-index:5}
-.zoom-btn{background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.04);color:var(--cyan);padding:6px 8px;border-radius:6px;margin-left:6px;cursor:pointer}
-.footer{margin-top:8px;text-align:center;color:#9fefff;opacity:0.9;font-size:12px}
-@media(max-width:480px){ #chartL{left:6%;width:60%} #chartR{display:none} }
+#chartL { left: 5%; bottom: 130px; width: 45%; height: 180px; }
+#chartR { right: 5%; bottom: 130px; width: 40%; height: 180px; }
+
+#chatbox {
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 900px;
+  height: 130px;
+  border-radius: 10px;
+  background: #02060b;
+  border: 2px solid rgba(0,229,255,0.08);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat area */
+.chat-log {
+  flex: 1;
+  padding: 6px;
+  overflow-y: auto;
+  color: #dff8ff;
+  font-size: 13px;
+}
+.chat-input {
+  display: flex;
+  padding: 6px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.chat-input input {
+  flex: 1;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  color: var(--cyan);
+}
+.chat-input button {
+  margin-left: 8px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: none;
+  background: var(--cyan);
+  color: #001;
+  cursor: pointer;
+}
+
+/* Focus (zoom per blok) */
+.focus {
+  transform: scale(1.2);
+  box-shadow: 0 0 30px rgba(0,229,255,0.25);
+  z-index: 5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .box { width: 45%; height: 80px; }
+  #datafeed { left: 5%; top: 4%; }
+  #backend { right: 5%; top: 4%; left: auto; }
+  #sat { left: 50%; top: 18%; transform: translateX(-50%); }
+  #aicore { left: 5%; top: 32%; }
+  #satmom { right: 5%; top: 32%; }
+  #risk { left: 50%; top: 44%; transform: translateX(-50%); }
+  #storage { left: 5%; top: 55%; }
+  #autotrade { left: 5%; top: 67%; width: 90%; }
+  #chartL, #chartR { width: 90%; left: 5%; right: auto; bottom: 160px; height: 150px; }
+  #chatbox { bottom: 10px; width: 95%; height: 120px; }
+}
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: #9fefff;
+  opacity: .8;
+  margin-top: 5px;
+}
 </style>
-</head>
-<body>
-<div class="container">
-  <div class="header">QuantumAI v6 Sulung Workflow — Live Demo</div>
-
-  <div class="stage" id="stage">
-    <div class="grid"></div>
-    <canvas id="connectors" class="connectors"></canvas>
-    <div class="glow"></div>
-
-    <div class="box" id="datafeed"><h4>Data Feed / API</h4><small>Market data • candles • volume</small></div>
-    <div class="box" id="backend"><h4>Backend Core System</h4></div>
-    <div class="box" id="sat"><h4>Satellite Node</h4><small>External feeds</small></div>
-
-    <div class="box" id="aicore"><h4>AI Core Signal</h4><small>BUY • SELL • HOLD</small></div>
-    <div class="box" id="satmom"><h4>Satellite Momentum</h4><small>Radar pulse analysis</small></div>
-    <div class="box" id="risk"><h4>Risk Engine</h4><small>SL • TP • BE</small></div>
-
-    <div class="box" id="storage"><h4>Secure Data Storage</h4><small>Encrypted JSON • Signals • News</small></div>
-    <div class="box" id="autotrade"><h4>AutoTrade & Manual Control</h4><small>Mock MT5 • MIFX • Binance</small></div>
-
-    <div class="box" id="chartL"><h4>Real-Time Chart</h4><canvas id="chartCanvasL" width="800" height="220"></canvas></div>
-    <div class="box" id="chartR"><h4>Risk Management</h4><canvas id="chartCanvasR" width="400" height="220"></canvas></div>
-
-    <div class="box" id="chatbox">
-      <div class="chat-log" id="chatLog"><div style="color:#9be3ff"><b>[SYSTEM]</b> QuantumAI core online — ready.</div></div>
-      <div class="chat-input">
-        <input id="chatInput" placeholder="Type command (scan / buy / sell / status)" />
-        <button onclick="sendChat()">Send</button>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="footer">Developed by dadanrukanda89-lab | QuantumAI Protocol 2026</div>
-</div>
-
-<script>
-/* ========== CONFIG ========== */
-const backendURL = "https://REPLACE_WITH_BACKEND.koyeb.app"; // <-- ganti URL backend Koyeb setelah deploy
-const pollInterval = 2000;
-
-/* ======== helpers ======== */
-const q = id => document.getElementById(id);
-function center(el){ const r=el.getBoundingClientRect(); return {x: r.left + r.width/2, y: r.top + r.height/2}; }
-
-/* ======== connectors canvas ======== */
-const con = q('connectors'); const ctx = con.getContext('2d');
-function resizeCanvas(){ con.width = window.innerWidth; con.height = window.innerHeight; drawLines(); }
-window.addEventListener('resize', resizeCanvas);
-
-function drawLines(){
-  ctx.clearRect(0,0,con.width,con.height);
-  const nodes = ['datafeed','backend','aicore','satmom','risk','storage','autotrade','chatbox'];
-  const pts = nodes.map(id => {
-    const el = q(id); const r = el.getBoundingClientRect();
-    return {x: r.left + r.width/2, y: r.top + r.height/2};
-  });
-  ctx.lineWidth = 2;
-  // simple connections: backend -> ai, backend -> sat, ai->risk, ai->storage, ai->autotrade, ai->chat
-  function line(a,b,c1,c2){ const A=pts[a], B=pts[b]; const g = ctx.createLinearGradient(A.x,A.y,B.x,B.y); g.addColorStop(0,c1); g.addColorStop(1,c2); ctx.strokeStyle=g; ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.quadraticCurveTo((A.x+B.x)/2, A.y, B.x,B.y); ctx.stroke(); }
-  line(1,2,'rgba(155,200,255,0.04)','rgba(0,229,255,0.65)'); // backend->ai
-  line(1,3,'rgba(155,120,255,0.04)','rgba(208,140,255,0.6)'); // backend->sat
-  line(2,4,'rgba(0,229,255,0.02)','rgba(230,126,34,0.8)'); // ai->risk
-  line(2,5,'rgba(0,229,255,0.02)','rgba(46,204,113,0.7)'); // ai->storage
-  line(2,6,'rgba(0,229,255,0.02)','rgba(231,76,60,0.8)'); // ai->autotrade
-  line(2,7,'rgba(0,229,255,0.02)','rgba(155,89,182,0.85)'); // ai->chat
-}
-setTimeout(resizeCanvas,300);
-
-/* ========== simple chart draw ======== */
-const cL = q('chartCanvasL').getContext('2d'), cR = q('chartCanvasR').getContext('2d');
-function drawLine(ctx,vals,color){
-  const W = ctx.canvas.width, H = ctx.canvas.height; ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='rgba(0,0,0,0.12)'; ctx.fillRect(0,0,W,H);
-  ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=2;
-  const step = W / Math.max( (vals.length-1),1);
-  vals.forEach((v,i)=>{ const x = i*step; const y = H/2 - v*(H/2 - 8); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
-  ctx.stroke();
-}
-
-/* ========== live fetch loop ======== */
-async function fetchJson(path){ try{ const r = await fetch(backendURL + path); return await r.json(); } catch(e){ console.error('fetch err',e); return null; } }
-async function liveTick(){
-  const s = await fetchJson('/api/signal'); if(s && s.signals) drawLine(cL, s.signals, '#9fff6b');
-  const r = await fetchJson('/api/radar'); // we ignore drawing angle here (can add radars)
-  const b = await fetchJson('/api/broker'); if(b) q('aicore').innerHTML = `<h4>AI Core Signal</h4><small>${b.broker} • Bal:${b.balance}</small>`;
-  drawLines();
-}
-let liveTimer;
-window.onload = async ()=>{ resizeCanvas(); await liveTick(); liveTimer = setInterval(liveTick, pollInterval); };
-
-/* ========== chat send ======== */
-function logHtml(html){ q('chatLog').insertAdjacentHTML('beforeend', html); q('chatLog').scrollTop = q('chatLog').scrollHeight; }
-async function sendChat(){
-  const txt = q('chatInput').value.trim(); if(!txt) return; logHtml(`<div style="color:#9be3ff"><b>[YOU]</b> ${escapeHtml(txt)}</div>`); q('chatInput').value='';
-  try{
-    const res = await fetch(backendURL + '/api/chat', {method:'POST',headers:{'Content-Type':'application/json'},body: JSON.stringify({text:txt})});
-    const j = await res.json(); logHtml(`<div style="color:#ffd56b"><b>[AI]</b> ${escapeHtml(j.reply)}</div>`);
-  }catch(e){ logHtml(`<div style="color:#ff6b6b"><b>[ERR]</b> Chat failed</div>`); }
-}
-function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-
-/* ========== interactive zoom per-block ========= */
-const blocks = ['datafeed','backend','sat','aicore','satmom','risk','storage','autotrade','chartL','chartR','chatbox'];
-blocks.forEach(id=>{
-  const el = q(id);
-  el.style.touchAction = 'manipulation';
-  el.addEventListener('click', e=>{
-    // if already focused -> unfocus
-    if(el.classList.contains('focus')){ el.classList.remove('focus'); document.body.style.overflow='auto'; resizeCanvas(); return; }
-    // remove other focuses
-    blocks.forEach(i=>{ const o=q(i); if(o) o.classList.remove('focus'); });
-    el.classList.add('focus'); // visually zoom
-    // scroll so element center visible
-    const r = el.getBoundingClientRect(); window.scrollTo({top: window.scrollY + r.top - 80, behavior:'smooth'});
-    setTimeout(()=>{ drawLines(); }, 300);
-  });
-});
-// click outside to reset
-document.addEventListener('click', e=>{
-  if(!e.target.closest('.box') && !e.target.closest('.chat-input')){ blocks.forEach(i=>{ const o=q(i); if(o) o.classList.remove('focus'); } ); }
-});
-
-/* ========== cleanup on unload ========= */
-window.addEventListener('beforeunload', ()=>{ if(liveTimer) clearInterval(liveTimer); });
-</script>
-</body>
-</html>
